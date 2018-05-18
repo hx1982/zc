@@ -1,0 +1,127 @@
+﻿body {
+    font-family:verdana,helvetica,arial,sans-serif;
+    padding:0px;
+    font-size:12px;
+    margin:0px;
+}
+h2 {
+    font-size:18px;
+    font-weight:bold;
+    margin:0;
+    margin-bottom:15px;
+}
+ul {
+    padding:0px;
+    list-style:none;
+}
+ul li{
+    padding:0px;
+    list-style:none;
+}
+.div-center{
+    background-color: #fff;
+    border-radius: 20px;
+    width: 450px;
+    height: 350px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.div-top{
+    height:45px;
+    line-height:45px;
+    vertical-align:middle;
+    background-image:url("/Content/images/top_bg1.jpg");
+    background-repeat:repeat-x;
+    color:white;
+}
+.div-bottom{
+    height:30px;
+    background:#d1cfcf;
+    line-height:30px;
+    color:#000;
+    vertical-align:middle;
+    text-align:center;
+}
+.div-left{
+    width:189px;
+}
+.addMerchant-title{
+    margin:0px 10px;
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+    border-bottom:1px solid #e9e4e4;
+    font-size:14px;
+    color:#808080;
+}
+.meau-nav{
+    width: 182px;
+	margin: 0px;
+	padding: 0px;
+}
+.meau-nav .link{
+    cursor: pointer;
+    display: block;
+    color: #fff;
+    font-size: 16px;
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+    padding-left:45px;
+    font-weight:bold;
+}
+.meau-nav .down{
+    background-image:url("/Content/images/m_t_2_down.jpg");
+}
+.meau-nav .up{
+    background-image:url("/Content/images/m_t_2_up.jpg");
+}
+.submenu{
+    display: none;
+	font-size: 14px;
+}
+.block{
+    display:block;
+}
+.submenu li{
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+    padding-left:50px;
+}
+.submenu .m_t_3_1 {
+    background-image:url("/Content/images/m_t_3_1.jpg");
+}
+
+.submenu .m_t_3_2 {
+    background-image:url("/Content/images/m_t_3_2.jpg");
+}
+
+.submenu .m_t_3_2 .aHover {
+    color:#ff6a00;
+    font-weight:bold;
+ }
+
+.submenu li:hover{
+    background-image:url("/Content/images/m_t_3_2.jpg");
+}
+.submenu li a{
+    color:#4d4d53;
+    text-decoration: none;
+}
+.submenu li a:hover{
+    color:#ff6a00;
+    font-weight:bold;
+}
+
+/* Seperator line */
+hr{
+    border: none;
+    border-bottom: 1px solid #ddd;
+    margin: 15px 0px;
+}
+

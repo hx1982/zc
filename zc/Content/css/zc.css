@@ -1,0 +1,32 @@
+body, a {
+	color: #333333;
+}
+
+* {
+	box-sizing: border-box !important;
+}
+
+.mui-bar {
+	background-color: #00AA90;
+}
+
+.mui-title {
+	color: #FFFFFF;
+}
+
+.mui-bar a {
+	color: #FFFFFF;
+}
+
+.mui-input-group {
+	background-color: transparent;
+}
+
+.mui-input-row {
+	margin: 10px 0px;
+	background-color: #FFFFFF;
+}
+
+.mui-btn-primary {
+	background-color: #00AA90 !important;
+}

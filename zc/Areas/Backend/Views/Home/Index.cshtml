@@ -1,0 +1,127 @@
+﻿@using zc.Commons
+@using zc.Models
+@{
+    ViewBag.Title = "框架页";
+}
+
+<!--顶部-->
+<div data-options="region:'north',border:false" class="div-top">
+    <div class="page-top">
+        <div style="float: left;padding-left: 20px;font-size:18px !important;">云企管理平台</div>
+        <div style="float: right; padding-right: 20px;">
+            <span>操作员：@User.Identity.Name，您好！</span>
+            <a href="javascript:;" style="color: white; text-decoration: underline;">修改密码</a>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <a href="javascript:;" style="color: white; text-decoration: underline;">退出</a>
+        </div>
+    </div>
+</div>
+
+<!--左侧菜单-->
+<div data-options="region:'center',border:false">
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west',split:true,title:' '" class="div-left">
+            <ul class="meau-nav" id="meau-nav">
+                <li>
+                    <div class="link down">
+                        会员管理
+                    </div>
+                    <ul class="submenu">
+                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("SearchNotActivatedUsers","User")">未激活会员</a></li>
+                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("All","User")">全部会员</a></li>
+                    </ul>
+                </li>
+                <li>
+                <div class="link down">
+                   店铺管理
+                </div>
+                <ul class="submenu">
+                    <li class="m_t_3_1"><a href="javascript:;">店铺列表</a></li>
+                    <li class="m_t_3_1"><a href="javascript:;">添加店铺</a></li>
+                </ul>
+            </li>
+            </ul>
+        </div>
+        <div data-options="region:'center'">
+            <div class="easyui-tabs" data-options="fit:true,border:false" id="tabs">
+                <div title="首页" style="padding: 10px">
+
+                    <iframe scrolling="auto" frameborder="0" src="@Url.Action("Default", "Home")" style="width:100%;height:98%;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--底部-->
+<div class="div-bottom" data-options="region:'south',border:false" >
+    <div class="page-bottom">版权所有：四川云企时代科技有限公司</div>
+</div>
+
+<script type="text/javascript">
+    var theMainFrameCount = 0;
+
+    function addTab(title, url) {
+        var exists = document.getElementById("theMain_Frame" + (theMainFrameCount)) != null;
+        if (exists) {
+            var tabs = $('#tabs').tabs('tabs');
+            $('#tabs').tabs('select', tabs.length - 1);
+            var currTab = tabs[tabs.length - 1];
+            if (url != undefined && currTab.panel('options').title != '首页') {
+                $('#tabs').tabs('update',
+                    {
+                        tab: currTab,
+                        options: {
+                            title: title,
+                            content: createFrame(url),
+                            closable: true
+                        }
+                    });
+            }
+        } else {
+            var content = createFrame(url);
+            $('#tabs').tabs('add',
+                {
+                    title: title,
+                    content: content,
+                    closable: true
+                });
+        }
+    }
+    //创建iframe
+    function createFrame(url) {
+        var s = '<iframe id="theMain_Frame' + theMainFrameCount + '" scrolling="auto" frameborder="0" style="width:100%;height:98%;"></iframe>';
+        s += '<script type="text/java' + 'script">$("#theMain_Frame' + theMainFrameCount + '").attr("src","' + url + '");</s' + 'cript>';
+        return s;
+    }
+
+    $(function () {
+        //菜单折叠
+        $("#meau-nav .link").click(function () {
+            if (this.className == "link down") {
+                $(this).addClass("up").next("ul.submenu").slideToggle(300).siblings("ul.submenu").slideUp("slow");
+            } else{
+                $(this).removeClass("up").next("ul.submenu").slideToggle(300).siblings("ul.submenu").slideUp("slow");
+            }
+        });
+        //点击子菜单样式变更
+        $(".submenu li").click(function () {
+            if (this.className == "m_t_3_1") {
+                $(".submenu li").removeClass("m_t_3_2").addClass("m_t_3_1");
+                $(this).removeClass("m_t_3_1").addClass("m_t_3_2");
+                $(this).children("a").addClass("aHover");
+            } else {
+                $(".submenu li").removeClass("m_t_3_1").addClass("m_t_3_2");
+                $(this).removeClass("m_t_3_2").addClass("m_t_3_1");
+                $(this).children("a").removeClass("aHover");
+            }
+        });
+        $(".submenu li a").click(function () {
+            var $this = $(this);
+            var href = $this.attr('src');
+            var title = $this.find("div").length > 0 ? $this.find("div").text() : $this.text();
+            addTab(title, href);
+        });
+    });
+</script>
+
