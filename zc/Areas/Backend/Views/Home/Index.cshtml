@@ -32,14 +32,13 @@
                     </ul>
                 </li>
                 <li>
-                <div class="link down">
-                   店铺管理
-                </div>
-                <ul class="submenu">
-                    <li class="m_t_3_1"><a href="javascript:;">店铺列表</a></li>
-                    <li class="m_t_3_1"><a href="javascript:;">添加店铺</a></li>
-                </ul>
-            </li>
+                    <div class="link down">
+                        财务管理
+                    </div>
+                    <ul class="submenu">
+                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("BonusRecords", "User")">分红记录</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div data-options="region:'center'">
@@ -54,7 +53,7 @@
 </div>
 
 <!--底部-->
-<div class="div-bottom" data-options="region:'south',border:false" >
+<div class="div-bottom" data-options="region:'south',border:false">
     <div class="page-bottom">版权所有：四川云企时代科技有限公司</div>
 </div>
 
@@ -100,7 +99,7 @@
         $("#meau-nav .link").click(function () {
             if (this.className == "link down") {
                 $(this).addClass("up").next("ul.submenu").slideToggle(300).siblings("ul.submenu").slideUp("slow");
-            } else{
+            } else {
                 $(this).removeClass("up").next("ul.submenu").slideToggle(300).siblings("ul.submenu").slideUp("slow");
             }
         });

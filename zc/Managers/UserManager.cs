@@ -18,6 +18,7 @@ namespace zc.Managers
 
             using (TransactionScope tx = new TransactionScope())
             {
+                // 保存用户激活信息
                 var user = db.users.Find(model.user_id);
                 user.reg_money = model.reg_money;
                 user.province = model.province;
@@ -31,6 +32,7 @@ namespace zc.Managers
 
                 db.SaveChanges();
 
+                // 保存分红信息
                 var dist_money = user.level.level_money1;
                 var bonus = new user_bonus
                 {
@@ -56,22 +58,33 @@ namespace zc.Managers
                 }
 
                 db.user_bonus.Add(bonus);
-
                 db.SaveChanges();
 
-                tx.Complete();
+                //todo: 是否需要保存分红记录 ? bonus_record ?
 
+                tx.Complete();
                 return user;
             }
         }
 
-        public bool Login(string phone, string pwd, string validateCode)
+        public user Login(string phone, string pwd)
         {
-            throw new NotImplementedException();
+            pwd = Utility.MD5Encrypt(pwd);
+            var query = from u in db.users
+                        where u.user_phone == phone && u.login_password == pwd 
+                        && u.user_status == UserStatus.NORMAL
+                        select u;
+            return query.FirstOrDefault();
         }
 
         public bool Register(UserRegisterModel model)
         {
+            // 校验user_phone唯一性
+            var query = from u in db.users where u.user_phone == model.UserPhone select u;
+            if (query.Count() > 0)
+            {
+                throw new Exception("手机号码\"" + model.UserPhone + "\"在系统中已存在!");
+            }
             // 创建持久对象
             user newUser = new user();
             // 复制有效值到持久对象
@@ -124,6 +137,68 @@ namespace zc.Managers
                              && u.user_phone.Contains(userPhone) // 用户电话模糊搜索
                              && u.user_status == UserStatus.NOT_ACTIVATED // 状态为未激活
                         select u;
+            return query.Count();
+        }
+
+        /// <summary>
+        /// 获得账户数据
+        /// </summary>
+        /// <param name="userId">会员id</param>
+        /// <returns></returns>
+        public user_account GetUserAccount(int userId)
+        {
+            var query = from ua in db.user_account
+                        where ua.user_id == userId
+                        select ua;
+            return query.FirstOrDefault();
+        }
+
+        public user GetUser(int userId)
+        {
+            return db.users.Find(userId);
+        }
+
+        public List<bonus_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        {
+            var query = from b in db.bonus_record select b;
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.create_time >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.create_time <= end);
+            }
+            return query.OrderBy(b => b.bonus_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public int GetBonusRecordsTotal(string user_name, string user_phone, DateTime? begin, DateTime? end)
+        {
+            var query = from b in db.bonus_record select b;
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.create_time >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.create_time <= end);
+            }
             return query.Count();
         }
     }

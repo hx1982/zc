@@ -53,11 +53,39 @@ namespace zc.Areas.Backend.Controllers
             }
             else
             {
-                return Json(new AjaxResultObject {
+                return Json(new AjaxResultObject
+                {
                     code = AjaxResultObject.ERROR,
                     message = "数据校验错误"
                 });
             }
+        }
+
+        // 财务管理 > 会员分红记录
+        public ActionResult BonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetBonusRecords(user_name, user_phone, begin, end, page, rows);
+                var data = pageData.Select(ToBonusRecordViewModel);
+                var total = this._userManager.GetBonusRecordsTotal(user_name, user_phone, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+        private object ToBonusRecordViewModel(bonus_record b)
+        {
+            return new
+            {
+                bonus_record_id = b.bonus_record_id,
+                user_name = b.user.user_name,
+                user_phone = b.user.user_phone,
+                bonus_type = b.bouns_type == 1 ? "本金分红" : "推荐分红",
+                bonus_money = b.bouns_money,
+                bonus_time = b.create_time,
+                bonus_remark = b.bonus_remark
+            };
         }
 
         private object ToUserViewModel(user a)

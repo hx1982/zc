@@ -1,0 +1,127 @@
+﻿@model zc.Models.user_account
+@{
+    ViewBag.Title = "Center";
+}
+
+@section style{
+    <style type="text/css">
+        /*等级图片*/
+        .level-img {
+            background-repeat: no-repeat;
+            padding: 40px;
+            color: #FFFFFF;
+            width: 340px;
+            height: 180px;
+            margin: 10px auto;
+        }
+
+        .level-img-gold {
+            background-image: url(/Content/Images/u69.png);
+        }
+
+        .level-img-silver {
+            background-image: url(/Content/Images/u73.png);
+        }
+
+        .level-img-cuprum {
+            background-image: url(/Content/Images/u77.png);
+        }
+
+        /*金银蓝钻的数量*/
+        .gold-diamond,
+        .silver-diamond,
+        .blue-diamond {
+            display: block;
+            text-align: center;
+            padding: 15px 0px;
+            color: #FFFFFF;
+        }
+
+        .gold-diamond {
+            background-color: gold;
+        }
+
+        .blue-diamond {
+            background-color: blue;
+        }
+
+        .silver-diamond {
+            background-color: silver;
+        }
+    </style>
+}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">会员中心</h1>
+</header>
+<div class="mui-content">
+    <div id="welcome" class="level-img">
+        尊敬的金卡会员你好!
+    </div>
+    <div class="mui-row">
+        <div class="mui-col-xs-4">
+            <a href="#" class="gold-diamond">
+                <span>金钻</span>
+                <br />
+                <span>@Model.account1</span>
+            </a>
+        </div>
+        <div class="mui-col-xs-4">
+            <a href="#" class="silver-diamond">
+                <span>银钻</span>
+                <br />
+                <span>@Model.account2</span>
+            </a>
+        </div>
+        <div class="mui-col-xs-4">
+            <a href="#" class="blue-diamond">
+                <span>蓝钻</span>
+                <br />
+                <span>@Model.account3</span>
+            </a>
+        </div>
+    </div>
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                个人信息
+            </a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                我的订单
+            </a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                提现记录
+            </a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                推荐码
+            </a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                协助注册
+            </a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                修改密码
+            </a>
+        </li>
+    </ul>
+</div>
+
+@section bottomScript{
+    <script>
+        @*这里要求数据库表level的铜银金三种级别id为1,2,3*@
+        var level_id = @ViewBag.User.level_id;
+        var level_img_class = ['', 'level-img-cuprum', 'level-img-silver', 'level-img-gold'];
+        var level_name = ['', '尊敬的铜卡会员您好!','尊敬的银卡会员您好!','尊敬的金卡会员您好!'];
+        $('#welcome').addClass(level_img_class[level_id]).text(level_name[level_id]);
+    </script>
+}

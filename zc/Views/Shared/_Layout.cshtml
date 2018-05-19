@@ -5,20 +5,23 @@
     <meta charset="UTF-8">
     <title>@ViewBag.Title</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <link href="~/Content/css/mui.min.css" rel="stylesheet" />
-    <link href="~/Content/css/zc.css"  rel="stylesheet" type="text/css"/>
+    <link href="~/plug-in/mui/css/mui.min.css" rel="stylesheet" />
+    <link href="~/plug-in/mui/css/mui.picker.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/zc.css" rel="stylesheet" type="text/css"/>
     @RenderSection(name: "style", required: false)
 </head>
 
 <body>
-    <script src="~/Content/js/mui.min.js"></script>
+    <script src="~/plug-in/mui/js/mui.min.js"></script>
+    <script src="~/plug-in/mui/js/mui.picker.min.js"></script>
     <script type="text/javascript">
         //mui.init();
     </script>
     @RenderBody()
-    @RenderSection(name: "bottomScript", required: false)
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection(name: "bottomScript", required: false)
 </body>
 
 </html>

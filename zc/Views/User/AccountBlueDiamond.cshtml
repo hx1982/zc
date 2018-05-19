@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "AccountGoldDiamond";
+}
+
+@section style {
+
+}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">会员账户 - 蓝钻</h1>
+    <a class="mui-btn mui-btn-red mui-pull-right">提现</a>
+</header>
+<div class="mui-content">
+    <h5 class="section-title">账户信息</h5>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>累计转入</th>
+                <th>累计转出</th>
+                <th>蓝钻余额</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>30000</td>
+                <td>20000</td>
+                <td>600</td>
+            </tr>
+        </tbody>
+    </table>
+    <h5 class="section-title">查询条件</h5>
+    <form class="mui-input-group">
+        <div class="mui-input-row">
+            <label>起始日期</label>
+            <input name="dateBegin" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
+        </div>
+        <div class="mui-input-row">
+            <label>终止日期</label>
+            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
+        </div>
+        <div class="mui-input-row">
+            <label>选择类型</label>
+            <select name="type" class="mui-input-clear" style="font-size:14px">
+                <option value="">选择类型</option>
+            </select>
+        </div>
+        <button class="btn btn-block btn-success">查询</button>
+    </form>
+    <h5 class="section-title">查询结果</h5>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>类型</th>
+                <th>蓝钻数</th>
+                <th>日期</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>本金分红</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>推荐分红</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>系统补偿</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>蓝钻提现</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>扣手续费</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>扣复消费</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+            <tr>
+                <td>系统扣减</td>
+                <td>100</td>
+                <td>2018/5/5</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section bottomScript{
+
+    <script type="text/javascript">
+        var datePicker = new mui.DtPicker({
+            type: 'date'
+        });
+        $('.datepicker').click(function () {
+            var $this = this;
+            datePicker.show(function (rs) {
+                $this.value = rs.text;
+            });
+        });
+    </script>
+}

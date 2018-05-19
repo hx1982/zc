@@ -80,8 +80,8 @@ namespace zc_unit_test
         [TestMethod]
         public void TestMethod6()
         {
-            var max = db.user_bonus.Count();
-            Console.WriteLine(max);
+            var q = db.bonus_record.Include("user").Include("user1").ToList();
+            Console.WriteLine(q);
         }
     }
 }

@@ -1,0 +1,51 @@
+﻿@model zc.Models.ViewModels.UserLoginModel
+@{
+    ViewBag.Title = "会员登录";
+}
+
+@section style{
+    <style type="text/css">
+        body {
+            background-color: #00AA90;
+        }
+
+        .mui-content, .mui-input-group {
+            background-color: transparent;
+        }
+
+        .mui-input {
+            background-color: #FFFFFF !important;
+        }
+
+        .mg {
+            margin: 0px 50px 20px 50px !important;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+}
+
+<div class="mui-content">
+    <div class="logo">
+        <img src="~/Content/Images/u4.png" />
+    </div>
+    <form class="mui-input-group" method="post">
+        <div class="mui-input-row mg">
+            <input name="UserPhone" type="text" class="mui-input-clear mui-input" placeholder="手机号码" />
+        </div>
+        <div class="mui-input-row mg">
+            <input name="LoginPwd" type="password" class="mui-input-clear mui-input" placeholder="登陆密码" />
+        </div>
+        <div class="mg">
+            <button class="mui-btn mui-btn-default mui-btn-block">登 录</button>
+        </div>
+        <div class="mg" style="text-align: right;">
+            <a href="/User/Register" style="color: #ffffff">注册新会员</a>
+        </div>
+    </form>
+</div>
+
+
