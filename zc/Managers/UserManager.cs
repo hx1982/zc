@@ -18,6 +18,10 @@ namespace zc.Managers
 
             using (TransactionScope tx = new TransactionScope())
             {
+                // todo: 验证推荐人是否存在
+
+                // todo: 验证推荐人是否是已激活的正常会员
+
                 // 保存用户激活信息
                 var user = db.users.Find(model.user_id);
                 user.reg_money = model.reg_money;
@@ -53,7 +57,7 @@ namespace zc.Managers
                         int referrer_money2 = Convert.ToInt32(user.referrer.referrer.level.recom_rate2 * user.reg_money);
                         bonus.referrer_id2 = user.referrer.referrer.user_id;
                         bonus.referrer_money2 = bonus.referrer_balance2 = referrer_money2;
-                        bonus.referrer_number1 = 22;
+                        bonus.referrer_number2 = 22;
                     }
                 }
 
