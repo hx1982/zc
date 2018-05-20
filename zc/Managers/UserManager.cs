@@ -329,5 +329,65 @@ namespace zc.Managers
             }
             return query.Count();
         }
+
+        //提现请求
+        public List<cash_record> GetCashRequests(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        {
+            var query = from b in db.cash_record select b;
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (cash_type != null)
+            {
+                query = query.Where(b=>b.cash_type == cash_type);
+            }
+            if (cash_status != null) {
+                query = query.Where(b => b.cash_status == cash_status);
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 <= end);
+            }
+            return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public int GetCashRequestsTotal(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
+        {
+            var query = from b in db.cash_record select b;
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (cash_type != null)
+            {
+                query = query.Where(b => b.cash_type == cash_type);
+            }
+            if (cash_status != null)
+            {
+                query = query.Where(b => b.cash_status == cash_status);
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 <= end);
+            }
+            return query.Count();
+        }
     }
 }
