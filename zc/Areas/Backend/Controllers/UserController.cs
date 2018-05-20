@@ -126,7 +126,7 @@ namespace zc.Areas.Backend.Controllers
                 area = a.area,
                 address = a.address,
                 reg_money = a.reg_money,
-                referrer_id = a.referrer_id
+                referrer = a.referrer == null ? "无" : a.referrer.user_name + "(" + a.referrer.user_code + ")"
             };
         }
 

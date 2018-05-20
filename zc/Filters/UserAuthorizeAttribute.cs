@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using zc.Commons;
 using zc.Models;
 
-namespace zc.Commons
+namespace zc.Filters
 {
+    // TODO: 待完善
+    /// <summary>
+    /// 会员授权过滤器
+    /// </summary>
     public class UserAuthorizeAttribute : AuthorizeAttribute
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)

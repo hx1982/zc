@@ -1,5 +1,9 @@
-body, a {
+body, a, a:hover {
     color: #333333;
+}
+
+a:hover{
+    text-decoration: none !important;
 }
 
 * {

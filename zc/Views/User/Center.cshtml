@@ -34,7 +34,7 @@
             display: block;
             text-align: center;
             padding: 15px 0px;
-            color: #FFFFFF;
+            color: #FFFFFF !important;
         }
 
         .gold-diamond {
@@ -61,21 +61,21 @@
     </div>
     <div class="mui-row">
         <div class="mui-col-xs-4">
-            <a href="#" class="gold-diamond">
+            <a href="@Url.Action("AccountGoldDiamond", "User")" class="gold-diamond">
                 <span>金钻</span>
                 <br />
                 <span>@Model.account1</span>
             </a>
         </div>
         <div class="mui-col-xs-4">
-            <a href="#" class="silver-diamond">
+            <a href="@Url.Action("AccountSilverDiamond", "User")" class="silver-diamond">
                 <span>银钻</span>
                 <br />
                 <span>@Model.account2</span>
             </a>
         </div>
         <div class="mui-col-xs-4">
-            <a href="#" class="blue-diamond">
+            <a href="@Url.Action("AccountBlueDiamond", "User")" class="blue-diamond">
                 <span>蓝钻</span>
                 <br />
                 <span>@Model.account3</span>

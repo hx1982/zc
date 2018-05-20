@@ -12,7 +12,7 @@
     <div class="mui-input-group">
         <div class="mui-input-row">
             <label>用户名称</label>
-            <input type="text" class="mui-input-clear" value="黄唯一" readonly>
+            <input type="text" value="黄唯一" readonly>
         </div>
         <div class="mui-input-row">
             <label>剩余金钻</label>
@@ -32,17 +32,17 @@
         </div>
         <div class="mui-input-row">
             <label>复消费</label>
-            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="复消费" readonly>
+            <input id="fuxiaofei" type="text" class="mui-input-clear datepicker" placeholder="复消费" readonly>
         </div>
         <div class="mui-input-row">
             <label>余额</label>
-            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
+            <input id="balance" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
         </div>
         <div class="mui-content-padded">
             <button class="btn btn-block btn-success">确定</button>
         </div>
         <div class="mui-content-padded">
-            <a href="@Url.Action("AccountGoldDimond", "User")" class="btn btn-block btn-success">取消</a>
+            <a href="javascript:history.back()" class="btn btn-block btn-default">取消</a>
         </div>
     </form>
 </div>

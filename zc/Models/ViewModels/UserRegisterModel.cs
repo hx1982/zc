@@ -18,7 +18,7 @@ namespace zc.Models.ViewModels
         [Required(ErrorMessage = "身份证号码必填")]
         public string IdNumber { get; set; }
         [Required(ErrorMessage = "推荐人编码必填")]
-        public int ReferrerId { get; set; }
+        public string ReferrerUserCode { get; set; }
         [Required(ErrorMessage = "必须同意注册协议")]
         public bool? AgreeRegisterProtocal { get; set; }
     }

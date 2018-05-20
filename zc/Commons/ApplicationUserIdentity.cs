@@ -7,8 +7,11 @@ using zc.Models;
 
 namespace zc.Commons
 {
+    // TODO: 待完善, 后期加入权限控制有用
 
-    // UNDONE: 可选操作, 未完成
+    /// <summary>
+    /// 鉴权相关: 会员身份标识
+    /// </summary>
     public class UserIdentity : IIdentity
     {
         private string _name;
@@ -60,6 +63,9 @@ namespace zc.Commons
         }
     }
 
+    /// <summary>
+    /// 鉴权相关: 会员Principal
+    /// </summary>
     public class UserPrincipal : IPrincipal
     {
 

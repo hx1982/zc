@@ -5,6 +5,9 @@ using System.Web;
 
 namespace zc.Commons
 {
+    /// <summary>
+    /// Ajax响应结果
+    /// </summary>
     public class AjaxResultObject
     {
         public static readonly int OK = 200;

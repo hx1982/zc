@@ -13,15 +13,18 @@ namespace zc.Managers
     {
         private ZCDbContext db = new ZCDbContext();
 
+        /// <summary>
+        /// 激活会员
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="operId">操作员id</param>
+        /// <returns></returns>
         public user ActiveUser(UserActiveModel model, int operId)
         {
 
             using (TransactionScope tx = new TransactionScope())
             {
-                // todo: 验证推荐人是否存在
-
-                // todo: 验证推荐人是否是已激活的正常会员
-
+                
                 // 保存用户激活信息
                 var user = db.users.Find(model.user_id);
                 user.reg_money = model.reg_money;
@@ -64,13 +67,28 @@ namespace zc.Managers
                 db.user_bonus.Add(bonus);
                 db.SaveChanges();
 
-                //todo: 是否需要保存分红记录 ? bonus_record ?
-
+                // 插入user_account记录, 值均为0
+                var userAccount = new user_account
+                {
+                    user_id = user.user_id,
+                    account1 = 0,
+                    account2 = 0,
+                    account3 = 0,
+                    account4 = 0
+                };
+                db.user_account.Add(userAccount);
+                db.SaveChanges();
                 tx.Complete();
                 return user;
             }
         }
 
+        /// <summary>
+        /// 会员登录
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
         public user Login(string phone, string pwd)
         {
             pwd = Utility.MD5Encrypt(pwd);
@@ -81,6 +99,11 @@ namespace zc.Managers
             return query.FirstOrDefault();
         }
 
+        /// <summary>
+        /// 会员注册
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public bool Register(UserRegisterModel model)
         {
             // 校验user_phone唯一性
@@ -89,13 +112,28 @@ namespace zc.Managers
             {
                 throw new Exception("手机号码\"" + model.UserPhone + "\"在系统中已存在!");
             }
+
+            // 验证推荐人是否存在
+            var referrer = (from u in db.users
+                                 where u.user_code == model.ReferrerUserCode
+                                 select u).FirstOrDefault();
+            if (referrer == null)
+            {
+                throw new Exception("推荐人编码\""+model.ReferrerUserCode+"\"不存在!");
+            }
+            // 验证推荐人是否是已激活的正常会员
+            if (referrer.user_status != UserStatus.NORMAL)
+            {
+                throw new Exception("推荐人\""+model.ReferrerUserCode+"\"不能是未激活或冻结的会员!");
+            }
+
             // 创建持久对象
             user newUser = new user();
             // 复制有效值到持久对象
             newUser.user_name = model.UserName;
             newUser.user_phone = model.UserPhone;
             newUser.id_number = model.IdNumber;
-            newUser.referrer_id = model.ReferrerId;
+            newUser.referrer_id = referrer.user_id;
             // 新注册会员状态为未激活
             newUser.user_status = UserStatus.NOT_ACTIVATED;
             // 初始等级
@@ -119,6 +157,25 @@ namespace zc.Managers
             return true;
         }
 
+        /// <summary>
+        /// 根据条件查询所有会员
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="idNumber"></param>
+        /// <param name="levelId"></param>
+        /// <param name="province"></param>
+        /// <param name="city"></param>
+        /// <param name="area"></param>
+        /// <param name="referrerUserName"></param>
+        /// <param name="userStatus"></param>
+        /// <param name="beginRegDate"></param>
+        /// <param name="endRegDate"></param>
+        /// <param name="beginActiveDate"></param>
+        /// <param name="endActiveDate"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public List<user> GetAllUsers(string userName, string userPhone, string idNumber, int? levelId, string province, string city, string area, string referrerUserName, int? userStatus, DateTime? beginRegDate, DateTime? endRegDate, DateTime? beginActiveDate, DateTime? endActiveDate, int pageNo, int pageSize)
         {
             var query = db.users.AsQueryable();
@@ -181,6 +238,23 @@ namespace zc.Managers
             return query.OrderBy(u => u.user_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
 
+        /// <summary>
+        /// 符合条件的会员总数
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="idNumber"></param>
+        /// <param name="levelId"></param>
+        /// <param name="province"></param>
+        /// <param name="city"></param>
+        /// <param name="area"></param>
+        /// <param name="referrerUserName"></param>
+        /// <param name="userStatus"></param>
+        /// <param name="beginRegDate"></param>
+        /// <param name="endRegDate"></param>
+        /// <param name="beginActiveDate"></param>
+        /// <param name="endActiveDate"></param>
+        /// <returns></returns>
         public int GetAllUsersTotal(string userName, string userPhone, string idNumber, int? levelId, string province, string city, string area, string referrerUserName, int? userStatus, DateTime? beginRegDate, DateTime? endRegDate, DateTime? beginActiveDate, DateTime? endActiveDate)
         {
             var query = db.users.AsQueryable();
@@ -243,6 +317,14 @@ namespace zc.Managers
             return query.Count();
         }
 
+        /// <summary>
+        /// 未激活会员
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public List<user> SearchNotActivedUsers(string userName, string userPhone, int pageNo, int pageSize)
         {
             var query = (from u in db.users
@@ -257,6 +339,12 @@ namespace zc.Managers
             return query.ToList();
         }
 
+        /// <summary>
+        /// 未激活会员总数
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <returns></returns>
         public int SearchTotalOfNotActivatedUsers(string userName, string userPhone)
         {
             var query = from u in db.users
@@ -269,7 +357,7 @@ namespace zc.Managers
         }
 
         /// <summary>
-        /// 获得账户数据
+        /// 查会员账户
         /// </summary>
         /// <param name="userId">会员id</param>
         /// <returns></returns>
@@ -286,6 +374,16 @@ namespace zc.Managers
             return db.users.Find(userId);
         }
 
+        /// <summary>
+        /// 分红记录
+        /// </summary>
+        /// <param name="user_name"></param>
+        /// <param name="user_phone"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public List<bonus_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.bonus_record select b;
@@ -308,6 +406,14 @@ namespace zc.Managers
             return query.OrderBy(b => b.bonus_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
 
+        /// <summary>
+        /// 分红记录总数
+        /// </summary>
+        /// <param name="user_name"></param>
+        /// <param name="user_phone"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public int GetBonusRecordsTotal(string user_name, string user_phone, DateTime? begin, DateTime? end)
         {
             var query = from b in db.bonus_record select b;

@@ -7,7 +7,7 @@
 <!--顶部-->
 <div data-options="region:'north',border:false" class="div-top">
     <div class="page-top">
-        <div style="float: left;padding-left: 20px;font-size:18px !important;">云企管理平台</div>
+        <div style="float: left;padding-left: 20px;font-size:18px !important;">七彩云南众筹分红系统操作员端</div>
         <div style="float: right; padding-right: 20px;">
             <span>操作员：@User.Identity.Name，您好！</span>
             <a href="javascript:;" style="color: white; text-decoration: underline;">修改密码</a>
@@ -54,7 +54,7 @@
 
 <!--底部-->
 <div class="div-bottom" data-options="region:'south',border:false">
-    <div class="page-bottom">版权所有：四川云企时代科技有限公司</div>
+    <div class="page-bottom">版权所有：昆明七彩云南庆沣祥茶业股份有限公司</div>
 </div>
 
 <script type="text/javascript">
@@ -105,15 +105,18 @@
         });
         //点击子菜单样式变更
         $(".submenu li").click(function () {
+
+            
             if (this.className == "m_t_3_1") {
                 $(".submenu li").removeClass("m_t_3_2").addClass("m_t_3_1");
                 $(this).removeClass("m_t_3_1").addClass("m_t_3_2");
                 $(this).children("a").addClass("aHover");
-            } else {
-                $(".submenu li").removeClass("m_t_3_1").addClass("m_t_3_2");
-                $(this).removeClass("m_t_3_2").addClass("m_t_3_1");
-                $(this).children("a").removeClass("aHover");
             }
+            //else {
+            //    $(".submenu li").removeClass("m_t_3_1").addClass("m_t_3_2");
+            //    $(this).removeClass("m_t_3_2").addClass("m_t_3_1");
+            //    $(this).children("a").removeClass("aHover");
+            //}
         });
         $(".submenu li a").click(function () {
             var $this = $(this);

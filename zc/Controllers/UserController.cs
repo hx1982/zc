@@ -28,10 +28,13 @@ namespace zc.Controllers
         [HttpPost]
         public ActionResult Register(UserRegisterModel model)
         {
-            var regSuccess = this.userManager.Register(model);
-            if (regSuccess)
+            if (ModelState.IsValid)
             {
-                return Content("注册成功, 请等待工作人员为您激活账户!");
+                var regSuccess = this.userManager.Register(model);
+                if (regSuccess)
+                {
+                    return Content("<script>alert('注册成功, 请等待工作人员为您激活账户!');</script>");
+                }
             }
             return View();
         }
@@ -52,11 +55,17 @@ namespace zc.Controllers
                     FormsAuthentication.SetAuthCookie(user.user_id.ToString(), true);
                     return RedirectToAction("Center");
                 }
+                else
+                {
+                    ViewBag.Message = "登录失败, 您可能手误, 也可能您的账户尚未激活";
+                    return View(model);
+                }
             }
             FormsAuthentication.SignOut();
-            return View();
+            return View(model);
         }
 
+        // 会员中心
         public ActionResult Center()
         {
             var userId = int.Parse(User.Identity.Name);
@@ -65,27 +74,32 @@ namespace zc.Controllers
             ViewBag.User = user;
             return View(userAccount);
         }
-        
+
+        // 会员账户 - 金钻
         public ActionResult AccountGoldDiamond()
         {
             return View();
         }
 
+        // 会员账户 - 银钻
         public ActionResult AccountSilverDiamond()
         {
             return View();
         }
 
+        // 会员账户 - 蓝钻
         public ActionResult AccountBlueDiamond()
         {
             return View();
         }
 
+        // 金钻提现申请
         public ActionResult CashGoldDiamond()
         {
             return View();
         }
 
+        // 银钻提现申请
         public ActionResult CashSilverDiamond()
         {
             return View();

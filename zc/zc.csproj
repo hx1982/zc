@@ -142,11 +142,11 @@
     <Compile Include="Commons\ApplicationUserIdentity.cs" />
     <Compile Include="Commons\CashConstants.cs" />
     <Compile Include="Commons\SessionConstants.cs" />
-    <Compile Include="Commons\UserAuthorizeAttribute.cs" />
+    <Compile Include="Filters\UserAuthorizeAttribute.cs" />
     <Compile Include="Commons\Utility.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\ViewModels\UserLoginModel.cs" />
-    <Compile Include="Controllers\Filters\OperatorAuthorizeAttribute.cs" />
+    <Compile Include="Filters\OperatorAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -10,6 +10,10 @@ using zc.Models;
 
 namespace zc.Filters
 {
+    // TODO: 待完善
+    /// <summary>
+    /// 操作员授权过滤器
+    /// </summary>
     public class OperatorAuthorizeAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)

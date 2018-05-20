@@ -5,53 +5,22 @@
 
 
 <style>
-    #tb span, .combobox-item {
-        font-size: 16px;
+    #tb {
+        padding: 15px;
     }
 
-    #tb .query-input {
-        line-height: 26px;
-        border: 1px solid #ccc;
-    }
-
-    #tb input {
-        font-size: 15px;
-    }
-
-    .tbspan {
-        padding-left: 20px;
-    }
-
-    .input-width {
-        width: 16%;
-    }
-
-    .datagrid-header .datagrid-cell span {
-        font-size: 15px !important;
-    }
-
-    .fitem {
-        margin-bottom: 15px;
-    }
-
-        .fitem label {
-            display: inline-block;
-            width: 6em;
-            text-align: right;
-        }
-
-    .easyui-textbox, .easyui-combobox {
-        width: 180px;
+    input, select {
+        vertical-align: middle;
     }
 </style>
 
-<div id="tb" style="padding:2%">
+<div id="tb">
     <form id="tbForm">
         <span class="tbspan">会员名称：</span>
-        <input id="userName" name="userName" class="input-width query-input">
+        <input id="userName" name="userName" type="text" class="easyui-textbox">
 
         <span class="tbspan">手机号码：</span>
-        <input id="userPhone" name="userPhone" class="input-width query-input ">
+        <input id="userPhone" name="userPhone" type="text" class="easyui-textbox">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" iconCls="icon-search" style="width: 80px;margin-left: 20px;">查询</a>
     </form>
 </div>
@@ -68,7 +37,7 @@
             <th field="area">区</th>
             <th field="address">详细地址</th>
             <th field="reg_money">注册金额</th>
-            <th field="referrer_id">推荐人</th>
+            <th field="referrer">推荐人</th>
             <th field="user_id" formatter="generateOperations">操作</th>
         </tr>
     </thead>
@@ -92,7 +61,7 @@
         </div>
         <div class="fitem">
             <label>推荐人</label>
-            <input name="referrer_id" class="easyui-textbox">
+            <input name="referrer" class="easyui-textbox">
         </div>
         <hr />
         <div class="fitem">

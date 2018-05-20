@@ -5,54 +5,21 @@
 
 
 <style>
-    #tb span, .combobox-item {
-        font-size: 16px;
+    #tb{
+        padding: 15px;
     }
-
-    #tb .query-input {
-        line-height: 26px;
-        border: 1px solid #ccc;
-    }
-
-    #tb input {
-        font-size: 15px;
+    input, select{
         vertical-align: middle;
-    }
-
-    .tbspan {
-        padding-left: 20px;
-    }
-
-    .input-width {
-        width: 10%;
-    }
-
-    .datagrid-header .datagrid-cell span {
-        font-size: 15px !important;
-    }
-
-    .fitem {
-        margin-bottom: 15px;
-    }
-
-        .fitem label {
-            display: inline-block;
-            width: 6em;
-            text-align: right;
-        }
-
-    .easyui-textbox, .easyui-combobox {
-        width: 180px;
     }
 </style>
 
-<div id="tb" style="padding:2%">
+<div id="tb">
     <form id="tbForm">
         <span class="tbspan">会员名称：</span>
-        <input id="userName" name="user_name" class="input-width query-input">
+        <input id="userName" name="user_name" class="easyui-textbox">
 
         <span class="tbspan">手机号码：</span>
-        <input id="userPhone" name="user_phone" class="input-width query-input ">
+        <input id="userPhone" name="user_phone" class="easyui-textbox">
 
         <span class="tbspan">起始日期：</span>
         <input id="userPhone" name="begin" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
