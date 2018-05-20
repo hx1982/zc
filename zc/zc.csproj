@@ -776,6 +776,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Areas\Backend\Views\User\BonusRecords.cshtml" />
     <Content Include="Areas\Backend\Views\User\All.cshtml" />
+    <Content Include="Areas\Backend\Views\User\CashRecordNoAudit.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
