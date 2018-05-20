@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "审核提现记录";
+}
+
+
+
+<style>
+    #tb span, .combobox-item {
+        font-size: 16px;
+    }
+
+    #tb .query-input {
+        line-height: 26px;
+        border: 1px solid #ccc;
+    }
+
+    #tb input {
+        font-size: 15px;
+        vertical-align: middle;
+    }
+
+    .tbspan {
+        padding-left: 20px;
+    }
+
+    .input-width {
+        width: 10%;
+    }
+
+    .datagrid-header .datagrid-cell span {
+        font-size: 15px !important;
+    }
+
+    .fitem {
+        margin-bottom: 15px;
+    }
+
+        .fitem label {
+            display: inline-block;
+            width: 6em;
+            text-align: right;
+        }
+
+    .easyui-textbox, .easyui-combobox {
+        width: 180px;
+    }
+</style>
+
+<div id="tb" style="padding:2%">
+    <form id="tbForm">
+        <span class="tbspan">提现类型：</span>
+        <select id="cashType" name="cash_type">
+            <option value="">全部</option>
+            <option value="1">分红提现</option>
+            <option value="2">茶票提现</option>
+        </select>
+
+        <span class="tbspan">会员名称：</span>
+        <input id="userName" name="user_name" class="input-width query-input ">
+        
+        <span class="tbspan">手机号码：</span>
+        <input id="userPhone" name="user_phone" class="input-width query-input ">
+
+        <span class="tbspan">起始日期：</span>
+        <input id="userPhone" name="begin" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+
+        <span class="tbspan">终止日期：</span>
+        <input id="userPhone" name="end" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+
+        <div id="cc" class="easyui-calendar">
+        </div>
+
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" iconCls="icon-search" style="width: 80px;margin-left: 20px;">查询</a>
+    </form>
+</div>
+<table id="tt" class="easyui-datagrid" style="width:100%;height:100%"
+       toolbar="#tb" rownumbers="true" pagination="true" data-options="url:'@Url.Action("CashRecordNoAudit","User")',fitColumns:true,singleSelect:true">
+    <thead>
+        <tr>
+            <th field="user_name">会员名称</th>
+            <th field="user_phone">手机号码</th>
+            <th field="cash_type">提现类型</th>
+            <th field="cash_money">提现金额</th>
+            <th field="shouxu_money">手续费</th>
+            <th field="fuxiao_money">复消金额</th>
+            <th field="actual_money">发放金额</th>
+            <th field="cash_status">状态</th>
+            <th field="cash_time1">申请时间</th>
+            <th field="cash_record_id" formatter="generateOperations">操作</th>
+        </tr>
+    </thead>
+</table>
+<div id="dlg" class="easyui-dialog" style="width:600px;height:auto;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons">
+    <form id="fm" method="post">
+        <input type="hidden" name="cash_record_id" />
+        <input type="hidden" id="isHave" />
+        <div class="fitem">
+            <label>审核备注</label>
+            <textarea name="cash_remark1"></textarea>
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="activeRecord()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
+</div>
+
+<script>
+    // 将form data序列化为json object
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
+
+    function submitForm() {
+        $('#tt').datagrid('load', $('#tbForm').serializeObject());
+    }
+
+    function generateOperations(val, row, index) {
+        if (row.user_status == 2)
+            return '<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="optionActiveForm(' + index + ')">通过</button>&nbsp;&nbsp;<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="noActiveRecord(' + index + ')">不通过</button>';
+        return '已审核';
+    }
+
+    var i = 0;
+    function optionActiveForm(index) {
+        i = index;
+        $("#isHave").val("1");
+        $('#tt').datagrid('selectRow', index);
+        var row = $('#tt').datagrid('getRows')[index];
+        $('#dlg').dialog('open').dialog('setTitle', '通过审核提现');
+        $('#fm').form('load', row);
+    }
+    var j = 0;
+    function noActiveRecord(index) {
+        j = index;
+        $("#isHave").val("2");
+        $('#tt').datagrid('selectRow', index);
+        var row = $('#tt').datagrid('getRows')[index];
+        $('#dlg').dialog('open').dialog('setTitle', '拒绝审核提现');
+        $('#fm').form('load', row);
+    }
+    
+
+
+</script>
+
+

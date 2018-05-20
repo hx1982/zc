@@ -136,9 +136,17 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, 0, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new {
-                    sdf = c.cash_money,
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = CashType.ToString(c.cash_type),
+                    cash_money = c.cash_money,
+                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    actual_money = c.cash_money- Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI)- Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    cash_status = CashStatus.ToString(c.cash_status),
+                    cash_time1 = c.cash_time1
 
                 });
                 var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 0, begin, end);
@@ -176,6 +184,6 @@ namespace zc.Areas.Backend.Controllers
             }
             return View();
         }
-
+       
     }
 }
