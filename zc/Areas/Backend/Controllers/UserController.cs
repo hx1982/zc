@@ -138,7 +138,15 @@ namespace zc.Areas.Backend.Controllers
             {
                 var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, 0, begin, end, page, rows);
                 var data = pageData.Select(c => new {
-                    sdf = c.cash_money,
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = c.cash_type == 1 ? "本金分红" : "推荐分红",
+                    cash_money = c.cash_money,
+                    shouxu_money = c.province,
+                    fuxiao_money = c.city,
+                    actual_money = c.area,
+                    cash_status = c.cash_time1,
+                    cash_time1 = c.cash_time1
 
                 });
                 var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 0, begin, end);
@@ -176,6 +184,6 @@ namespace zc.Areas.Backend.Controllers
             }
             return View();
         }
-
+       
     }
 }
