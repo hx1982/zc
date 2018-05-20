@@ -19,7 +19,7 @@ namespace zc_unit_test
         public void TestMethod1()
         {
             var pwdHash = Utility.MD5Encrypt("admin");
-            Console.WriteLine(pwdHash);
+            //Console.WriteLine(pwdHash);
         }
 
         [TestMethod]
