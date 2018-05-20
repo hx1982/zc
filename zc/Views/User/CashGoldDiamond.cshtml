@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "CashGoldDiamond";
+}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">金钻提现申请</h1>
+</header>
+<div class="mui-content">
+    <h5 class="section-title">基本信息</h5>
+    <div class="mui-input-group">
+        <div class="mui-input-row">
+            <label>用户名称</label>
+            <input type="text" class="mui-input-clear" value="黄唯一" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>剩余金钻</label>
+            <input type="text" value="1000" readonly>
+        </div>
+        <div></div>
+    </div>
+    <h5 class="section-title">本次提现</h5>
+    <form class="mui-input-group">
+        <div class="mui-input-row">
+            <label>提现金额</label>
+            <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现金额">
+        </div>
+        <div class="mui-input-row">
+            <label>手续费</label>
+            <input id="service_charge" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>复消费</label>
+            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="复消费" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>余额</label>
+            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
+        </div>
+        <div class="mui-content-padded">
+            <button class="btn btn-block btn-success">确定</button>
+        </div>
+        <div class="mui-content-padded">
+            <a href="@Url.Action("AccountGoldDimond", "User")" class="btn btn-block btn-success">取消</a>
+        </div>
+    </form>
+</div>

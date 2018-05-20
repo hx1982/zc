@@ -831,6 +831,8 @@
     <Content Include="Views\User\AccountGoldDiamond.cshtml" />
     <Content Include="Views\User\AccountSilverDiamond.cshtml" />
     <Content Include="Views\User\AccountBlueDiamond.cshtml" />
+    <Content Include="Views\User\CashGoldDiamond.cshtml" />
+    <Content Include="Views\User\CashSilverDiamond.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
