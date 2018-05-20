@@ -106,5 +106,53 @@ namespace zc.Areas.Backend.Controllers
                 referrer_id = a.referrer_id
             };
         }
+
+        //会员未审核提现请求
+        //提现状态 -1-审核不通过 0-待审核 1-待发放 2-已发放
+        public ActionResult CashRecordNoAudit(string user_name, string user_phone, int? cash_type, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, 0, begin, end, page, rows);
+                var data = pageData.Select(c => new {
+                    sdf = c.cash_money,
+
+                });
+                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 0, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+        public ActionResult CashRecordNoGrant(string user_name, string user_phone, int? cash_type, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, 1, begin, end, page, rows);
+                var data = pageData.Select(c => new {
+                    sdf = c.cash_money,
+
+                });
+                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 1, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+        public ActionResult CashRecordAll(string user_name, string user_phone, int? cash_type,int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
+                var data = pageData.Select(c => new {
+                    sdf = c.cash_money,
+
+                });
+                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, cash_status, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
     }
 }
