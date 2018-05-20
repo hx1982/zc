@@ -71,7 +71,7 @@ namespace zc.Managers
         {
             pwd = Utility.MD5Encrypt(pwd);
             var query = from u in db.users
-                        where u.user_phone == phone && u.login_password == pwd 
+                        where u.user_phone == phone && u.login_password == pwd
                         && u.user_status == UserStatus.NORMAL
                         select u;
             return query.FirstOrDefault();
@@ -113,6 +113,130 @@ namespace zc.Managers
             db.users.Add(newUser);
             db.SaveChanges();
             return true;
+        }
+
+        public List<user> GetAllUsers(string userName, string userPhone, string idNumber, int? levelId, string province, string city, string area, string referrerUserName, int? userStatus, DateTime? beginRegDate, DateTime? endRegDate, DateTime? beginActiveDate, DateTime? endActiveDate, int pageNo, int pageSize)
+        {
+            var query = db.users.AsQueryable();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(u => u.user_name.Contains(userName));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user_phone.Contains(userPhone));
+            }
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                query = query.Where(u => u.id_number.Contains(idNumber));
+            }
+            if (levelId.HasValue)
+            {
+                query = query.Where(u => u.level_id == levelId);
+            }
+            if (!string.IsNullOrEmpty(province))
+            {
+                query = query.Where(u => u.province.Contains(province));
+            }
+            if (!string.IsNullOrEmpty(city))
+            {
+                query = query.Where(u => u.city.Contains(city));
+            }
+            if (!string.IsNullOrEmpty(area))
+            {
+                query = query.Where(u => u.area.Contains(area));
+            }
+            if (!string.IsNullOrEmpty(province))
+            {
+                query = query.Where(u => u.province.Contains(province));
+            }
+            if (!string.IsNullOrEmpty(referrerUserName))
+            {
+                query = query.Where(u => u.referrer.user_name.Contains(referrerUserName));
+            }
+            if (userStatus.HasValue)
+            {
+                query = query.Where(u => u.user_status == userStatus);
+            }
+            if (beginRegDate.HasValue)
+            {
+                query = query.Where(u => u.register_time >= beginRegDate);
+            }
+            if (endRegDate.HasValue)
+            {
+                query = query.Where(u => u.register_time <= endRegDate);
+            }
+            if (beginActiveDate.HasValue)
+            {
+                query = query.Where(u => u.activate_time >= beginActiveDate);
+            }
+            if (endActiveDate.HasValue)
+            {
+                query = query.Where(u => u.activate_time <= endActiveDate);
+            }
+            return query.OrderBy(u => u.user_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        public int GetAllUsersTotal(string userName, string userPhone, string idNumber, int? levelId, string province, string city, string area, string referrerUserName, int? userStatus, DateTime? beginRegDate, DateTime? endRegDate, DateTime? beginActiveDate, DateTime? endActiveDate)
+        {
+            var query = db.users.AsQueryable();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(u => u.user_name.Contains(userName));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user_phone.Contains(userPhone));
+            }
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                query = query.Where(u => u.id_number.Contains(idNumber));
+            }
+            if (levelId.HasValue)
+            {
+                query = query.Where(u => u.level_id == levelId);
+            }
+            if (!string.IsNullOrEmpty(province))
+            {
+                query = query.Where(u => u.province.Contains(province));
+            }
+            if (!string.IsNullOrEmpty(city))
+            {
+                query = query.Where(u => u.city.Contains(city));
+            }
+            if (!string.IsNullOrEmpty(area))
+            {
+                query = query.Where(u => u.area.Contains(area));
+            }
+            if (!string.IsNullOrEmpty(province))
+            {
+                query = query.Where(u => u.province.Contains(province));
+            }
+            if (!string.IsNullOrEmpty(referrerUserName))
+            {
+                query = query.Where(u => u.referrer.user_name.Contains(referrerUserName));
+            }
+            if (userStatus.HasValue)
+            {
+                query = query.Where(u => u.user_status == userStatus);
+            }
+            if (beginRegDate.HasValue)
+            {
+                query = query.Where(u => u.register_time >= beginRegDate);
+            }
+            if (endRegDate.HasValue)
+            {
+                query = query.Where(u => u.register_time <= endRegDate);
+            }
+            if (beginActiveDate.HasValue)
+            {
+                query = query.Where(u => u.activate_time >= beginActiveDate);
+            }
+            if (endActiveDate.HasValue)
+            {
+                query = query.Where(u => u.activate_time <= endActiveDate);
+            }
+            return query.Count();
         }
 
         public List<user> SearchNotActivedUsers(string userName, string userPhone, int pageNo, int pageSize)

@@ -145,7 +145,7 @@
     <Compile Include="Commons\Utility.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\ViewModels\UserLoginModel.cs" />
-    <Compile Include="Filters\OperatorAuthorizeAttribute.cs" />
+    <Compile Include="Controllers\Filters\OperatorAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -774,6 +774,8 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Areas\Backend\Views\User\BonusRecords.cshtml" />
+    <Content Include="Areas\Backend\Views\User\All.cshtml" />
+    <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -800,7 +802,9 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

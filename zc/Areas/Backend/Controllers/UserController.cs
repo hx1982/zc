@@ -31,9 +31,32 @@ namespace zc.Areas.Backend.Controllers
         }
 
 
-        public ActionResult All()
+        public ActionResult All(string userName, string userPhone, string idNumber, int? levelId, string province, string city, string area, string referrerUserName, int? userStatus, DateTime? beginRegDate, DateTime? endRegDate, DateTime? beginActiveDate, DateTime? endActiveDate, int page = 1, int rows = 10)
         {
-
+            if (Request.IsAjaxRequest())
+            {
+                var users = this._userManager.GetAllUsers(userName, userPhone, idNumber, levelId, province, city, area, referrerUserName, userStatus, beginRegDate, endRegDate, beginActiveDate, endActiveDate, page, rows);
+                var data = users.Select(u => new
+                {
+                    user_id = u.user_id,
+                    user_code = u.user_code,
+                    user_name = u.user_name,
+                    user_phone = u.user_phone,
+                    id_number = u.id_number,
+                    level_name = u.level.level_name,
+                    province = u.province,
+                    city = u.city,
+                    area = u.area,
+                    address = u.address,
+                    reg_money = u.reg_money,
+                    referrer_name = u.referrer == null ? "无" : u.referrer.user_name,
+                    user_status = UserStatusHelper.ToString(u.user_status),
+                    register_time = u.register_time.ToLongDateString(),
+                    activate_time = u.activate_time == null ? "" : u.activate_time.Value.ToLongDateString()
+                });
+                var total = this._userManager.GetAllUsersTotal(userName, userPhone, idNumber, levelId, province, city, area, referrerUserName, userStatus, beginRegDate, endRegDate, beginActiveDate, endActiveDate);
+                return Json(new { total = total, rows = data });
+            }
             return View();
         }
 
