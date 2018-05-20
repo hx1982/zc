@@ -80,8 +80,30 @@ namespace zc_unit_test
         [TestMethod]
         public void TestMethod6()
         {
-            var q = db.bonus_record.Include("user").Include("user1").ToList();
-            Console.WriteLine(q);
+            UserManager um = new UserManager();
+            var users = um.GetAllUsers("", "", "", null, "", "", "", "", null, null, null, null, null, 1, 10);
+            var data = users.Select(u => new
+            {
+                user_id = u.user_id,
+                user_code = u.user_code,
+                user_name = u.user_name,
+                user_phone = u.user_phone,
+                id_number = u.id_number,
+                level_name = u.level.level_name,
+                province = u.province,
+                city = u.city,
+                area = u.area,
+                address = u.address,
+                reg_money = u.reg_money,
+                referrer_name = u.referrer == null ? "无" : u.referrer.user_name,
+                user_status = u.user_status,
+                register_time = u.register_time,
+                activate_time = u.activate_time
+            });
+            foreach (var item in data)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }

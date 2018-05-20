@@ -80,5 +80,15 @@ namespace zc.Controllers
         {
             return View();
         }
+
+        public ActionResult CashGoldDiamond()
+        {
+            return View();
+        }
+
+        public ActionResult CashSilverDiamond()
+        {
+            return View();
+        }
     }
 }
