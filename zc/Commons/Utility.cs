@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using zc.Models;
@@ -64,6 +65,16 @@ namespace zc.Commons
         public static string MD5Encrypt(string source)
         {
             return System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(source, "MD5");
+        }
+
+        /// <summary>
+        /// 获取配置文件的Key对应的值   
+        /// </summary>
+        /// <param name="keyValue"></param>
+        /// <returns></returns>
+        public static string GetAppKey(string keyValue)
+        {
+            return ConfigurationManager.AppSettings[keyValue];
         }
     }
 }

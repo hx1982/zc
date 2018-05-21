@@ -1,4 +1,4 @@
-﻿
+﻿@using zc.Commons;
 @{
     ViewBag.Title = "AccountGoldDiamond";
 }
@@ -24,9 +24,9 @@
         </thead>
         <tbody>
             <tr>
-                <td>30000</td>
-                <td>20000</td>
-                <td>600</td>
+                <td>@ViewBag.TotalIncome</td>
+                <td>@ViewBag.TotalExpend</td>
+                <td>@ViewBag.Balance</td>
             </tr>
         </tbody>
     </table>
@@ -42,11 +42,18 @@
         </div>
         <div class="mui-input-row">
             <label>选择类型</label>
-            <select name="type" class="mui-input-clear" style="font-size:14px">
-                <option value="">选择类型</option>
+            <select name="acc_record_type" class="mui-input-clear" style="font-size:14px">
+                <option value="">全部</option>
+                <option value="1">本金分红</option>
+                <option value="2">推荐分红</option>
+                <option value="3">系统补偿</option>
+                <option value="4">扣手续费</option>
+                <option value="5">扣复消费</option>
+                <option value="6">系统扣除</option>
+                <option value="8">金钻提现</option>
             </select>
         </div>
-        <button class="btn btn-block btn-success">查询</button>
+        <button class="btn btn-block btn-success" onclick="SearchData();">查询</button>
     </form>
     <h5 class="section-title">查询结果</h5>
     <table class="table table-bordered table-condensed">
@@ -58,41 +65,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>本金分红</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>推荐分红</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>系统补偿</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>金钻提现</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>扣手续费</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>扣复消费</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
-            <tr>
-                <td>系统扣减</td>
-                <td>100</td>
-                <td>2018/5/5</td>
-            </tr>
+            @foreach (var record in ViewBag.RecordList)
+            {
+                <tr>
+                    <td>@AccRecordType.ToString(record.acc_record_type)</td>
+                    @if (record.cons_type == -1)
+                    {
+                        <td style="color:red;">@record.cons_value</td>
+                    }
+                    else
+                    {
+                        <td>@record.cons_value</td>
+                    }
+
+                    <td>@record.acc_record_time.ToString("yyyy/MM/dd")</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
@@ -109,5 +97,9 @@
                 $this.value = rs.text;
             });
         });
+        ///点击查询的时候
+        function SearchData() {
+
+        }
     </script>
 }

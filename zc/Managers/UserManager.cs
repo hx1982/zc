@@ -82,6 +82,19 @@ namespace zc.Managers
                 return user;
             }
         }
+        /// <summary>
+        /// 将user_remark1用作用户推荐二维码地址的存储
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public user SaveUserCodeForRemark1(user model)
+        {
+            var user = db.users.Find(model.user_id);
+            user.user_remark1 = model.user_remark1;
+            db.SaveChanges();
+
+            return user;
+        }
 
         /// <summary>
         /// 会员登录
@@ -465,7 +478,7 @@ namespace zc.Managers
             }
             return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
-
+        //提现请求分页
         public int GetCashRequestsTotal(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
         {
             var query = from b in db.cash_record select b;
@@ -495,5 +508,126 @@ namespace zc.Managers
             }
             return query.Count();
         }
+
+        #region 金钻，银钻，蓝钻 收入，支出总数
+
+        /// <summary>
+        /// 收入
+        /// </summary>
+        /// <param name="acc_type"></param>
+        /// <returns></returns>
+        public int GetTotalIncome(int? acc_type,int? user_id)
+        {
+            var query = from b in db.account_record select b;
+            if (acc_type !=null)
+            {
+                query = query.Where(b => b.acc_type== acc_type);
+            }
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            query = query.Where(b => b.cons_type == ConType.INCOME);
+
+            return query.Select(b => b.cons_value).DefaultIfEmpty(0).Sum();
+        }
+        /// <summary>
+        /// 支出
+        /// </summary>
+        /// <param name="acc_type"></param>
+        /// <returns></returns>
+        public int GetTotalExpend(int? acc_type, int? user_id)
+        {
+            var query = from b in db.account_record select b;
+            if (acc_type != null)
+            {
+                query = query.Where(b => b.acc_type == acc_type);
+            }
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            query = query.Where(b => b.cons_type == ConType.EXPEND);
+
+            return query.Select(b => b.cons_value).DefaultIfEmpty(0).Sum();
+        }
+
+        /// <summary>
+        /// 账户变动记录
+        /// </summary>
+        /// <param name="user_id">用户ID</param>
+        /// <param name="acc_type">账户类型</param>
+        /// <param name="acc_record_type">记录类型</param>
+        /// <param name="begin">开始时间</param>
+        /// <param name="end">结束时间</param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public List<account_record> GetAccountRecordList(int? user_id,int? acc_type,int? acc_record_type, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        {
+            var query = from b in db.account_record select b;
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            if (acc_type != null)
+            {
+                query = query.Where(b => b.acc_type == acc_type);
+            }
+            if (acc_record_type != null)
+            {
+                query = query.Where(b => b.acc_record_type == acc_record_type);
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.acc_record_time >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.acc_record_time <= end);
+            }
+            return query.OrderBy(b => b.acc_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+
+        /// <summary>
+        /// 账户变动记录
+        /// </summary>
+        /// <param name="user_id">用户ID</param>
+        /// <param name="acc_type">账户类型</param>
+        /// <param name="acc_record_type">记录类型</param>
+        /// <param name="begin">开始时间</param>
+        /// <param name="end">结束时间</param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public int GetAccountRecordTotal(int? user_id, int? acc_type, int? acc_record_type, DateTime? begin, DateTime? end)
+        {
+            var query = from b in db.account_record select b;
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            if (acc_type != null)
+            {
+                query = query.Where(b => b.acc_type == acc_type);
+            }
+            if (acc_record_type != null)
+            {
+                query = query.Where(b => b.acc_record_type == acc_record_type);
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.acc_record_time >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.acc_record_time <= end);
+            }
+            return query.Count();
+        }
+
+        #endregion 
+
     }
 }

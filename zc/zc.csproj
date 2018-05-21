@@ -116,6 +116,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>..\ex_dll\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -138,6 +141,7 @@
     <Compile Include="Areas\Backend\Controllers\HomeController.cs" />
     <Compile Include="Areas\Backend\Controllers\LoginController.cs" />
     <Compile Include="Areas\Backend\Controllers\UserController.cs" />
+    <Compile Include="Commons\AccountConstants.cs" />
     <Compile Include="Commons\AjaxResultObject.cs" />
     <Compile Include="Commons\ApplicationUserIdentity.cs" />
     <Compile Include="Commons\CashConstants.cs" />
@@ -835,10 +839,12 @@
     <Content Include="Views\User\AccountBlueDiamond.cshtml" />
     <Content Include="Views\User\CashGoldDiamond.cshtml" />
     <Content Include="Views\User\CashSilverDiamond.cshtml" />
+    <Content Include="Views\User\RefferCode.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Backend\Models\" />
+    <Folder Include="photos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

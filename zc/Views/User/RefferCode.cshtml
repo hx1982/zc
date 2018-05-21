@@ -1,0 +1,25 @@
+﻿@model zc.Models.user
+@{
+    ViewBag.Title = "推荐码";
+    
+}
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">推荐码</h1>
+</header>
+<div class="mui-content">
+    <div class="mui-content">
+            <div class="mui-input-row">
+                <label>用户名称</label>
+                <input type="text" readonly value="@Model.user_name" />
+            </div>
+            <div class="mui-input-row">
+            <label>推荐码</label>
+                <input type="text" readonly value="@Model.user_code" />
+        </div>
+        <h5 class="section-title">推荐二维码</h5>
+        <div style="padding:20px 30px;text-align:center;">
+            <img alt="" src="@Model.user_remark1" style="width:300px;height:300px;" />
+        </div>
+        </div>
+    </div>
