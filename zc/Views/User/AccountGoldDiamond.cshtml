@@ -8,7 +8,8 @@
 }
 
 <header class="mui-bar mui-bar-nav">
-    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <!-- 防止history.back()回退到上一次查询金钻的页面 -->
+    <a onclick="location.href = '@Url.Action("Center", "User")';" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">会员账户 - 金钻</h1>
     <a class="mui-btn mui-btn-red mui-pull-right" href="@Url.Action("CashGoldDiamond", "User")">提现</a>
 </header>
@@ -34,15 +35,15 @@
     <form class="mui-input-group" id="searchForm">
         <div class="mui-input-row">
             <label>起始日期</label>
-            <input name="dateBegin" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
+            <input name="dateBegin" value="@Request["dateBegin"]" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
         </div>
         <div class="mui-input-row">
             <label>终止日期</label>
-            <input name="dateEnd" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
+            <input name="dateEnd" value="@Request["dateEnd"]" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
         </div>
         <div class="mui-input-row">
             <label>选择类型</label>
-            <select name="acc_record_type" class="mui-input-clear" style="font-size:14px">
+            <select id="acc_record_type" name="acc_record_type" value="@Request["acc_record_type"]" class="mui-input-clear" style="font-size:14px">
                 <option value="">全部</option>
                 <option value="1">本金分红</option>
                 <option value="2">推荐分红</option>
@@ -53,7 +54,7 @@
                 <option value="8">金钻提现</option>
             </select>
         </div>
-        <button class="btn btn-block btn-success" onclick="SearchData();">查询</button>
+        <button type="submit" class="btn btn-block btn-success">查询</button>
     </form>
     <h5 class="section-title">查询结果</h5>
     <table class="table table-bordered table-condensed">
@@ -97,16 +98,23 @@
                 $this.value = rs.text;
             });
         });
+
+        $('#acc_record_type > option').each(function (i, e) {
+            if (e.value == $('#acc_record_type').attr('value')) {
+                e.selected = "selected";
+            }
+        });
+
         ///点击查询的时候
-        function SearchData() {
-            $.ajax({
-                url: "/User/AccountGoldDiamond",
-                type: "POST",
-                data: $("#searchForm").serializeObject(),
-                success: function () {
-                    $(this).addClass("done");
-                }
-            });
-        }
+        //function SearchData() {
+        //    $.ajax({
+        //        url: "/User/AccountGoldDiamond",
+        //        type: "POST",
+        //        data: $("#searchForm").serializeObject(),
+        //        success: function () {
+        //            $(this).addClass("done");
+        //        }
+        //    });
+        //}
     </script>
 }

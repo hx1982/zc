@@ -25,9 +25,15 @@ namespace zc.Controllers
             return View();
         }
 
-        public ActionResult Register()
+        public ActionResult Register(int? id)
         {
-            //var user = this.userManager.GetUser(userId);
+            if (id.HasValue)
+            {
+                var user = this.userManager.GetUser(id.Value);
+                ViewBag.ReferrerUserCode = user.user_code;
+                return View(new UserRegisterModel { ReferrerUserCode = user.user_code });
+            }
+
             return View();
         }
 
