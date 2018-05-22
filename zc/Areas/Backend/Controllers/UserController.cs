@@ -18,6 +18,9 @@ namespace zc.Areas.Backend.Controllers
         {
             return View();
         }
+
+        #region 会员列表相关
+
         public ActionResult SearchNotActivatedUsers(string userName = "", string userPhone = "", int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
@@ -60,6 +63,10 @@ namespace zc.Areas.Backend.Controllers
             return View();
         }
 
+        #endregion
+
+        #region 激活会员
+
         public ActionResult ActiveUser(UserActiveModel model)
         {
             var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
@@ -83,6 +90,10 @@ namespace zc.Areas.Backend.Controllers
                 });
             }
         }
+
+        #endregion
+
+        #region 会员分红相关
 
         // 财务管理 > 会员分红记录
         public ActionResult BonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
@@ -130,6 +141,124 @@ namespace zc.Areas.Backend.Controllers
             };
         }
 
+        #endregion
+
+        #region 会员提现相关
+
+        /// <summary>
+        /// 审核提现
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        [Route("/User/AuditCashRequest")]
+        public ActionResult AuditCashRequest(FormCollection form)
+        {
+            var cashRecordId = form["cash_record_id"];
+            if (string.IsNullOrEmpty(cashRecordId))
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "数据校验错误"
+                });
+            }
+            int cashId = int.Parse(cashRecordId);
+            //获取对象
+            cash_record cashRecord = this._userManager.GetCashRecord(cashId);
+            var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
+
+            if (cashRecordId == null)
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "数据校验错误"
+                });
+            }
+            cashRecord.oper_id1 = operId;
+
+            //判断是通过审核还是不通过审核
+            var cash_status = form["cash_status"];
+            //如果不通过
+            if (cash_status.Equals(CashStatus.AUDIT_DENY))
+            {
+                cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                cashRecord.cash_time2 = DateTime.Now;
+                cashRecord.cash_remark1 = form["cash_remark1"];
+
+                this._userManager.UpdateCashRecord(cashRecord);
+
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.OK,
+                    message = "审核成功",
+                    data = cashRecord
+                });
+            }
+
+            //如果是通过的
+            var userAccount = this._userManager.GetUserAccount(cashRecord.user_id);//查会员账户
+            int cash_money = cashRecord.cash_money;
+            int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
+            int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
+            //判断是否需要的金额，大于了所剩余额
+            if(cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
+            {
+                if(userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                {
+                    cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                    cashRecord.cash_time2 = DateTime.Now;
+                    cashRecord.cash_remark1 = "审核不成功，该账户余额不足以支付提现扣除";
+
+                    this._userManager.UpdateCashRecord(cashRecord);
+
+                    return Json(new AjaxResultObject
+                    {
+                        code = AjaxResultObject.ERROR,
+                        message = "审核不成功，该账户余额不足以支付提现扣除"
+                    });
+                }
+            }
+            if (cashRecord.cash_type == CashType.SILVER_DIAMOND) //银钻账户
+            {
+                if (userAccount.account2 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                {
+                    cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                    cashRecord.cash_time2 = DateTime.Now;
+                    cashRecord.cash_remark1 = "审核不成功，该账户余额不足以支付提现扣除";
+
+                    this._userManager.UpdateCashRecord(cashRecord);
+
+                    return Json(new AjaxResultObject
+                    {
+                        code = AjaxResultObject.ERROR,
+                        message = "审核不成功，该账户余额不足以支付提现扣除"
+                    });
+                }
+            }
+            cashRecord.cash_remark1 = form["cash_remark1"];
+
+            cash_record mm = this._userManager.AuidCashRecord(cashRecord);
+            if(mm.cash_status == CashStatus.GIVEMONEY_WAITING)
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.OK,
+                    message = "审核成功",
+                    data = mm
+                });
+            }else
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "审核不成功"
+                });
+            }
+            
+        }
+
+
         //会员未审核提现请求
         //提现状态 -1-审核不通过 0-待审核 1-待发放 2-已发放
         public ActionResult CashRecordNoAudit(string user_name, string user_phone, int? cash_type, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
@@ -146,30 +275,55 @@ namespace zc.Areas.Backend.Controllers
                     fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     actual_money = c.cash_money- Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI)- Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
-                    cash_time1 = c.cash_time1
+                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_record_id = c.cash_record_id,
+                    user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 0, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
         }
 
+        /// <summary>
+        /// 查询未发放的提现记录
+        /// </summary>
+        /// <param name="user_name"></param>
+        /// <param name="user_phone"></param>
+        /// <param name="cash_type"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         public ActionResult CashRecordNoGrant(string user_name, string user_phone, int? cash_type, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, 1, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new {
                     sdf = c.cash_money,
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, 1, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
         }
 
+        /// <summary>
+        /// 查询全部提现记录
+        /// </summary>
+        /// <param name="user_name"></param>
+        /// <param name="user_phone"></param>
+        /// <param name="cash_type"></param>
+        /// <param name="cash_status"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         public ActionResult CashRecordAll(string user_name, string user_phone, int? cash_type,int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
@@ -184,6 +338,8 @@ namespace zc.Areas.Backend.Controllers
             }
             return View();
         }
-       
+
+        #endregion
+
     }
 }

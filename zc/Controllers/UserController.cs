@@ -24,6 +24,7 @@ namespace zc.Controllers
         {
             return View();
         }
+        #region 注册相关
 
         public ActionResult Register(int? id)
         {
@@ -51,6 +52,10 @@ namespace zc.Controllers
             return View();
         }
 
+        #endregion
+
+        #region 登录相关
+
         public ActionResult Login()
         {
             return View();
@@ -76,6 +81,10 @@ namespace zc.Controllers
             FormsAuthentication.SignOut();
             return View(model);
         }
+
+        #endregion
+
+        #region 会员账户相关
 
         // 会员中心
         public ActionResult Center()
@@ -106,28 +115,95 @@ namespace zc.Controllers
 
 
         // 会员账户 - 银钻
-        public ActionResult AccountSilverDiamond()
+        public ActionResult AccountSilverDiamond(int? acc_record_type, DateTime? dateBegin, DateTime? dateEnd, int page = 1, int rows = 20)
         {
+            var userId = int.Parse(User.Identity.Name);
+            var userAccount = this.userManager.GetUserAccount(userId);
+            //统计累计转入，消费
+            ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.SILVER, userId);
+            ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.SILVER, userId);
+            ViewBag.Balance = userAccount.account2;
+
+            //查询列表
+            var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.SILVER, acc_record_type, dateBegin, dateEnd, page, rows);
+            ViewBag.RecordList = accountRecordList;
+
             return View();
         }
 
         // 会员账户 - 蓝钻
-        public ActionResult AccountBlueDiamond()
+        public ActionResult AccountBlueDiamond(int? acc_record_type, DateTime? dateBegin, DateTime? dateEnd, int page = 1, int rows = 20)
         {
+            var userId = int.Parse(User.Identity.Name);
+            var userAccount = this.userManager.GetUserAccount(userId);
+            //统计累计转入，消费
+            ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.BLUE, userId);
+            ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.BLUE, userId);
+            ViewBag.Balance = userAccount.account3;
+
+            //查询列表
+            var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.BLUE, acc_record_type, dateBegin, dateEnd, page, rows);
+            ViewBag.RecordList = accountRecordList;
+
             return View();
         }
 
-        // 金钻提现申请
-        public ActionResult CashGoldDiamond()
+        #endregion
+
+        #region 提现相关
+         
+
+        // 金钻提现申请  分红提现
+        public ActionResult CashGoldDiamond(int? cash_money)
         {
-            return View();
+            var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
+            var userAccount = this.userManager.GetUserAccount(userId);
+
+            if (!cash_money.HasValue)
+            {
+                ViewBag.user = user;
+                ViewBag.userAccount = userAccount;
+                return View();
+            }
+            //获取提现的值
+            cash_record model = new cash_record();
+            model.cash_money = int.Parse(cash_money.ToString());
+            model.user_id = userAccount.user_id;
+            model.cash_type = CashType.GOLD_DIAMOND;
+
+            bool result = this.userManager.InsertCashRecord(model);
+
+            return Content(result.ToString());
         }
 
-        // 银钻提现申请
-        public ActionResult CashSilverDiamond()
+        // 银钻提现申请  茶票提现
+        public ActionResult CashSilverDiamond(int? cash_money)
         {
-            return View();
+            var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
+            var userAccount = this.userManager.GetUserAccount(userId);
+
+            if (!cash_money.HasValue)
+            {
+                ViewBag.user = user;
+                ViewBag.userAccount = userAccount;
+                return View();
+            }
+            //获取提现的值
+            cash_record model = new cash_record();
+            model.cash_money = int.Parse(cash_money.ToString());
+            model.user_id = userAccount.user_id;
+            model.cash_type = CashType.SILVER_DIAMOND;
+
+            bool result = this.userManager.InsertCashRecord(model);
+
+            return Content(result.ToString());
         }
+
+        #endregion
+
+        #region 会员推荐码相关
 
         //会员账户推荐码页面
         public ActionResult RefferCode()
@@ -184,5 +260,7 @@ namespace zc.Controllers
             string decodedString = decoder.decode(new QRCodeBitmapImage(myBitmap));
             return decodedString;
         }
+
+        #endregion
     }
 }

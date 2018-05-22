@@ -1,7 +1,116 @@
-﻿
+﻿@using zc.Commons;
 @{
-    ViewBag.Title = "CashSilverDiamond";
+    ViewBag.Title = "银钻提现";
 }
 
-<h2>CashSilverDiamond</h2>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">银钻提现申请</h1>
+</header>
+<div class="mui-content">
+    <h5 class="section-title">基本信息</h5>
+    <div class="mui-input-group">
+        <div class="mui-input-row">
+            <label>用户名称</label>
+            <input type="text" value="@ViewBag.user.user_name" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>剩余银钻</label>
+            <input type="text" id="balance_value" value="@ViewBag.userAccount.account2" readonly>
+        </div>
+        <div></div>
+    </div>
+    <h5 class="section-title">本次提现</h5>
+    <div class="mui-input-group">
+        <div class="mui-input-row">
+            <label>提现金额</label>
+            <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现金额">
+        </div>
+        <div class="mui-input-row">
+            <label>手续费</label>
+            <input id="shouxufei" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>复消费</label>
+            <input id="fuxiaofei" type="text" class="mui-input-clear datepicker" placeholder="复消费" readonly>
+        </div>
+        <div class="mui-input-row">
+            <label>余额</label>
+            <input id="balance" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
+        </div>
+        <div class="mui-content-padded">
+            <button id="submitRequest" class="btn btn-block btn-success">确定</button>
+        </div>
+        <div class="mui-content-padded">
+            <a href="javascript:history.back()" class="btn btn-block btn-default">取消</a>
+        </div>
+    </div>
+</div>
 
+<script type="text/javascript">
+    $(function(){
+        $('#service_charge').bind('input propertychange', function() {
+            var s = $(this).val();
+            if(isNaN(s)) {
+                alert("输入的提现金额不是数字");
+                $(this).focus();
+            }
+            var service = $("#service_charge").val();
+            var shouxufei = service * @CashRate.SHOU_XU_FEI;
+            var fuxiaofei = service * @CashRate.FU_XIAO_FEI;
+            $("#shouxufei").val(shouxufei);
+            $("#fuxiaofei").val(fuxiaofei);
+            $("#balance").val($("#balance_value").val()-service-shouxufei-fuxiaofei);
+        });
+
+        $("#submitRequest").click(function(){
+            //验证输入的金额是否是整数
+            var s = $('#service_charge').val();
+            if(isNaN(s)) {
+                alert("输入的提现金额不是数字");
+                $('#service_charge').focus();
+                return;
+            }
+            var isTen=s%200;
+            if(isTen != 0){
+                alert("提现金额只能是200或者200的倍数");
+                $('#service_charge').focus();
+                return;
+            }
+
+            var re = /^[0-9]*[1-9][0-9]*$/ ;
+
+            if(!TestRgexp(re , s)){
+                alert("输入的提现金额不是正整数");
+                $('#service_charge').focus();
+                return;
+            }
+            var ba =  $("#balance").val();
+            if(!TestRgexp(re , ba)){
+                alert("剩余金额不足扣除支付");
+                $('#service_charge').focus();
+                return;
+            }
+            $.ajax({
+                url: "/User/CashSilverDiamond",
+               type: "POST",
+               data: {cash_money:$("#service_charge").val()},
+               success: function (data) {
+                   //如果成功，跳转页面
+                   if(data){
+                    location.href = '@Url.Action("AccountSilverDiamond", "User")';
+                   }else{
+                       //失败提示
+                       alert("申请提现失败");
+                   }
+               }
+               });
+        });
+
+    });
+    // 参数说明 re 为正则表达式 s 为要判断的字符
+    function TestRgexp(re, s){
+        return re.test(s)
+    }
+
+</script>

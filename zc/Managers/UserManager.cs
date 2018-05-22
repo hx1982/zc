@@ -170,6 +170,8 @@ namespace zc.Managers
             return true;
         }
 
+        #region 查询会员
+
         /// <summary>
         /// 根据条件查询所有会员
         /// </summary>
@@ -368,6 +370,9 @@ namespace zc.Managers
                         select u;
             return query.Count();
         }
+        
+
+        #endregion
 
         /// <summary>
         /// 查会员账户
@@ -386,6 +391,8 @@ namespace zc.Managers
         {
             return db.users.Find(userId);
         }
+
+        #region 分红记录
 
         /// <summary>
         /// 分红记录
@@ -449,7 +456,138 @@ namespace zc.Managers
             return query.Count();
         }
 
-        //提现请求
+        #endregion
+
+        #region 提现请求相关
+
+        /// <summary>
+        /// 插入提现请求
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool InsertCashRecord(cash_record model)
+        {
+            cash_record newCashRecord = new cash_record();
+            newCashRecord.user_id = model.user_id;
+            newCashRecord.cash_type = model.cash_type;
+            newCashRecord.cash_money = model.cash_money;
+            newCashRecord.cash_status = CashStatus.AUDIT_WAITING;
+            newCashRecord.cash_time1 = DateTime.Now;
+            // 持久化
+            db.cash_record.Add(newCashRecord);
+
+            db.SaveChanges();
+            return true;
+        }
+
+        #region 审核提现操作相关
+
+        /// <summary>
+        /// 查提现申请详情
+        /// </summary>
+        /// <param name="cash_record_id">提现申请ID</param>
+        /// <returns></returns>
+        public cash_record GetCashRecord(int cash_record_id)
+        {
+            var query = from ua in db.cash_record
+                        where ua.cash_record_id == cash_record_id
+                        select ua;
+            return query.FirstOrDefault();
+        }
+        /// <summary>
+        /// 修改提现申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateCashRecord(cash_record model)
+        {
+            db.SaveChanges();
+            return true;
+        }
+        /// <summary>
+        /// 通过提现申请
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public cash_record AuidCashRecord(cash_record model)
+        {
+            using (TransactionScope tx = new TransactionScope())
+            {
+                //修改审核状态
+                model.cash_status = CashStatus.GIVEMONEY_WAITING;
+                model.cash_time2 = DateTime.Now;
+                db.SaveChanges();
+
+                //查询用户的账户资金
+                user_account userModel = this.GetUserAccount(model.user_id);
+
+                int accRecordType = AccRecordType.GOLD_CASH;
+                int accBalance = 0;
+                
+                if (model.cash_type == CashType.GOLD_DIAMOND)
+                {
+                    accRecordType = AccRecordType.GOLD_CASH;
+                    accBalance = userModel.account1 - model.cash_money;
+
+                }
+                if(model.cash_type == CashType.SILVER_DIAMOND)
+                {
+                    accRecordType = AccRecordType.SILVER_CASH;
+                    accBalance = userModel.account2 - model.cash_money;
+                }
+                //插入资金变动记录
+                account_record accModel = new account_record();
+                accModel.user_id = model.user_id;
+                accModel.acc_type = model.cash_type;
+                accModel.cons_type = ConType.EXPEND;
+                accModel.acc_record_type = accRecordType;
+                accModel.acc_balance = accBalance;
+                accModel.cons_value = model.cash_money;
+                accModel.oper_id = model.oper_id1;
+                db.account_record.Add(accModel);
+
+                int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SHOU_XU_FEI);
+                accModel = new account_record();
+                accModel.user_id = model.user_id;
+                accModel.acc_type = model.cash_type;
+                accModel.cons_type = ConType.EXPEND;
+                accModel.acc_record_type = AccRecordType.MINUS_SHOU_XU_FEI;
+                accModel.acc_balance = accBalance;
+                accModel.cons_value = shou_xu_fei;
+                accModel.oper_id = model.oper_id1;
+                db.account_record.Add(accModel);
+
+                int fu_xiao_fei = Convert.ToInt32(model.cash_money * CashRate.FU_XIAO_FEI);
+                accModel = new account_record();
+                accModel.user_id = model.user_id;
+                accModel.acc_type = model.cash_type;
+                accModel.cons_type = ConType.EXPEND;
+                accModel.acc_record_type = AccRecordType.MINUS_FU_XIAO_FEI;
+                accModel.acc_balance = accBalance;
+                accModel.cons_value = fu_xiao_fei;
+                accModel.oper_id = model.oper_id1;
+                db.account_record.Add(accModel);
+
+                db.SaveChanges();
+
+                //修改账户余额记录
+                if (model.cash_type == CashType.GOLD_DIAMOND)
+                {
+                    userModel.account1 = userModel.account1 - (model.cash_money);
+                }
+                if (model.cash_type == CashType.SILVER_DIAMOND)
+                {
+                    userModel.account2 = userModel.account2 - model.cash_money-shou_xu_fei-fu_xiao_fei;
+                }
+                db.SaveChanges();
+                tx.Complete();
+                return model;
+            }
+        }
+
+        #endregion
+
+        //提现请求列表
         public List<cash_record> GetCashRequests(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.cash_record select b;
@@ -478,7 +616,7 @@ namespace zc.Managers
             }
             return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
-        //提现请求分页
+        //提现请求分页计数
         public int GetCashRequestsTotal(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
         {
             var query = from b in db.cash_record select b;
@@ -508,6 +646,8 @@ namespace zc.Managers
             }
             return query.Count();
         }
+
+        #endregion
 
         #region 金钻，银钻，蓝钻 收入，支出总数
 

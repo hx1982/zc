@@ -1,6 +1,6 @@
-﻿
+﻿@using zc.Commons;
 @{
-    ViewBag.Title = "CashGoldDiamond";
+    ViewBag.Title = "金钻提现";
 }
 
 <header class="mui-bar mui-bar-nav">
@@ -12,23 +12,23 @@
     <div class="mui-input-group">
         <div class="mui-input-row">
             <label>用户名称</label>
-            <input type="text" value="黄唯一" readonly>
+            <input type="text" value="@ViewBag.user.user_name" readonly>
         </div>
         <div class="mui-input-row">
             <label>剩余金钻</label>
-            <input type="text" value="1000" readonly>
+            <input type="text" id="balance_value" value="@ViewBag.userAccount.account1" readonly>
         </div>
         <div></div>
     </div>
     <h5 class="section-title">本次提现</h5>
-    <form class="mui-input-group">
+    <div class="mui-input-group">
         <div class="mui-input-row">
             <label>提现金额</label>
             <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现金额">
         </div>
         <div class="mui-input-row">
             <label>手续费</label>
-            <input id="service_charge" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
+            <input id="shouxufei" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
         </div>
         <div class="mui-input-row">
             <label>复消费</label>
@@ -39,10 +39,78 @@
             <input id="balance" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
         </div>
         <div class="mui-content-padded">
-            <button class="btn btn-block btn-success">确定</button>
+            <button id="submitRequest" class="btn btn-block btn-success">确定</button>
         </div>
         <div class="mui-content-padded">
             <a href="javascript:history.back()" class="btn btn-block btn-default">取消</a>
         </div>
-    </form>
+    </div>
 </div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#service_charge').bind('input propertychange', function() {
+            var s = $(this).val();
+            if(isNaN(s)) {
+                alert("输入的提现金额不是数字");
+                $(this).focus();
+            }
+            var service = $("#service_charge").val();
+            var shouxufei = service * @CashRate.SHOU_XU_FEI;
+            var fuxiaofei = service * @CashRate.FU_XIAO_FEI;
+            $("#shouxufei").val(shouxufei);
+            $("#fuxiaofei").val(fuxiaofei);
+            $("#balance").val($("#balance_value").val()-service-shouxufei-fuxiaofei);
+        });
+
+        $("#submitRequest").click(function(){
+            //验证输入的金额是否是整数
+            var s = $('#service_charge').val();
+            if(isNaN(s)) {
+                alert("输入的提现金额不是数字");
+                $('#service_charge').focus();
+                return;
+            }
+            var isTen=s%200;
+            if(isTen != 0){
+                alert("提现金额只能是200或者200的倍数");
+                $('#service_charge').focus();
+                return;
+            }
+
+            var re = /^[0-9]*[1-9][0-9]*$/ ;
+
+            if(!TestRgexp(re , s)){
+                alert("输入的提现金额不是正整数");
+                $('#service_charge').focus();
+                return;
+            }
+            var ba =  $("#balance").val();
+            if(!TestRgexp(re , ba)){
+                alert("剩余金额不足扣除支付");
+                $('#service_charge').focus();
+                return;
+            }
+            $.ajax({
+                url: "/User/CashGoldDiamond",
+               type: "POST",
+               data: {cash_money:$("#service_charge").val()},
+               success: function (data) {
+                   //如果成功，跳转页面
+                   if(data){
+                    location.href = '@Url.Action("AccountGoldDiamond", "User")';
+                   }else{
+                       //失败提示
+                       alert("申请提现失败");
+                   }
+               }
+               });
+        });
+        
+    });
+    // 参数说明 re 为正则表达式 s 为要判断的字符
+    function TestRgexp(re, s){ 
+        return re.test(s)
+    }
+
+</script>

@@ -15,6 +15,8 @@
 <body>
     <script src="~/plug-in/mui/js/mui.min.js"></script>
     <script src="~/plug-in/mui/js/mui.picker.min.js"></script>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         //mui.init();
         //$(".mui-action-back").click(function () {
@@ -24,8 +26,6 @@
 
     </script>
     @RenderBody()
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
     @RenderSection(name: "bottomScript", required: false)
 </body>
 

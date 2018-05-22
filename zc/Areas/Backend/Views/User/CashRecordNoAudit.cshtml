@@ -1,6 +1,7 @@
-﻿
+﻿@using zc.Commons;
+
 @{
-    ViewBag.Title = "审核提现记录";
+    ViewBag.Title = "未审核提现记录";
 }
 
 
@@ -93,9 +94,9 @@
 </table>
 <div id="dlg" class="easyui-dialog" style="width:600px;height:auto;padding:10px 20px"
      closed="true" buttons="#dlg-buttons">
-    <form id="fm" method="post">
+    <form id="fm">
         <input type="hidden" name="cash_record_id" />
-        <input type="hidden" id="isHave" />
+        <input type="hidden" id="isHave" name="cash_status" />
         <div class="fitem">
             <label>审核备注</label>
             <textarea name="cash_remark1"></textarea>
@@ -130,30 +131,51 @@
     }
 
     function generateOperations(val, row, index) {
-        if (row.user_status == 2)
-            return '<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="optionActiveForm(' + index + ')">通过</button>&nbsp;&nbsp;<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="noActiveRecord(' + index + ')">不通过</button>';
+        if (row.cash_status != 0)
+            return '<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="optionActiveForm(' + index + ',' + row.cash_record_id + ')">通过</button>&nbsp;&nbsp;<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="noActiveRecord(' + index + ',' + row.cash_record_id + ')">不通过</button>';
         return '已审核';
     }
 
     var i = 0;
-    function optionActiveForm(index) {
+    function optionActiveForm(index,cashId) {
         i = index;
-        $("#isHave").val("1");
+        $("#isHave").val("@CashStatus.GIVEMONEY_WAITING");
+        $("#cash_record_id").val(cashId);
         $('#tt').datagrid('selectRow', index);
         var row = $('#tt').datagrid('getRows')[index];
         $('#dlg').dialog('open').dialog('setTitle', '通过审核提现');
         $('#fm').form('load', row);
     }
     var j = 0;
-    function noActiveRecord(index) {
+    function noActiveRecord(index, cashId) {
         j = index;
-        $("#isHave").val("2");
+        $("#isHave").val("@CashStatus.AUDIT_DENY");
+        $("#cash_record_id").val(cashId);
         $('#tt').datagrid('selectRow', index);
         var row = $('#tt').datagrid('getRows')[index];
         $('#dlg').dialog('open').dialog('setTitle', '拒绝审核提现');
         $('#fm').form('load', row);
     }
-    
+
+    //确定按钮功能
+    function activeRecord() {
+        $.ajax({
+            url: '@Url.Action("AuditCashRequest", "User")',
+           type: "POST",
+           data: $("#fm").serializeObject(),
+           success: function (data) {
+               data = eval('(' + data + ')');
+               if (data.code == 200) {
+                   $('#tt').datagrid('updateRow', {
+                       index: i,
+                       row: data.data
+                   });
+                   $.messager.alert('系统提示', '审核成功');
+                   $('#dlg').dialog('close');
+               }
+           }
+         });
+    }
 
 
 </script>
