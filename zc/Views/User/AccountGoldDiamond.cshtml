@@ -31,7 +31,7 @@
         </tbody>
     </table>
     <h5 class="section-title">查询条件</h5>
-    <form class="mui-input-group">
+    <form class="mui-input-group" id="searchForm">
         <div class="mui-input-row">
             <label>起始日期</label>
             <input name="dateBegin" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
@@ -99,7 +99,14 @@
         });
         ///点击查询的时候
         function SearchData() {
-
+            $.ajax({
+                url: "/User/AccountGoldDiamond",
+                type: "POST",
+                data: $("#searchForm").serializeObject(),
+                success: function () {
+                    $(this).addClass("done");
+                }
+            });
         }
     </script>
 }
