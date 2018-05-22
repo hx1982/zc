@@ -91,20 +91,27 @@
                 $('#service_charge').focus();
                 return;
             }
-            $.ajax({
-                url: "/User/CashGoldDiamond",
-               type: "POST",
-               data: {cash_money:$("#service_charge").val()},
-               success: function (data) {
-                   //如果成功，跳转页面
-                   if(data){
-                    location.href = '@Url.Action("AccountGoldDiamond", "User")';
-                   }else{
-                       //失败提示
-                       alert("申请提现失败");
-                   }
-               }
-               });
+            //弹出对话框，输入二次密码，密码通过，而且还需要在提现的时候查看时候有银行卡资料
+            mui.prompt('','请输入交易密码','',['确定','取消'],function(e){
+                $.ajax({
+                    url: "/User/CashGoldDiamond",
+                    type: "POST",
+                    data: {cash_money:$("#service_charge").val(),second_password:e.value},
+                    success: function (data) {
+                        //如果成功，跳转页面
+                        if(data=="true"){
+                            location.href = '@Url.Action("AccountGoldDiamond", "User")';
+                        }else{
+                            //失败提示
+                            alert("申请提现失败");
+                        }
+                    }
+                });
+            },'div') ;
+            document.querySelector('.mui-popup-input input').type='password';
+
+
+            
         });
         
     });
