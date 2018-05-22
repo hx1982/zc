@@ -131,30 +131,33 @@
     }
 
     function generateOperations(val, row, index) {
-        if (row.cash_status != 0)
+        // 如果是待审核状态，才显示按钮
+        if (row.cash_status == "待审核")
             return '<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="optionActiveForm(' + index + ',' + row.cash_record_id + ')">通过</button>&nbsp;&nbsp;<button data-rowindex="' + index + '" class="easyui-linkbutton" onclick="noActiveRecord(' + index + ',' + row.cash_record_id + ')">不通过</button>';
-        return '已审核';
+        if (row.cash_status == "待发放")
+            return '已审核，待发放';
+        return "";
     }
 
     var i = 0;
     function optionActiveForm(index,cashId) {
         i = index;
-        $("#isHave").val("@CashStatus.GIVEMONEY_WAITING");
-        $("#cash_record_id").val(cashId);
         $('#tt').datagrid('selectRow', index);
         var row = $('#tt').datagrid('getRows')[index];
         $('#dlg').dialog('open').dialog('setTitle', '通过审核提现');
         $('#fm').form('load', row);
+        $("#cash_record_id").val(cashId);
+        $("#isHave").val("@CashStatus.GIVEMONEY_WAITING");
     }
     var j = 0;
     function noActiveRecord(index, cashId) {
         j = index;
-        $("#isHave").val("@CashStatus.AUDIT_DENY");
-        $("#cash_record_id").val(cashId);
         $('#tt').datagrid('selectRow', index);
         var row = $('#tt').datagrid('getRows')[index];
         $('#dlg').dialog('open').dialog('setTitle', '拒绝审核提现');
         $('#fm').form('load', row);
+        $("#cash_record_id").val(cashId);
+        $("#isHave").val("@CashStatus.AUDIT_DENY");
     }
 
     //确定按钮功能
@@ -164,7 +167,7 @@
            type: "POST",
            data: $("#fm").serializeObject(),
            success: function (data) {
-               data = eval('(' + data + ')');
+               //data = eval('(' + data + ')');
                if (data.code == 200) {
                    $('#tt').datagrid('updateRow', {
                        index: i,
@@ -172,6 +175,8 @@
                    });
                    $.messager.alert('系统提示', '审核成功');
                    $('#dlg').dialog('close');
+               } else {
+                   $.messager.alert('系统提示', data.message);
                }
            }
          });

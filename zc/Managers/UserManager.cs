@@ -544,6 +544,7 @@ namespace zc.Managers
                 accModel.acc_balance = accBalance;
                 accModel.cons_value = model.cash_money;
                 accModel.oper_id = model.oper_id1;
+                accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
                 int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SHOU_XU_FEI);
@@ -555,6 +556,7 @@ namespace zc.Managers
                 accModel.acc_balance = accBalance;
                 accModel.cons_value = shou_xu_fei;
                 accModel.oper_id = model.oper_id1;
+                accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
                 int fu_xiao_fei = Convert.ToInt32(model.cash_money * CashRate.FU_XIAO_FEI);
@@ -566,6 +568,7 @@ namespace zc.Managers
                 accModel.acc_balance = accBalance;
                 accModel.cons_value = fu_xiao_fei;
                 accModel.oper_id = model.oper_id1;
+                accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
                 db.SaveChanges();

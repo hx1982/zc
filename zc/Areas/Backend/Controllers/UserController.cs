@@ -241,11 +241,25 @@ namespace zc.Areas.Backend.Controllers
             cash_record mm = this._userManager.AuidCashRecord(cashRecord);
             if(mm.cash_status == CashStatus.GIVEMONEY_WAITING)
             {
+                var c = mm;
                 return Json(new AjaxResultObject
                 {
                     code = AjaxResultObject.OK,
                     message = "审核成功",
-                    data = mm
+                    data = new {
+                        user_name = c.user.user_name,
+                        user_phone = c.user.user_phone,
+                        cash_type = CashType.ToString(c.cash_type),
+                        cash_money = c.cash_money,
+                        shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                        fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                        actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                        cash_status = CashStatus.ToString(c.cash_status),
+                        cash_time1 = c.cash_time1.ToLongDateString(),
+                        cash_record_id = c.cash_record_id,
+                        user_id = c.user_id
+
+                    }
                 });
             }else
             {
