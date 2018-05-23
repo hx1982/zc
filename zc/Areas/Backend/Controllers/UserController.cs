@@ -258,7 +258,6 @@ namespace zc.Areas.Backend.Controllers
                         cash_time1 = c.cash_time1.ToLongDateString(),
                         cash_record_id = c.cash_record_id,
                         user_id = c.user_id
-
                     }
                 });
             }else
@@ -271,7 +270,6 @@ namespace zc.Areas.Backend.Controllers
             }
             
         }
-
 
         //会员未审核提现请求
         //提现状态 -1-审核不通过 0-待审核 1-待发放 2-已发放
@@ -301,6 +299,23 @@ namespace zc.Areas.Backend.Controllers
         }
 
         /// <summary>
+        /// 发放奖金
+        /// </summary>
+        /// <returns></returns>
+        public bool  UpdateGiveMoney(int cash_record_id)
+        {
+            var cashRecord = this._userManager.GetCashRecord(cash_record_id);
+            var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
+            cashRecord.cash_status = CashStatus.GIVEMONEY_OK;
+            cashRecord.oper_id2 = operId;
+            cashRecord.cash_time3 = DateTime.Now;
+
+            bool result = this._userManager.UpdateCashRecord(cashRecord);
+
+            return result;
+        }
+
+        /// <summary>
         /// 查询未发放的提现记录
         /// </summary>
         /// <param name="user_name"></param>
@@ -317,7 +332,17 @@ namespace zc.Areas.Backend.Controllers
             {
                 var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new {
-                    sdf = c.cash_money,
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = CashType.ToString(c.cash_type),
+                    cash_money = c.cash_money,
+                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    cash_status = CashStatus.ToString(c.cash_status),
+                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_record_id = c.cash_record_id,
+                    user_id = c.user_id
 
                 });
                 var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
@@ -344,7 +369,17 @@ namespace zc.Areas.Backend.Controllers
             {
                 var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
                 var data = pageData.Select(c => new {
-                    sdf = c.cash_money,
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = CashType.ToString(c.cash_type),
+                    cash_money = c.cash_money,
+                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    cash_status = CashStatus.ToString(c.cash_status),
+                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_record_id = c.cash_record_id,
+                    user_id = c.user_id
 
                 });
                 var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, cash_status, begin, end);
