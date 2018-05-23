@@ -117,7 +117,7 @@ namespace zc.Areas.Backend.Controllers
                 user_phone = b.user.user_phone,
                 bonus_type = b.bouns_type == 1 ? "本金分红" : "推荐分红",
                 bonus_money = b.bouns_money,
-                bonus_time = b.create_time,
+                bonus_time = b.create_time.ToLongDateString(),
                 bonus_remark = b.bonus_remark
             };
         }

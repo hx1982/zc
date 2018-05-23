@@ -553,7 +553,7 @@ namespace zc.Managers
                 accModel.acc_type = model.cash_type;
                 accModel.cons_type = ConType.EXPEND;
                 accModel.acc_record_type = AccRecordType.MINUS_SHOU_XU_FEI;
-                accModel.acc_balance = accBalance;
+                accModel.acc_balance = accBalance-shou_xu_fei;
                 accModel.cons_value = shou_xu_fei;
                 accModel.oper_id = model.oper_id1;
                 accModel.acc_record_time = DateTime.Now;
@@ -565,7 +565,7 @@ namespace zc.Managers
                 accModel.acc_type = model.cash_type;
                 accModel.cons_type = ConType.EXPEND;
                 accModel.acc_record_type = AccRecordType.MINUS_FU_XIAO_FEI;
-                accModel.acc_balance = accBalance;
+                accModel.acc_balance = accBalance-fu_xiao_fei;
                 accModel.cons_value = fu_xiao_fei;
                 accModel.oper_id = model.oper_id1;
                 accModel.acc_record_time = DateTime.Now;
@@ -574,15 +574,34 @@ namespace zc.Managers
                 db.SaveChanges();
 
                 //修改账户余额记录
+                int rt = AccRecordType.ADD_GOLD;
                 if (model.cash_type == CashType.GOLD_DIAMOND)
                 {
-                    userModel.account1 = userModel.account1 - (model.cash_money);
+                    userModel.account1 = userModel.account1 - model.cash_money - shou_xu_fei - fu_xiao_fei;
+                    rt = AccRecordType.ADD_GOLD;
                 }
                 if (model.cash_type == CashType.SILVER_DIAMOND)
                 {
-                    userModel.account2 = userModel.account2 - model.cash_money-shou_xu_fei-fu_xiao_fei;
+                    userModel.account2 = userModel.account2 - model.cash_money - shou_xu_fei - fu_xiao_fei;
+                    rt = AccRecordType.ADD_SILVER;
                 }
+                userModel.account4 = userModel.account4 + fu_xiao_fei;
                 db.SaveChanges();
+                
+                //增加复消费新增的记录
+                accModel = new account_record();
+                accModel.user_id = model.user_id;
+                accModel.acc_type = model.cash_type;
+                accModel.cons_type = ConType.INCOME;
+                accModel.acc_record_type = rt;
+                accModel.acc_balance = userModel.account4 + fu_xiao_fei;
+                accModel.cons_value = fu_xiao_fei;
+                accModel.oper_id = model.oper_id1;
+                accModel.acc_record_time = DateTime.Now;
+                db.account_record.Add(accModel);
+
+                db.SaveChanges();
+
                 tx.Complete();
                 return model;
             }
