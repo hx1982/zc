@@ -1,0 +1,89 @@
+﻿@model zc.Models.user
+@{
+    ViewBag.Title = "个人信息";
+}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">@ViewBag.Title</h1>
+</header>
+<div class="mui-content">
+    <form id="personalInfoForm" class="mui-input-group" method="post">
+        @Html.HiddenFor(model => model.user_id)
+        <h5 class="section-title">基本信息</h5>
+        <div class="mui-input-row">
+            <label>用户名称</label>
+            @Html.TextBoxFor(model => model.user_name, new { placeholder = "会员名称", disabled = "disabled" })
+        </div>
+        <div class="mui-input-row">
+            <label>手机号码</label>
+            @Html.TextBoxFor(model => model.user_phone, new { placeholder = "手机号码", disabled = "disabled" })
+        </div>
+        <div class="mui-input-row">
+            <label>身份证号</label>
+            @Html.TextBoxFor(model => model.id_number, new { placeholder = "身份证号", disabled = "disabled" })
+        </div>
+        <h5 class="section-title">
+            收货地址
+        </h5>
+        <div class="mui-input-row">
+            <label>省</label>
+            @Html.TextBoxFor(model => model.province, new { placeholder = "省" })
+        </div>
+        <div class="mui-input-row">
+            <label>市</label>
+            @Html.TextBoxFor(model => model.city, new { placeholder = "市" })
+        </div>
+        <div class="mui-input-row">
+            <label>区</label>
+            @Html.TextBoxFor(model => model.area, new { placeholder = "区" })
+        </div>
+        <div class="mui-input-row">
+            <label>详细地址</label>
+            @Html.TextBoxFor(model => model.address, new { placeholder = "详细地址", @class = "mui-input-clear" })
+        </div>
+        <h5 class="section-title">银行卡</h5>
+        <div class="mui-input-row">
+            <label>银行卡号</label>
+            @Html.TextBoxFor(model => model.account_num, new { placeholder = "银行卡号", @class = "mui-input-clear" })
+        </div>
+        <div class="mui-input-row">
+            <label>开户行</label>
+            @Html.TextBoxFor(model => model.bank_name, new { placeholder = "开户行", @class = "mui-input-clear" })
+        </div>
+        <div class="mui-content-padded">
+            <button type="button" onclick="save()" class="mui-btn mui-btn-primary mui-btn-block">保存</button>
+        </div>
+    </form>
+</div>
+
+@section bottomScript{
+    <script>
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        }
+        function save() {
+            mui.ajax('@Url.Action("PersonalInfo", "User")',{
+                data:$('#personalInfoForm').serializeObject(),
+                dataType:'json',//服务器返回json格式数据
+                type:'post',//HTTP请求类型
+                success:function(result){
+                    mui.alert(result.message, "提示");
+                }
+            });
+        }
+    </script>
+}
+

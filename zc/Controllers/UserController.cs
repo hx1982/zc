@@ -111,7 +111,7 @@ namespace zc.Controllers
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.GOLD, acc_record_type, dateBegin, dateEnd, page, rows);
             ViewBag.RecordList = accountRecordList;
-           
+
             return View();
         }
 
@@ -155,10 +155,10 @@ namespace zc.Controllers
         #endregion
 
         #region 提现相关
-         
+
 
         // 金钻提现申请  分红提现
-        public ActionResult CashGoldDiamond(int? cash_money,string second_password)
+        public ActionResult CashGoldDiamond(int? cash_money, string second_password)
         {
             var userId = int.Parse(User.Identity.Name);
             var user = this.userManager.GetUser(userId);
@@ -171,7 +171,8 @@ namespace zc.Controllers
                 return View();
             }
             //验证二次密码是否正确
-            if (!user.second_password.Equals(Utility.MD5Encrypt(second_password))){
+            if (!user.second_password.Equals(Utility.MD5Encrypt(second_password)))
+            {
                 return Content("false");
             }
 
@@ -219,10 +220,10 @@ namespace zc.Controllers
         {
             var userId = int.Parse(User.Identity.Name);
             var user = this.userManager.GetUser(userId);
-            if(user.user_remark1 == null)
+            if (user.user_remark1 == null)
             {
-                string str = Utility.GetAppKey("DefaultCodeUrl") +"/User/Register/" +user.user_id;
-                user = CreateQRImg(str,user);
+                string str = Utility.GetAppKey("DefaultCodeUrl") + "/User/Register/" + user.user_id;
+                user = CreateQRImg(str, user);
             }
             ViewBag.User = user;
             return View(user);
@@ -232,7 +233,7 @@ namespace zc.Controllers
         /// 生成二维码
         /// </summary>
         /// <param name="str"></param>
-        private user CreateQRImg(string str,user model)
+        private user CreateQRImg(string str, user model)
         {
             string enCodeString = str;
             QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
@@ -248,10 +249,10 @@ namespace zc.Controllers
 
             fs.Close();
             image.Dispose();
-            
+
             //将路径保存在user表的remark1字段中
             model.user_remark1 = "/photos/" + filename;
-            user user= userManager.SaveUserCodeForRemark1(model);
+            user user = userManager.SaveUserCodeForRemark1(model);
             return user;
         }
 
@@ -271,5 +272,54 @@ namespace zc.Controllers
         }
 
         #endregion
+
+        #region 个人信息及密码修改
+        public ActionResult PersonalInfo()
+        {
+            var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult PersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name)
+        {
+            this.userManager.UpdateUserPersonalInfo(user_id, province, city, area, address, account_num, bank_name);
+            return Json(new AjaxResultObject
+            {
+                code = AjaxResultObject.OK,
+                message = "修改个人信息成功"
+            });
+        }
+
+        public ActionResult ChangePwd()
+        {
+            return View();
+        }
+
+        public ActionResult SaveLoginPwd(string loginPwd)
+        {
+            var userId = int.Parse(User.Identity.Name);
+            this.userManager.UpdateLoginPwd(userId, loginPwd);
+            return Json(new AjaxResultObject {
+                code = AjaxResultObject.OK,
+                message = "登录密码修改成功"
+            });
+        }
+
+        public ActionResult SaveSecondPwd(string secondPwd)
+        {
+            var userId = int.Parse(User.Identity.Name);
+            this.userManager.UpdateSecondPwd(userId, secondPwd);
+            return Json(new AjaxResultObject
+            {
+                code = AjaxResultObject.OK,
+                message = "二级密码修改成功"
+            });
+        }
+        #endregion
+
+
+
     }
 }

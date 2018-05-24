@@ -24,7 +24,7 @@ namespace zc.Managers
 
             using (TransactionScope tx = new TransactionScope())
             {
-                
+
                 // 保存用户激活信息
                 var user = db.users.Find(model.user_id);
                 user.reg_money = model.reg_money;
@@ -128,16 +128,16 @@ namespace zc.Managers
 
             // 验证推荐人是否存在
             var referrer = (from u in db.users
-                                 where u.user_code == model.ReferrerUserCode
-                                 select u).FirstOrDefault();
+                            where u.user_code == model.ReferrerUserCode
+                            select u).FirstOrDefault();
             if (referrer == null)
             {
-                throw new Exception("推荐人编码\""+model.ReferrerUserCode+"\"不存在!");
+                throw new Exception("推荐人编码\"" + model.ReferrerUserCode + "\"不存在!");
             }
             // 验证推荐人是否是已激活的正常会员
             if (referrer.user_status != UserStatus.NORMAL)
             {
-                throw new Exception("推荐人\""+model.ReferrerUserCode+"\"不能是未激活或冻结的会员!");
+                throw new Exception("推荐人\"" + model.ReferrerUserCode + "\"不能是未激活或冻结的会员!");
             }
 
             // 创建持久对象
@@ -370,7 +370,7 @@ namespace zc.Managers
                         select u;
             return query.Count();
         }
-        
+
 
         #endregion
 
@@ -523,14 +523,14 @@ namespace zc.Managers
 
                 int accRecordType = AccRecordType.GOLD_CASH;
                 int accBalance = 0;
-                
+
                 if (model.cash_type == CashType.GOLD_DIAMOND)
                 {
                     accRecordType = AccRecordType.GOLD_CASH;
                     accBalance = userModel.account1 - model.cash_money;
 
                 }
-                if(model.cash_type == CashType.SILVER_DIAMOND)
+                if (model.cash_type == CashType.SILVER_DIAMOND)
                 {
                     accRecordType = AccRecordType.SILVER_CASH;
                     accBalance = userModel.account2 - model.cash_money;
@@ -553,7 +553,7 @@ namespace zc.Managers
                 accModel.acc_type = model.cash_type;
                 accModel.cons_type = ConType.EXPEND;
                 accModel.acc_record_type = AccRecordType.MINUS_SHOU_XU_FEI;
-                accModel.acc_balance = accBalance-shou_xu_fei;
+                accModel.acc_balance = accBalance - shou_xu_fei;
                 accModel.cons_value = shou_xu_fei;
                 accModel.oper_id = model.oper_id1;
                 accModel.acc_record_time = DateTime.Now;
@@ -565,7 +565,7 @@ namespace zc.Managers
                 accModel.acc_type = model.cash_type;
                 accModel.cons_type = ConType.EXPEND;
                 accModel.acc_record_type = AccRecordType.MINUS_FU_XIAO_FEI;
-                accModel.acc_balance = accBalance-fu_xiao_fei;
+                accModel.acc_balance = accBalance - fu_xiao_fei;
                 accModel.cons_value = fu_xiao_fei;
                 accModel.oper_id = model.oper_id1;
                 accModel.acc_record_time = DateTime.Now;
@@ -587,7 +587,7 @@ namespace zc.Managers
                 }
                 userModel.account4 = userModel.account4 + fu_xiao_fei;
                 db.SaveChanges();
-                
+
                 //增加复消费新增的记录
                 accModel = new account_record();
                 accModel.user_id = model.user_id;
@@ -610,7 +610,7 @@ namespace zc.Managers
         #endregion
 
         //提现请求列表
-        public List<cash_record> GetCashRequests(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        public List<cash_record> GetCashRequests(string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.cash_record select b;
             if (!string.IsNullOrEmpty(user_name))
@@ -623,9 +623,10 @@ namespace zc.Managers
             }
             if (cash_type != null)
             {
-                query = query.Where(b=>b.cash_type == cash_type);
+                query = query.Where(b => b.cash_type == cash_type);
             }
-            if (cash_status != null) {
+            if (cash_status != null)
+            {
                 query = query.Where(b => b.cash_status == cash_status);
             }
             if (begin.HasValue)
@@ -639,7 +640,7 @@ namespace zc.Managers
             return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
         //提现请求分页计数
-        public int GetCashRequestsTotal(string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
+        public int GetCashRequestsTotal(string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
         {
             var query = from b in db.cash_record select b;
             if (!string.IsNullOrEmpty(user_name))
@@ -678,12 +679,12 @@ namespace zc.Managers
         /// </summary>
         /// <param name="acc_type"></param>
         /// <returns></returns>
-        public int GetTotalIncome(int? acc_type,int? user_id)
+        public int GetTotalIncome(int? acc_type, int? user_id)
         {
             var query = from b in db.account_record select b;
-            if (acc_type !=null)
+            if (acc_type != null)
             {
-                query = query.Where(b => b.acc_type== acc_type);
+                query = query.Where(b => b.acc_type == acc_type);
             }
             if (user_id != null)
             {
@@ -725,7 +726,7 @@ namespace zc.Managers
         /// <param name="pageNo"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public List<account_record> GetAccountRecordList(int? user_id,int? acc_type,int? acc_record_type, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        public List<account_record> GetAccountRecordList(int? user_id, int? acc_type, int? acc_record_type, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.account_record select b;
             if (user_id != null)
@@ -789,7 +790,37 @@ namespace zc.Managers
             return query.Count();
         }
 
-        #endregion 
+        #endregion
+
+        #region 修改/完善个人信息/修改密码
+
+        public void UpdateUserPersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name)
+        {
+            var user = db.users.Find(user_id);
+            user.province = province;
+            user.city = city;
+            user.area = area;
+            user.address = address;
+            user.account_num = account_num;
+            user.bank_name = bank_name;
+            db.SaveChanges();
+        }
+
+        public void UpdateLoginPwd(int userId, string loginPwd)
+        {
+            var user = db.users.Find(userId);
+            user.login_password = Utility.MD5Encrypt(loginPwd);
+            db.SaveChanges();
+        }
+
+        public void UpdateSecondPwd(int userId, string secondPwd)
+        {
+            var user = db.users.Find(userId);
+            user.second_password = Utility.MD5Encrypt(secondPwd);
+            db.SaveChanges();
+        }
+
+        #endregion
 
     }
 }
