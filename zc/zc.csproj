@@ -842,6 +842,7 @@
     <Content Include="Views\User\CashGoldDiamond.cshtml" />
     <Content Include="Views\User\CashSilverDiamond.cshtml" />
     <Content Include="Views\User\RefferCode.cshtml" />
+    <Content Include="Views\User\CashRecordList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
