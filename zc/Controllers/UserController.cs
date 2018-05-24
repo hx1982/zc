@@ -210,6 +210,53 @@ namespace zc.Controllers
 
             return Content(result.ToString());
         }
+        /// <summary>
+        /// 提现记录页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CashRecordList()
+        {
+            var userId = int.Parse(User.Identity.Name);
+            int completeGoldCash = this.userManager.GetCashMoneyTotal(CashType.GOLD_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
+            int completeSilverCash = this.userManager.GetCashMoneyTotal(CashType.SILVER_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
+            int sumCashMoney = completeGoldCash + completeSilverCash;
+
+            ViewBag.CompleteGoldCash = completeGoldCash;
+            ViewBag.CompleteSilverCash = completeSilverCash;
+            ViewBag.SumCashMoney = sumCashMoney;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 查询提现记录的列表
+        /// </summary>
+        /// <param name="cash_type">金钻还是银钻</param>
+        /// <param name="cash_status">状态</param>
+        /// <param name="beginTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
+        /// <param name="page">页码</param>
+        /// <param name="rows">条数</param>
+        /// <returns></returns>
+        public ActionResult SelectCashRecordList(int? cash_type, int? cash_status, DateTime? beginTime, DateTime? endTime, int page = 1, int rows = 20)
+        {
+            var userId = int.Parse(User.Identity.Name);
+
+            var pageData = this.userManager.GetCashRequests(userId, null, null, cash_type, cash_status, beginTime, endTime, page, rows);
+
+            var data = pageData.Select(c => new {
+                user_id = c.user_id,
+                cash_type = CashType.ToString(c.cash_type),
+                cash_money = c.cash_money,
+                cash_status = CashStatus.ToString(c.cash_status),
+                cash_time1 = c.cash_time1.ToLongDateString(),
+                cash_record_id = c.cash_record_id
+
+            });
+            var total = this.userManager.GetCashRequestsTotal(userId, null, null, cash_type, cash_status, beginTime, endTime);
+            return Json(new { total = total, rows = data });
+        }
+
 
         #endregion
 

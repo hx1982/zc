@@ -277,7 +277,7 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
@@ -292,7 +292,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -330,7 +330,7 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
@@ -345,7 +345,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -367,7 +367,7 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
                 var data = pageData.Select(c => new {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
@@ -382,7 +382,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(user_name, user_phone, cash_type, cash_status, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, cash_status, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();

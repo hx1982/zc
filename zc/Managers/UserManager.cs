@@ -609,10 +609,43 @@ namespace zc.Managers
 
         #endregion
 
-        //提现请求列表
-        public List<cash_record> GetCashRequests(string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        /// <summary>
+        /// 总计提现成功了的总数
+        /// </summary>
+        /// <param name="acc_type"></param>
+        /// <returns></returns>
+        public int GetCashMoneyTotal(int? cash_type, int? user_id,int? cash_status)
         {
             var query = from b in db.cash_record select b;
+            if (cash_type != null)
+            {
+                query = query.Where(b => b.cash_type == cash_type);
+            }
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            if (cash_status != null)
+            {
+                if(cash_status == -1 || cash_status == 0) {
+                    query = query.Where(b => b.cash_status == cash_status);
+                }else
+                {
+                    int[] array = new int[] { 1, 2 };
+                    query = query.Where(b =>array.Contains(b.cash_status));
+                }
+            }
+            return query.Select(b => b.cash_money).DefaultIfEmpty(0).Sum();
+        }
+
+        //提现请求列表
+        public List<cash_record> GetCashRequests(int? user_id,string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        {
+            var query = from b in db.cash_record select b;
+            if(user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
             if (!string.IsNullOrEmpty(user_name))
             {
                 query = query.Where(b => b.user.user_name.Contains(user_name));
@@ -625,9 +658,16 @@ namespace zc.Managers
             {
                 query = query.Where(b => b.cash_type == cash_type);
             }
-            if (cash_status != null)
-            {
-                query = query.Where(b => b.cash_status == cash_status);
+            if (cash_status != null) {
+                if (cash_status == 5)
+                {
+                    int[] array = new int[] { 1, 2 };
+                    query = query.Where(b => array.Contains(b.cash_status));
+                }
+                else
+                {
+                    query = query.Where(b => b.cash_status == cash_status);
+                }
             }
             if (begin.HasValue)
             {
@@ -640,9 +680,13 @@ namespace zc.Managers
             return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
         //提现请求分页计数
-        public int GetCashRequestsTotal(string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
+        public int GetCashRequestsTotal(int? user_id,string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
         {
             var query = from b in db.cash_record select b;
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
             if (!string.IsNullOrEmpty(user_name))
             {
                 query = query.Where(b => b.user.user_name.Contains(user_name));
@@ -657,7 +701,15 @@ namespace zc.Managers
             }
             if (cash_status != null)
             {
-                query = query.Where(b => b.cash_status == cash_status);
+                if (cash_status == 5)
+                {
+                    int[] array = new int[] { 1, 2 };
+                    query = query.Where(b => array.Contains(b.cash_status));
+                }
+                else
+                {
+                    query = query.Where(b => b.cash_status == cash_status);
+                }
             }
             if (begin.HasValue)
             {
