@@ -16,6 +16,7 @@ using ThoughtWorks.QRCode.Codec.Data;
 
 namespace zc.Controllers
 {
+    [UserAuthorize]
     public class UserController : Controller
     {
         private UserManager userManager = new UserManager();
@@ -26,6 +27,7 @@ namespace zc.Controllers
         }
         #region 注册相关
 
+        [AllowAnonymous]
         public ActionResult Register(int? id)
         {
             if (id.HasValue)
@@ -38,6 +40,7 @@ namespace zc.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Register(UserRegisterModel model)
         {
@@ -56,11 +59,13 @@ namespace zc.Controllers
 
         #region 登录相关
 
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Login(UserLoginModel model)
         {
@@ -69,7 +74,7 @@ namespace zc.Controllers
                 var user = this.userManager.Login(model.UserPhone, model.LoginPwd);
                 if (user != null)
                 {
-                    FormsAuthentication.SetAuthCookie(user.user_id.ToString(), true);
+                    FormsAuthentication.SetAuthCookie(user.user_id.ToString(), false);
                     return RedirectToAction("Center");
                 }
                 else

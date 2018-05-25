@@ -143,6 +143,7 @@
     <Compile Include="Areas\Backend\Controllers\UserController.cs" />
     <Compile Include="Commons\AccountConstants.cs" />
     <Compile Include="Commons\AjaxResultObject.cs" />
+    <Compile Include="Commons\ApplicationOperatorIdentity.cs" />
     <Compile Include="Commons\ApplicationUserIdentity.cs" />
     <Compile Include="Commons\CashConstants.cs" />
     <Compile Include="Commons\SessionConstants.cs" />
@@ -785,6 +786,7 @@
     <Content Include="Areas\Backend\Views\User\CashRecordNoAudit.cshtml" />
     <Content Include="Areas\Backend\Views\User\CashRecordNoGrant.cshtml" />
     <Content Include="Areas\Backend\Views\User\CashRecordAll.cshtml" />
+    <Content Include="Areas\Backend\Views\Shared\Forbidden.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />

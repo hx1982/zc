@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using zc.Commons;
@@ -26,10 +27,23 @@ namespace zc.Filters
             string path = HttpContext.Current.Request.Path;
             var query = (from role in oper.sysroles
                          from menu in role.menus
-                         where path.StartsWith(menu.menu_url) //这里假定子菜单的url一定是以父菜单的url开头
+                         where menu.menu_url != null && path.StartsWith(menu.menu_url)
                          select menu).Count();
             bool hasPermission = query > 0;
+            if (!hasPermission)
+            {
+                HttpContext.Current.Response.StatusCode = 403;
+            }
             return hasPermission;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            base.HandleUnauthorizedRequest(filterContext);
+            if (filterContext.HttpContext.Response.StatusCode == 403)
+            {
+                filterContext.Result = new ViewResult() { ViewName = "~/Areas/Backend/Views/Shared/Forbidden.cshtml" };
+            }
         }
 
         public override void OnAuthorization(AuthorizationContext filterContext)

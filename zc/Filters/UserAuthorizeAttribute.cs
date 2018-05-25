@@ -21,12 +21,11 @@ namespace zc.Filters
                 using (ZCDbContext db = new ZCDbContext())
                 {
                     user user = null;
-                    user = db.users.Find(HttpContext.Current.User.Identity.Name);
+                    user = db.users.Find(int.Parse(HttpContext.Current.User.Identity.Name));
                     UserPrincipal upc = new UserPrincipal(user);
                     HttpContext.Current.User = upc;
                     return true;
                 }
-
             }
             return false;
         }

@@ -19,6 +19,7 @@ namespace zc
                 defaults: new { controller = "User", action = "Login", id = UrlParameter.Optional },
                 namespaces: new string[] { "zc.Controllers" }
             );
+            //routes.DataTokens.Add("area", "Backend");
         }
     }
 }

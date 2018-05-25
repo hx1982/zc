@@ -7,9 +7,10 @@ using zc.Commons;
 using zc.Managers;
 using zc.Models;
 using zc.Models.ViewModels;
-
+using zc.Filters;
 namespace zc.Areas.Backend.Controllers
 {
+    //[OperatorAuthorize]
     public class UserController : Controller
     {
         private UserManager _userManager = new UserManager();

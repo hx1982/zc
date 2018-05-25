@@ -12,10 +12,10 @@ namespace zc.Commons
     /// <summary>
     /// 鉴权相关: 会员身份标识
     /// </summary>
-    public class UserIdentity : IIdentity
+    public class OperatorIdentity : IIdentity
     {
         private string _name;
-        private user _userObj;
+        private _operator _operatorObj;
 
         public string AuthenticationType
         {
@@ -38,35 +38,29 @@ namespace zc.Commons
             get { return this._name; }
         }
 
-        public user UserObj
+        public _operator OperatorObj
         {
             get
             {
-                return _userObj;
-            }
-
-            set
-            {
-                _userObj = value;
+                return _operatorObj;
             }
         }
 
-        public UserIdentity(user user)
+        public OperatorIdentity(_operator oper)
         {
-            this._userObj = user;
-            this._name = user.user_id.ToString();
+            this._operatorObj = oper;
+            this._name = oper.oper_name;
         }
 
-        public UserIdentity()
+        public OperatorIdentity()
         {
-
         }
     }
 
     /// <summary>
     /// 鉴权相关: 会员Principal
     /// </summary>
-    public class UserPrincipal : IPrincipal
+    public class OperatorPrincipal : IPrincipal
     {
 
         private IIdentity _identity;
@@ -84,9 +78,9 @@ namespace zc.Commons
             return true;
         }
 
-        public UserPrincipal(user user)
+        public OperatorPrincipal(_operator oper)
         {
-            this._identity = new UserIdentity(user);
+            this._identity = new OperatorIdentity(oper);
         }
     }
 }
