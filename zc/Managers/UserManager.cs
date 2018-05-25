@@ -620,7 +620,7 @@ namespace zc.Managers
                 //增加复消费新增的记录
                 accModel = new account_record();
                 accModel.user_id = model.user_id;
-                accModel.acc_type = model.cash_type;
+                accModel.acc_type = AccountConstants.BLUE;
                 accModel.cons_type = ConType.INCOME;
                 accModel.acc_record_type = rt;
                 accModel.acc_balance = userModel.account4 + fu_xiao_fei;
