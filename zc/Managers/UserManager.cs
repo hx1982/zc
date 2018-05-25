@@ -160,7 +160,7 @@ namespace zc.Managers
             // 初始等级
             newUser.level_id = 0;
             // 生成用户编号(user_code)
-            newUser.user_code = Utility.GenerateUserCode();
+            newUser.user_code = Utility.GenerateUserCode(newUser);
             // 生成默认登录密码
             newUser.login_password = Utility.GenerateLoginPwd(newUser);
             // 生成默认二级密码

@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 using System.Collections;
 using System.Collections.Generic;
 using zc.Managers;
+using System.Text;
+using System.Threading;
+using System.Data.SqlClient;
 
 namespace zc_unit_test
 {
@@ -103,6 +106,30 @@ namespace zc_unit_test
             foreach (var item in data)
             {
                 Console.WriteLine(item);
+            }
+        }
+
+        [TestMethod]
+        public void TestMethod7()
+        {
+            var user = new user
+            {
+                id_number = "00000000000000000X",
+                user_phone = "13666660005"
+            };
+            var uc = Utility.GenerateUserCode(user);
+            Console.WriteLine(uc);
+        }
+
+
+        [TestMethod]
+        public void TestMethod8()
+        {
+            using (ZCDbContext db = new ZCDbContext())
+            {
+                var c = db.Database.SqlQuery<int>(
+                    "select count(0) from [user] where user_code='00000005'");
+                Console.WriteLine(c.Single());
             }
         }
     }
