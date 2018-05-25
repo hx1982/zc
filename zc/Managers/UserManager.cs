@@ -51,7 +51,7 @@ namespace zc.Managers
                 {
                     user = user,
                     dist_money = dist_money,
-                    dist_balance = dist_money,
+                    dist_balance = 0,
                     dist_number = 22
                 };
 
@@ -59,13 +59,15 @@ namespace zc.Managers
                 {
                     int referrer_money1 = Convert.ToInt32(user.referrer.level.recom_rate1 * user.reg_money);
                     bonus.referrer_id1 = user.referrer_id;
-                    bonus.referrer_money1 = bonus.referrer_balance1 = referrer_money1;
+                    bonus.referrer_money1 = referrer_money1;
+                    bonus.referrer_balance1 = 0;
                     bonus.referrer_number1 = 22;
                     if (user.referrer.referrer != null)
                     {
                         int referrer_money2 = Convert.ToInt32(user.referrer.referrer.level.recom_rate2 * user.reg_money);
                         bonus.referrer_id2 = user.referrer.referrer.user_id;
-                        bonus.referrer_money2 = bonus.referrer_balance2 = referrer_money2;
+                        bonus.referrer_money2 = referrer_money2;
+                        bonus.referrer_balance2 = 0;
                         bonus.referrer_number2 = 22;
                     }
                 }

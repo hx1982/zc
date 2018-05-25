@@ -25,7 +25,6 @@
         }
         $("#regMoney").html(str);*@
     });
-
 </script>
 
 <div id="tb">
@@ -80,11 +79,9 @@
         <hr />
         <div class="fitem">
             <label>注册金额</label>
-            <select name="reg_money" id="regMoney" class="easyui-combobox" style="width: 180px">
-               <option value="18000">18000元</option>
-                <option value="32000">32000元</option>
-                <option value="76000">76000元</option>
-            </select>
+            @Html.DropDownList("reg_money", ViewBag.Levels as SelectList, "请选择注册金额", new { @class = "easyui-combobox", style = "width:180px", id = "", editable = "false" })
+        </div>
+        <div class="fitem">
             <label>省</label>
             <input name="province" class="easyui-textbox">
         </div>
@@ -149,15 +146,15 @@
         $("#btnConfim").hide();
         $('#fm').form('submit', {
             url: '@Url.Action("ActiveUser", "User")',
-            onSubmit: function () {
-                var regMoney = document.forms['fm'].reg_money.value;
-                if (regMoney != 18000 && regMoney != 32000 && regMoney != 76000) {
-                    alert('注册金额必须是已经有的等级');
-                    $("#btnConfim").show();
-                    return false;
-                }
-                return true;
-            },
+            //onSubmit: function () {
+            //    var regMoney = document.forms['fm'].reg_money.value;
+            //    if (regMoney != 18000 && regMoney != 32000 && regMoney != 76000) {
+            //        alert('注册金额必须是已经有的等级');
+            //        $("#btnConfim").show();
+            //        return false;
+            //    }
+            //    return true;
+            //},
             success: function (data) {
                 data = eval('(' + data + ')');
                 console.log(data);

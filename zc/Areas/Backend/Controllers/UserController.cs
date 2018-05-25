@@ -23,10 +23,6 @@ namespace zc.Areas.Backend.Controllers
 
         public ActionResult SearchNotActivatedUsers(string userName = "", string userPhone = "", int page = 1, int rows = 10)
         {
-            //查询等级列表
-            var level = this._userManager.GetLevelList();
-            ViewBag.Levels = level;
-
             if (Request.IsAjaxRequest())
             {
                 var notActivatedUsers = _userManager.SearchNotActivedUsers(userName, userPhone, page, rows);
@@ -34,6 +30,9 @@ namespace zc.Areas.Backend.Controllers
                 var total = _userManager.SearchTotalOfNotActivatedUsers(userName, userPhone);
                 return Json(new { total = total, rows = data });
             }
+            //查询等级列表
+            var level = this._userManager.GetLevelList();
+            ViewBag.Levels = new SelectList(level, "level_money", "level_money");
             return View();
         }
 
@@ -50,7 +49,7 @@ namespace zc.Areas.Backend.Controllers
                     user_name = u.user_name,
                     user_phone = u.user_phone,
                     id_number = u.id_number,
-                    level_name = u.level.level_name,
+                    level_name = u.level == null ? "" : u.level.level_name,
                     province = u.province,
                     city = u.city,
                     area = u.area,

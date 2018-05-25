@@ -46,7 +46,7 @@ namespace zc.Controllers
                 var regSuccess = this.userManager.Register(model);
                 if (regSuccess)
                 {
-                    return Content("<script>alert('注册成功, 请等待工作人员为您激活账户!');location.href='/User/Center'</script>");
+                    return Content("<script>alert('注册成功, 请等待工作人员为您激活账户!');</script>");
                 }
             }
             return View();
