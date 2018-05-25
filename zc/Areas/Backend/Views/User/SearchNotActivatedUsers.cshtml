@@ -14,6 +14,20 @@
     }
 </style>
 
+<script type="text/javascript">
+    $(function () {
+        @*var model = '@Html.Raw(@ViewBag.Levels)';
+        $("#regMoney").html("");
+        var str = "";
+        for (var i = 0; i < model.length; i++) {
+            var temp = model[i];
+            str += '<option value="'+temp.level_money+'">'+temp.level_money+'元</option>';
+        }
+        $("#regMoney").html(str);*@
+    });
+
+</script>
+
 <div id="tb">
     <form id="tbForm">
         <span class="tbspan">会员名称：</span>
@@ -66,8 +80,8 @@
         <hr />
         <div class="fitem">
             <label>注册金额</label>
-            <select name="reg_money" class="easyui-combobox" style="width: 180px">
-                <option value="18000">18000元</option>
+            <select name="reg_money" id="regMoney" class="easyui-combobox" style="width: 180px">
+               <option value="18000">18000元</option>
                 <option value="32000">32000元</option>
                 <option value="76000">76000元</option>
             </select>
@@ -138,7 +152,7 @@
             onSubmit: function () {
                 var regMoney = document.forms['fm'].reg_money.value;
                 if (regMoney != 18000 && regMoney != 32000 && regMoney != 76000) {
-                    alert('注册金额必须是1.8万/3.2万/7.6万');
+                    alert('注册金额必须是已经有的等级');
                     $("#btnConfim").show();
                     return false;
                 }

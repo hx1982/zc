@@ -23,6 +23,10 @@ namespace zc.Areas.Backend.Controllers
 
         public ActionResult SearchNotActivatedUsers(string userName = "", string userPhone = "", int page = 1, int rows = 10)
         {
+            //查询等级列表
+            var level = this._userManager.GetLevelList();
+            ViewBag.Levels = level;
+
             if (Request.IsAjaxRequest())
             {
                 var notActivatedUsers = _userManager.SearchNotActivedUsers(userName, userPhone, page, rows);

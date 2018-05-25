@@ -76,9 +76,10 @@
     </form>
 </div>
 <table id="tt" class="easyui-datagrid" style="width:100%;height:100%"
-       toolbar="#tb" rownumbers="true" pagination="true" data-options="url:'@Url.Action("CashRecordNoGrant","User")',fitColumns:true,singleSelect:true">
+      rownumbers="true" pagination="true" data-options="url:'@Url.Action("CashRecordNoGrant","User")',fitColumns:true">
     <thead>
         <tr>
+            <!--<th data-options="field:'cash_record_id',checkbox:true"></th>-->
             <th field="user_name">会员名称</th>
             <th field="user_phone">手机号码</th>
             <th field="cash_type">提现类型</th>
@@ -110,6 +111,25 @@
         });
         return o;
     }
+
+    var toolbar = [{
+        text: '批量发放',
+        iconCls: 'icon-edit',
+        handler: function () { alert('add') }
+    },  '-', {
+        text: '单个发放',
+        iconCls: 'icon-save',
+        handler: function () {
+            var checkedItems = $('#tt').datagrid('getChecked');
+            var names = [];
+            $.each(checkedItems, function (index, item) {
+                names.push(item.cash_record_id);
+                alert(item.cash_record_id);
+            });
+                
+        }
+    }];
+
 
     function submitForm() {
         $('#tt').datagrid('load', $('#tbForm').serializeObject());

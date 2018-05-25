@@ -13,6 +13,12 @@ namespace zc.Managers
     {
         private ZCDbContext db = new ZCDbContext();
 
+        public List<level> GetLevelList()
+        {
+            var query = from b in db.levels select b;
+            return query.ToList();
+        }
+
         /// <summary>
         /// 激活会员
         /// </summary>
@@ -501,6 +507,19 @@ namespace zc.Managers
         /// <returns></returns>
         public bool UpdateCashRecord(cash_record model)
         {
+            //int[] array = new int[] { 1, 2 };
+            //query = query.Where(b => array.Contains(b.cash_status));
+
+            //NorthwindDataContext db = new NorthwindDataContext();
+            //var customers = db.Customers.Where(c => c.CustomerID.StartsWith("BL"));
+            //foreach (var customer in customers)
+            //{
+            //    customer.Address = "Guangzhou";
+            //    customer.ContactName = "CoolCode";
+            //    customer.CompanyName = "Microsoft";
+            //}
+            //db.SubmitChanges();
+
             db.SaveChanges();
             return true;
         }
