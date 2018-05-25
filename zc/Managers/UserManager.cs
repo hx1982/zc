@@ -510,19 +510,27 @@ namespace zc.Managers
             //int[] array = new int[] { 1, 2 };
             //query = query.Where(b => array.Contains(b.cash_status));
 
-            //NorthwindDataContext db = new NorthwindDataContext();
-            //var customers = db.Customers.Where(c => c.CustomerID.StartsWith("BL"));
-            //foreach (var customer in customers)
-            //{
-            //    customer.Address = "Guangzhou";
-            //    customer.ContactName = "CoolCode";
-            //    customer.CompanyName = "Microsoft";
-            //}
-            //db.SubmitChanges();
-
             db.SaveChanges();
             return true;
         }
+        /// <summary>
+        /// 批量修改未发放的状态
+        /// </summary>
+        /// <param name="recordIds"></param>
+        /// <returns></returns>
+        public bool BachUpdateCashRecord(int[] recordIds,int operId)
+        {
+            var customers = db.cash_record.Where(c => recordIds.Contains(c.cash_record_id));
+            foreach (var customer in customers)
+            {
+                customer.cash_status = CashStatus.GIVEMONEY_OK;
+                customer.cash_time3 = DateTime.Now;
+                customer.oper_id2 = operId;
+            }
+            db.SaveChanges();
+            return true;
+        }
+
         /// <summary>
         /// 通过提现申请
         /// </summary>

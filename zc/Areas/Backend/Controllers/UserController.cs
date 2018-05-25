@@ -155,6 +155,86 @@ namespace zc.Areas.Backend.Controllers
         /// <param name="form"></param>
         /// <returns></returns>
         [Route("/User/AuditCashRequest")]
+        public bool BachAuditCashRequest(int[] recordIds,int cash_status)
+        {
+            for (int i = 0; i < recordIds.Length; i++)
+            {
+                int cashId = recordIds[i];
+                //获取对象
+                cash_record cashRecord = this._userManager.GetCashRecord(cashId);
+                var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
+
+                if (cashRecord == null)
+                {
+                    continue;
+                }
+                cashRecord.oper_id1 = operId;
+
+                //判断是通过审核还是不通过审核
+                //如果不通过
+                if (cash_status==CashStatus.AUDIT_DENY)
+                {
+                    cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                    cashRecord.cash_time2 = DateTime.Now;
+
+                    this._userManager.UpdateCashRecord(cashRecord);
+                    continue;
+                }
+
+                //如果是通过的
+                var userAccount = this._userManager.GetUserAccount(cashRecord.user_id);//查会员账户
+                int cash_money = cashRecord.cash_money;
+                int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
+                int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
+                //判断是否需要的金额，大于了所剩余额
+                if (cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
+                {
+                    if (userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                    {
+                        cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                        cashRecord.cash_time2 = DateTime.Now;
+                        cashRecord.cash_remark1 = "审核不成功，该账户余额不足以支付提现扣除";
+
+                        this._userManager.UpdateCashRecord(cashRecord);
+
+                        continue;
+                    }
+                }
+                if (cashRecord.cash_type == CashType.SILVER_DIAMOND) //银钻账户
+                {
+                    if (userAccount.account2 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                    {
+                        cashRecord.cash_status = CashStatus.AUDIT_DENY;
+                        cashRecord.cash_time2 = DateTime.Now;
+                        cashRecord.cash_remark1 = "审核不成功，该账户余额不足以支付提现扣除";
+
+                        this._userManager.UpdateCashRecord(cashRecord);
+
+                        continue;
+                    }
+                }
+
+                cash_record mm = this._userManager.AuidCashRecord(cashRecord);
+                if (mm.cash_status == CashStatus.GIVEMONEY_WAITING)
+                {
+                    var c = mm;
+                    continue;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            return true;
+
+        }
+
+        /// <summary>
+        /// 单个，要弹出对话框的 审核提现
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        [Route("/User/AuditCashRequest")]
         public ActionResult AuditCashRequest(FormCollection form)
         {
             var cashRecordId = form["cash_record_id"];
@@ -306,15 +386,18 @@ namespace zc.Areas.Backend.Controllers
         /// 发放奖金
         /// </summary>
         /// <returns></returns>
-        public bool  UpdateGiveMoney(int cash_record_id)
+        public bool  UpdateGiveMoney(int[] recordIds)
         {
-            var cashRecord = this._userManager.GetCashRecord(cash_record_id);
             var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
-            cashRecord.cash_status = CashStatus.GIVEMONEY_OK;
-            cashRecord.oper_id2 = operId;
-            cashRecord.cash_time3 = DateTime.Now;
 
-            bool result = this._userManager.UpdateCashRecord(cashRecord);
+            //var cashRecord = this._userManager.GetCashRecord(cash_record_id);
+            //cashRecord.cash_status = CashStatus.GIVEMONEY_OK;
+            //cashRecord.oper_id2 = operId;
+            //cashRecord.cash_time3 = DateTime.Now;
+
+            //bool result = this._userManager.UpdateCashRecord(cashRecord);
+            int[] IDS = recordIds;
+            bool result = this._userManager.BachUpdateCashRecord(IDS, operId);
 
             return result;
         }
