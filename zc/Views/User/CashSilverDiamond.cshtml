@@ -99,12 +99,12 @@
                     data: {cash_money:$("#service_charge").val(),second_password:e.value},
                     success: function (data) {
                         //如果成功，跳转页面
-                        if(data=="true"){
+                       // if(data=="true"){
                             location.href = '@Url.Action("Center", "User")';
-                        }else{
-                            //失败提示
-                            alert("申请提现失败");
-                        }
+                        //}else{
+                        //    //失败提示
+                        //    alert("申请提现失败");
+                        //}
                     }
                 });
             },'div') ;

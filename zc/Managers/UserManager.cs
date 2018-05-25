@@ -614,7 +614,7 @@ namespace zc.Managers
                     userModel.account2 = userModel.account2 - model.cash_money - shou_xu_fei - fu_xiao_fei;
                     rt = AccRecordType.ADD_SILVER;
                 }
-                userModel.account4 = userModel.account4 + fu_xiao_fei;
+                userModel.account3 = userModel.account3 + fu_xiao_fei;
                 db.SaveChanges();
 
                 //增加复消费新增的记录
