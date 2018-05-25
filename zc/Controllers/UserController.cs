@@ -93,6 +93,15 @@ namespace zc.Controllers
             var user = this.userManager.GetUser(userId);
             var userAccount = this.userManager.GetUserAccount(userId);
             ViewBag.User = user;
+
+            var userBouns = this.userManager.GetUserBonus(userId);
+
+            ViewBag.ZC1A = userBouns.dist_money;
+            ViewBag.ZC1B = userBouns.dist_balance;
+
+            ViewBag.ZC2A = this.userManager.GetReferrerMoney1Total(userId)+ this.userManager.GetReferrerMoney2Total(userId);
+            ViewBag.ZC2B = this.userManager.GetReferrerBalance1Total(userId) + this.userManager.GetReferrerBalance2Total(userId);
+
             return View(userAccount);
         }
 

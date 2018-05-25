@@ -893,5 +893,74 @@ namespace zc.Managers
 
         #endregion
 
+        #region 分红信息的查询 user_bouns
+
+        public user_bonus GetUserBonus(int userId)
+        {
+            var query = from ua in db.user_bonus
+                        where ua.user_id == userId
+                        select ua;
+            return query.FirstOrDefault();
+        }
+        /// <summary>
+        /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐金额总和
+        /// </summary>
+        /// <param name="referrer_id1"></param>
+        /// <returns></returns>
+        public int GetReferrerMoney1Total(int? referrer_id1)
+        {
+            var query = from b in db.user_bonus select b;
+            if (referrer_id1 != null)
+            {
+                query = query.Where(b => b.referrer_id1 == referrer_id1);
+            }
+            return query.Select(b => b.referrer_money1).DefaultIfEmpty(0).Sum();
+        }
+        /// <summary>
+        /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐金额总和
+        /// </summary>
+        /// <param name="referrer_id1"></param>
+        /// <returns></returns>
+        public int GetReferrerMoney2Total(int? referrer_id2)
+        {
+            var query = from b in db.user_bonus select b;
+            if (referrer_id2 != null)
+            {
+                query = query.Where(b => b.referrer_id2 == referrer_id2);
+            }
+            return (int)query.Select(b => b.referrer_money2).DefaultIfEmpty(0).Sum();
+        }
+
+        /// <summary>
+        /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐余额总和
+        /// </summary>
+        /// <param name="referrer_id1"></param>
+        /// <returns></returns>
+        public int GetReferrerBalance1Total(int? referrer_id1)
+        {
+            var query = from b in db.user_bonus select b;
+            if (referrer_id1 != null)
+            {
+                query = query.Where(b => b.referrer_id1 == referrer_id1);
+            }
+            return query.Select(b => b.referrer_balance1).DefaultIfEmpty(0).Sum();
+        }
+        /// <summary>
+        /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐余额总和
+        /// </summary>
+        /// <param name="referrer_id1"></param>
+        /// <returns></returns>
+        public int GetReferrerBalance2Total(int? referrer_id2)
+        {
+            var query = from b in db.user_bonus select b;
+            if (referrer_id2 != null)
+            {
+                query = query.Where(b => b.referrer_id2 == referrer_id2);
+            }
+            return (int)query.Select(b => b.referrer_balance2).DefaultIfEmpty(0).Sum();
+        }
+
+        #endregion
+
     }
 }
