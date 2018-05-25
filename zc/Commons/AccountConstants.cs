@@ -49,11 +49,11 @@ namespace zc.Commons
     public class AccRecordType
     {
         /// <summary>
-        /// 本金分红
+        /// 本金分红 改为 众筹1分红
         /// </summary>
         public static readonly int PRINCIPAL_SHARE = 1;
         /// <summary>
-        /// 推荐分红
+        /// 推荐分红 改为 众筹2分红
         /// </summary>
         public static readonly int REFERRER_SHARE = 2;
         /// <summary>
@@ -108,8 +108,8 @@ namespace zc.Commons
         public static string ToString(int status)
         {
             string str = "未知";
-            if (status == PRINCIPAL_SHARE) str = "本金分红";
-            else if (status == REFERRER_SHARE) str = "推荐分红";
+            if (status == PRINCIPAL_SHARE) str = "众筹1分红";
+            else if (status == REFERRER_SHARE) str = "众筹2分红";
             else if (status == SYSTEM_COMPENSATION) str = "系统补偿";
             else if (status == MINUS_SHOU_XU_FEI) str = "扣手续费";
             else if (status == MINUS_FU_XIAO_FEI) str = "扣复消费";

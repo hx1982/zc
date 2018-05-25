@@ -119,7 +119,7 @@ namespace zc.Areas.Backend.Controllers
                 bonus_record_id = b.bonus_record_id,
                 user_name = b.user.user_name,
                 user_phone = b.user.user_phone,
-                bonus_type = b.bouns_type == 1 ? "本金分红" : "推荐分红",
+                bonus_type = b.bouns_type == 1 ? "众筹1分红" : "众筹2分红",
                 bonus_money = b.bouns_money,
                 bonus_time = b.create_time.ToLongDateString(),
                 bonus_remark = b.bonus_remark
