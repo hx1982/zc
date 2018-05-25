@@ -258,7 +258,7 @@ namespace zc.Controllers
                 cash_type = CashType.ToString(c.cash_type),
                 cash_money = c.cash_money,
                 cash_status = CashStatus.ToString(c.cash_status),
-                cash_time1 = c.cash_time1.ToLongDateString(),
+                cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                 cash_record_id = c.cash_record_id
 
             });

@@ -100,7 +100,7 @@
                     success: function (data) {
                         //如果成功，跳转页面
                         if(data=="true"){
-                            location.href = '@Url.Action("AccountGoldDiamond", "User")';
+                            location.href = '@Url.Action("Center", "User")';
                         }else{
                             //失败提示
                             alert("申请提现失败");

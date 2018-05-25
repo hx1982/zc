@@ -57,8 +57,8 @@ namespace zc.Areas.Backend.Controllers
                     reg_money = u.reg_money,
                     referrer_name = u.referrer == null ? "无" : u.referrer.user_name,
                     user_status = UserStatusHelper.ToString(u.user_status),
-                    register_time = u.register_time.ToLongDateString(),
-                    activate_time = u.activate_time == null ? "" : u.activate_time.Value.ToLongDateString()
+                    register_time = u.register_time.ToString("yyyy-MM-dd HH:mm:ss"),
+                    activate_time = u.activate_time == null ? "" : u.activate_time.Value.ToString("yyyy-MM-dd HH:mm:ss")
                 });
                 var total = this._userManager.GetAllUsersTotal(userName, userPhone, idNumber, levelId, province, city, area, referrerUserName, userStatus, beginRegDate, endRegDate, beginActiveDate, endActiveDate);
                 return Json(new { total = total, rows = data });
@@ -120,7 +120,7 @@ namespace zc.Areas.Backend.Controllers
                 user_phone = b.user.user_phone,
                 bonus_type = b.bouns_type == 1 ? "众筹1分红" : "众筹2分红",
                 bonus_money = b.bouns_money,
-                bonus_time = b.create_time.ToLongDateString(),
+                bonus_time = b.create_time.ToString("yyyy-MM-dd HH:mm:ss"),
                 bonus_remark = b.bonus_remark
             };
         }
@@ -140,7 +140,8 @@ namespace zc.Areas.Backend.Controllers
                 area = a.area,
                 address = a.address,
                 reg_money = a.reg_money,
-                referrer = a.referrer == null ? "无" : a.referrer.user_name + "(" + a.referrer.user_code + ")"
+                referrer = a.referrer == null ? "无" : a.referrer.user_name + "(" + a.referrer.user_code + ")",
+                register_time = a.register_time.ToString("yyyy-MM-dd HH:mm:ss")
             };
         }
 
@@ -338,7 +339,7 @@ namespace zc.Areas.Backend.Controllers
                         fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                         actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                         cash_status = CashStatus.ToString(c.cash_status),
-                        cash_time1 = c.cash_time1.ToLongDateString(),
+                        cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                         cash_record_id = c.cash_record_id,
                         user_id = c.user_id
                     }
@@ -370,7 +371,7 @@ namespace zc.Areas.Backend.Controllers
                     fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     actual_money = c.cash_money- Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI)- Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
-                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
@@ -426,7 +427,7 @@ namespace zc.Areas.Backend.Controllers
                     fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
-                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
@@ -463,7 +464,7 @@ namespace zc.Areas.Backend.Controllers
                     fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
-                    cash_time1 = c.cash_time1.ToLongDateString(),
+                    cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
