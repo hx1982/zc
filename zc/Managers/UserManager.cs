@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
 using System.Web;
@@ -520,7 +522,7 @@ namespace zc.Managers
         /// </summary>
         /// <param name="recordIds"></param>
         /// <returns></returns>
-        public bool BachUpdateCashRecord(int[] recordIds,int operId)
+        public bool BachUpdateCashRecord(int[] recordIds, int operId)
         {
             var customers = db.cash_record.Where(c => recordIds.Contains(c.cash_record_id));
             foreach (var customer in customers)
@@ -636,6 +638,7 @@ namespace zc.Managers
             }
         }
 
+
         #endregion
 
         /// <summary>
@@ -643,7 +646,7 @@ namespace zc.Managers
         /// </summary>
         /// <param name="acc_type"></param>
         /// <returns></returns>
-        public int GetCashMoneyTotal(int? cash_type, int? user_id,int? cash_status)
+        public int GetCashMoneyTotal(int? cash_type, int? user_id, int? cash_status)
         {
             var query = from b in db.cash_record select b;
             if (cash_type != null)
@@ -656,22 +659,24 @@ namespace zc.Managers
             }
             if (cash_status != null)
             {
-                if(cash_status == -1 || cash_status == 0) {
+                if (cash_status == -1 || cash_status == 0)
+                {
                     query = query.Where(b => b.cash_status == cash_status);
-                }else
+                }
+                else
                 {
                     int[] array = new int[] { 1, 2 };
-                    query = query.Where(b =>array.Contains(b.cash_status));
+                    query = query.Where(b => array.Contains(b.cash_status));
                 }
             }
             return query.Select(b => b.cash_money).DefaultIfEmpty(0).Sum();
         }
 
         //提现请求列表
-        public List<cash_record> GetCashRequests(int? user_id,string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        public List<cash_record> GetCashRequests(int? user_id, string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.cash_record select b;
-            if(user_id != null)
+            if (user_id != null)
             {
                 query = query.Where(b => b.user_id == user_id);
             }
@@ -687,7 +692,8 @@ namespace zc.Managers
             {
                 query = query.Where(b => b.cash_type == cash_type);
             }
-            if (cash_status != null) {
+            if (cash_status != null)
+            {
                 if (cash_status == 5)
                 {
                     int[] array = new int[] { 1, 2 };
@@ -709,7 +715,7 @@ namespace zc.Managers
             return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
         //提现请求分页计数
-        public int GetCashRequestsTotal(int? user_id,string user_name,string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
+        public int GetCashRequestsTotal(int? user_id, string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
         {
             var query = from b in db.cash_record select b;
             if (user_id != null)
@@ -972,5 +978,73 @@ namespace zc.Managers
 
         #endregion
 
+        #region 等级修改相关
+
+        /// <summary>
+        /// 根据会员名和会员电话模糊分页查询正常用户
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        public List<user> SearchNormalUsersByNameAndPhone(string userName, string userPhone, int page, int rows)
+        {
+            var query = from u in db.users
+                        where u.user_name.Contains(userName)
+                        && u.user_phone.Contains(userPhone)
+                        && u.user_status == UserStatus.NORMAL
+                        orderby u.user_id ascending
+                        select u;
+            return query.Skip(rows * page - rows).Take(rows).ToList();
+        }
+
+        public int SearchNormalUsersByNameAndPhoneTotal(string userName, string userPhone)
+        {
+            var query = from u in db.users
+                        where u.user_name.Contains(userName)
+                        && u.user_phone.Contains(userPhone)
+                        && u.user_status == UserStatus.NORMAL
+                        select u;
+            return query.Count();
+        }
+
+
+        public void ChangeLevel(int[] array_user_id, int new_level)
+        {
+            if (array_user_id == null || array_user_id.Length == 0)
+            {
+                return;
+            }
+            var sql = "update [user] set level_id = @new_level where user_id in (" + string.Join(",", array_user_id) + ")";
+            db.Database.ExecuteSqlCommand(sql, new SqlParameter("@new_level", new_level));
+        }
+
+        #endregion
+
+        #region 账户流水
+
+        public List<account_record> AccountLines(string userName, string userPhone, int accType, int page, int rows)
+        {
+            var query = from a in db.account_record
+                        where a.user.user_name.Contains(userName)
+                        && a.user.user_phone.Contains(userPhone)
+                        && a.acc_type == accType
+                        orderby a.acc_record_id ascending
+                        select a;
+            return query.Skip(page * rows - rows).Take(rows).ToList();
+        }
+
+        public int AccountLinesTotal(string userName, string userPhone, int accType)
+        {
+            var query = from a in db.account_record
+                        where a.user.user_name.Contains(userName)
+                        && a.user.user_phone.Contains(userPhone)
+                        && a.acc_type == accType
+                        select a;
+            return query.Count();
+        }
+
+        #endregion
     }
 }

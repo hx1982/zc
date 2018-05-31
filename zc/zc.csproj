@@ -787,6 +787,8 @@
     <Content Include="Areas\Backend\Views\User\CashRecordNoGrant.cshtml" />
     <Content Include="Areas\Backend\Views\User\CashRecordAll.cshtml" />
     <Content Include="Areas\Backend\Views\Shared\Forbidden.cshtml" />
+    <Content Include="Areas\Backend\Views\User\PrepareChangeLevel.cshtml" />
+    <Content Include="Areas\Backend\Views\User\AccountLine.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />
@@ -850,6 +852,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Backend\Models\" />
+    <Folder Include="Areas\Backend\Views\Level\" />
     <Folder Include="photos\" />
   </ItemGroup>
   <ItemGroup>

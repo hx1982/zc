@@ -156,7 +156,7 @@ namespace zc.Areas.Backend.Controllers
         /// <param name="form"></param>
         /// <returns></returns>
         [Route("/User/AuditCashRequest")]
-        public bool BachAuditCashRequest(int[] recordIds,int cash_status)
+        public bool BachAuditCashRequest(int[] recordIds, int cash_status)
         {
             for (int i = 0; i < recordIds.Length; i++)
             {
@@ -173,7 +173,7 @@ namespace zc.Areas.Backend.Controllers
 
                 //判断是通过审核还是不通过审核
                 //如果不通过
-                if (cash_status==CashStatus.AUDIT_DENY)
+                if (cash_status == CashStatus.AUDIT_DENY)
                 {
                     cashRecord.cash_status = CashStatus.AUDIT_DENY;
                     cashRecord.cash_time2 = DateTime.Now;
@@ -287,9 +287,9 @@ namespace zc.Areas.Backend.Controllers
             int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
             int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
             //判断是否需要的金额，大于了所剩余额
-            if(cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
+            if (cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
             {
-                if(userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                if (userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
                 {
                     cashRecord.cash_status = CashStatus.AUDIT_DENY;
                     cashRecord.cash_time2 = DateTime.Now;
@@ -324,14 +324,15 @@ namespace zc.Areas.Backend.Controllers
             cashRecord.cash_remark1 = form["cash_remark1"];
 
             cash_record mm = this._userManager.AuidCashRecord(cashRecord);
-            if(mm.cash_status == CashStatus.GIVEMONEY_WAITING)
+            if (mm.cash_status == CashStatus.GIVEMONEY_WAITING)
             {
                 var c = mm;
                 return Json(new AjaxResultObject
                 {
                     code = AjaxResultObject.OK,
                     message = "审核成功",
-                    data = new {
+                    data = new
+                    {
                         user_name = c.user.user_name,
                         user_phone = c.user.user_phone,
                         cash_type = CashType.ToString(c.cash_type),
@@ -345,7 +346,8 @@ namespace zc.Areas.Backend.Controllers
                         user_id = c.user_id
                     }
                 });
-            }else
+            }
+            else
             {
                 return Json(new AjaxResultObject
                 {
@@ -353,7 +355,7 @@ namespace zc.Areas.Backend.Controllers
                     message = "审核不成功"
                 });
             }
-            
+
         }
 
         //会员未审核提现请求
@@ -362,22 +364,23 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end, page, rows);
-                var data = pageData.Select(c => new {
+                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end, page, rows);
+                var data = pageData.Select(c => new
+                {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
                     fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
-                    actual_money = c.cash_money- Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI)- Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, cash_type, CashStatus.AUDIT_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -387,7 +390,7 @@ namespace zc.Areas.Backend.Controllers
         /// 发放奖金
         /// </summary>
         /// <returns></returns>
-        public bool  UpdateGiveMoney(int[] recordIds)
+        public bool UpdateGiveMoney(int[] recordIds)
         {
             var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
 
@@ -418,8 +421,9 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
-                var data = pageData.Select(c => new {
+                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
+                var data = pageData.Select(c => new
+                {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
                     cash_type = CashType.ToString(c.cash_type),
@@ -433,7 +437,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -451,12 +455,13 @@ namespace zc.Areas.Backend.Controllers
         /// <param name="page"></param>
         /// <param name="rows"></param>
         /// <returns></returns>
-        public ActionResult CashRecordAll(string user_name, string user_phone, int? cash_type,int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        public ActionResult CashRecordAll(string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null,user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
-                var data = pageData.Select(c => new {
+                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, cash_type, cash_status, begin, end, page, rows);
+                var data = pageData.Select(c => new
+                {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
                     cash_type = CashType.ToString(c.cash_type),
@@ -470,7 +475,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null,user_name, user_phone, cash_type, cash_status, begin, end);
+                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, cash_type, cash_status, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -478,5 +483,91 @@ namespace zc.Areas.Backend.Controllers
 
         #endregion
 
+        #region 等级修改相关
+
+        // 准备修改等级的视图
+        public ActionResult PrepareChangeLevel()
+        {
+            var levels = this._userManager.GetLevelList();
+            ViewBag.Levels = levels;
+            return View();
+        }
+        // 修改等级前的查询
+        public ActionResult SearchBeforeChangeLevel(string userName, string userPhone, int page = 1, int rows = 10)
+        {
+            var users = _userManager.SearchNormalUsersByNameAndPhone(userName, userPhone, page, rows);
+            var data = users.Select(user => new
+            {
+                user_id = user.user_id,
+                user_code = user.user_code,
+                user_name = user.user_name,
+                user_phone = user.user_phone,
+                id_number = user.id_number,
+                level_name = user.level.level_name,
+                referrer_name = user.referrer != null ? user.referrer.user_name : "无"
+            });
+            var total = _userManager.SearchNormalUsersByNameAndPhoneTotal(userName, userPhone);
+            return Json(new
+            {
+                total = total,
+                rows = data
+            });
+        }
+        // 修改等级
+        public ActionResult ChangeLevel(int[] array_user_id, int new_level)
+        {
+            try
+            {
+                this._userManager.ChangeLevel(array_user_id, new_level);
+                return Json(new AjaxResultObject { code = AjaxResultObject.OK, message = "等级修改成功" });
+            }
+            catch (Exception e)
+            {
+                return Json(new AjaxResultObject { code = AjaxResultObject.ERROR, message = "系统错误: " });
+            }
+        }
+        #endregion
+
+        #region 账户流水查询
+
+        public ActionResult AccountLine(string userName, string userPhone, int? accType, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                if (!accType.HasValue)
+                {
+                    return null;
+                }
+                var lines = this._userManager.AccountLines(userName, userPhone, accType.Value, page, rows);
+                var total = this._userManager.AccountLinesTotal(userName, userPhone, accType.Value);
+                var result = new
+                {
+                    total = total,
+                    rows = lines.Select(a => new
+                    {
+                        user_name = a.user.user_name,
+                        user_phone = a.user.user_phone,
+                        acc_type = AccountConstants.ToString(a.acc_type),
+                        acc_record_type = AccRecordType.ToString(a.acc_record_type),
+                        cons_value = a.cons_type == ConType.EXPEND ? "-" + a.cons_value : "+" + a.cons_value,
+                        acc_record_time = a.acc_record_time.ToString("yyyy-MM-dd HH:mm"),
+                        acc_remark = a.acc_remark
+                    })
+                };
+                return Json(result);
+            }
+            return View();
+        }
+
+        #endregion
+
+        #region 账户汇总查询
+
+        public ActionResult AccountSumamry()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }

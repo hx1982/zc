@@ -26,6 +26,20 @@ namespace zc.Commons
         /// 茶票
         /// </summary>
         public static readonly int TEATICKET = 4;
+
+        public static string ToString(int accType)
+        {
+            string str = string.Empty;
+            switch (accType)
+            {
+                case 1: str = "金钻"; break;
+                case 2: str = "银钻"; break;
+                case 3: str = "蓝钻"; break;
+                case 4: str = "茶票"; break;
+            }
+            return str;
+        }
+
     }
 
    /// <summary>
