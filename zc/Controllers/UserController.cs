@@ -104,7 +104,7 @@ namespace zc.Controllers
             ViewBag.ZC1A = userBouns.dist_money;
             ViewBag.ZC1B = userBouns.dist_balance;
 
-            ViewBag.ZC2A = this.userManager.GetReferrerMoney1Total(userId)+ this.userManager.GetReferrerMoney2Total(userId);
+            ViewBag.ZC2A = this.userManager.GetReferrerMoney1Total(userId) + this.userManager.GetReferrerMoney2Total(userId);
             ViewBag.ZC2B = this.userManager.GetReferrerBalance1Total(userId) + this.userManager.GetReferrerBalance2Total(userId);
 
             return View(userAccount);
@@ -125,6 +125,31 @@ namespace zc.Controllers
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.GOLD, acc_record_type, dateBegin, dateEnd, page, rows);
             ViewBag.RecordList = accountRecordList;
+
+            //如果是Ajax请求, 说明是上拉加载
+            if (Request.IsAjaxRequest())
+            {
+                if (accountRecordList.Count > 0)
+                {
+                    return Json(new AjaxResultObject() {
+                        code = AjaxResultObject.OK,
+                        message = "OK",
+                        data = accountRecordList.Select(a => new
+                        {
+                            acc_record_type = AccRecordType.ToString(a.acc_record_type),
+                            cons_value = a.cons_value,
+                            acc_record_time = a.acc_record_time.ToString("yyyy/MM/dd")
+                        })
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AjaxResultObject() {
+                        code = AjaxResultObject.ERROR,
+                        message = "没更多有数据了"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
 
             return View();
         }
@@ -258,7 +283,8 @@ namespace zc.Controllers
 
             var pageData = this.userManager.GetCashRequests(userId, null, null, cash_type, cash_status, beginTime, endTime, page, rows);
 
-            var data = pageData.Select(c => new {
+            var data = pageData.Select(c => new
+            {
                 user_id = c.user_id,
                 cash_type = CashType.ToString(c.cash_type),
                 cash_money = c.cash_money,
@@ -362,7 +388,8 @@ namespace zc.Controllers
         {
             var userId = int.Parse(User.Identity.Name);
             this.userManager.UpdateLoginPwd(userId, loginPwd);
-            return Json(new AjaxResultObject {
+            return Json(new AjaxResultObject
+            {
                 code = AjaxResultObject.OK,
                 message = "登录密码修改成功"
             });
