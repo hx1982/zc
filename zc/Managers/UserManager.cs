@@ -417,6 +417,9 @@ namespace zc.Managers
         public List<bonus_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
             var query = from b in db.bonus_record select b;
+            // 只查已支付的分红
+            query = query.Where(b => b.bouns_is_give);
+
             if (!string.IsNullOrEmpty(user_name))
             {
                 query = query.Where(b => b.user.user_name.Contains(user_name));
@@ -447,6 +450,9 @@ namespace zc.Managers
         public int GetBonusRecordsTotal(string user_name, string user_phone, DateTime? begin, DateTime? end)
         {
             var query = from b in db.bonus_record select b;
+            // 只查已支付的分红
+            query = query.Where(b => b.bouns_is_give);
+
             if (!string.IsNullOrEmpty(user_name))
             {
                 query = query.Where(b => b.user.user_name.Contains(user_name));

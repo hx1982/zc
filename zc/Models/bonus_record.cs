@@ -24,6 +24,8 @@ namespace zc.Models
         [StringLength(1000)]
         public string bonus_remark { get; set; }
 
+        public bool bouns_is_give { get; set; }
+
         public virtual user user { get; set; }
 
         public virtual user user1 { get; set; }

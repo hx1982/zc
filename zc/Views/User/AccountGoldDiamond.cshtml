@@ -57,33 +57,38 @@
         <button type="submit" class="btn btn-block btn-success">查询</button>
     </form>
     <h5 class="section-title">查询结果</h5>
-    <table class="table table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>类型</th>
-                <th>金钻数</th>
-                <th>日期</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in ViewBag.RecordList)
-            {
-                <tr>
-                    <td>@AccRecordType.ToString(record.acc_record_type)</td>
-                    @if (record.cons_type == -1)
-                    {
-                        <td style="color:red;">@record.cons_value</td>
-                    }
-                    else
-                    {
-                        <td>@record.cons_value</td>
-                    }
 
-                    <td>@record.acc_record_time.ToString("yyyy/MM/dd")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div id="recordList">
+        <div class="mui-scroll">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>金钻数</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in ViewBag.RecordList)
+                    {
+                        <tr>
+                            <td>@AccRecordType.ToString(record.acc_record_type)</td>
+                            @if (record.cons_type == -1)
+                            {
+                                <td style="color:red;">@record.cons_value</td>
+                            }
+                            else
+                            {
+                                <td>@record.cons_value</td>
+                            }
+
+                            <td>@record.acc_record_time.ToString("yyyy/MM/dd")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 @section bottomScript{
@@ -107,11 +112,31 @@
 
         ///点击提现的时候
         function clickSendQuest() {
-            if('@ViewBag.User.account_num'==null || '@ViewBag.User.account_num' == ""){
+            if ('@ViewBag.User.account_num' == null || '@ViewBag.User.account_num' == "") {
                 alert("您还不存在银行卡信息，请先完善资料");
                 return;
             }
-            location.href='@Url.Action("CashGoldDiamond", "User")';
+            location.href = '@Url.Action("CashGoldDiamond", "User")';
         }
+
+        //下拉加载
+        mui.init({
+            pullRefresh: {
+                container: "#recordList",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+                down: {
+                    height: 50,//可选,默认50.触发下拉刷新拖动距离,
+                    auto: false,//可选,默认false.首次加载自动下拉刷新一次
+                    contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentrefresh: "正在加载...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                    callback: pullRefreshHandler //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+                }
+            }
+        });
+
+        function pullRefreshHandler() {
+            console.log("pullRefreshHandler");
+        }
+
     </script>
 }
