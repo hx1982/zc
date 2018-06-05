@@ -129,29 +129,36 @@ namespace zc.Controllers
             //如果是Ajax请求, 说明是上拉加载
             if (Request.IsAjaxRequest())
             {
-                if (accountRecordList.Count > 0)
-                {
-                    return Json(new AjaxResultObject() {
-                        code = AjaxResultObject.OK,
-                        message = "OK",
-                        data = accountRecordList.Select(a => new
-                        {
-                            acc_record_type = AccRecordType.ToString(a.acc_record_type),
-                            cons_value = a.cons_value,
-                            acc_record_time = a.acc_record_time.ToString("yyyy/MM/dd")
-                        })
-                    }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new AjaxResultObject() {
-                        code = AjaxResultObject.ERROR,
-                        message = "没更多有数据了"
-                    }, JsonRequestBehavior.AllowGet);
-                }
+                return JsonForPullUp(accountRecordList);
             }
 
             return View();
+        }
+
+        private ActionResult JsonForPullUp(List<account_record> accountRecordList)
+        {
+            if (accountRecordList.Count > 0)
+            {
+                return Json(new AjaxResultObject()
+                {
+                    code = AjaxResultObject.OK,
+                    message = "OK",
+                    data = accountRecordList.Select(a => new
+                    {
+                        acc_record_type = AccRecordType.ToString(a.acc_record_type),
+                        cons_value = a.cons_value,
+                        acc_record_time = a.acc_record_time.ToString("yyyy/MM/dd")
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AjaxResultObject()
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "没更多有数据了"
+                }, JsonRequestBehavior.AllowGet);
+            }
         }
 
 
@@ -171,6 +178,11 @@ namespace zc.Controllers
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.SILVER, acc_record_type, dateBegin, dateEnd, page, rows);
             ViewBag.RecordList = accountRecordList;
 
+            //如果是Ajax请求, 说明是上拉加载
+            if (Request.IsAjaxRequest())
+            {
+                return JsonForPullUp(accountRecordList);
+            }
             return View();
         }
 
@@ -187,6 +199,12 @@ namespace zc.Controllers
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.BLUE, acc_record_type, dateBegin, dateEnd, page, rows);
             ViewBag.RecordList = accountRecordList;
+
+            //如果是Ajax请求, 说明是上拉加载
+            if (Request.IsAjaxRequest())
+            {
+                return JsonForPullUp(accountRecordList);
+            }
 
             return View();
         }

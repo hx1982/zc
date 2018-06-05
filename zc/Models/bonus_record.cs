@@ -17,7 +17,7 @@ namespace zc.Models
 
         public int bouns_money { get; set; }
 
-        public int source_id { get; set; }
+        public int? source_id { get; set; }
 
         public DateTime create_time { get; set; }
 

@@ -13,75 +13,78 @@
     <h1 class="mui-title">会员账户 - 蓝钻</h1>
 </header>
 <div class="mui-content">
-    <h5 class="section-title">账户信息</h5>
-    <table class="table table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>累计转入</th>
-                <th>累计转出</th>
-                <th>蓝钻余额</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@ViewBag.TotalIncome</td>
-                <td>@ViewBag.TotalExpend</td>
-                <td>@ViewBag.Balance</td>
-            </tr>
-        </tbody>
-    </table>
-    <h5 class="section-title">查询条件</h5>
-    <form class="mui-input-group" id="searchForm">
-        <div class="mui-input-row">
-            <label>起始日期</label>
-            <input name="dateBegin" value="@Request["dateBegin"]" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
-        </div>
-        <div class="mui-input-row">
-            <label>终止日期</label>
-            <input name="dateEnd" value="@Request["dateEnd"]" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
-        </div>
-        <div class="mui-input-row">
-            <label>选择类型</label>
-            <select id="acc_record_type" name="acc_record_type" value="@Request["acc_record_type"]" class="mui-input-clear" style="font-size:14px">
-                <option value="">全部</option>
-                <option value="3">系统补偿</option>
-                <option value="6">系统扣除</option>
-                <option value="10">金钻转入</option>
-                <option value="11">银钻转入</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-block btn-success">查询</button>
-    </form>
-    <h5 class="section-title">查询结果</h5>
-    <table class="table table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>类型</th>
-                <th>蓝钻数</th>
-                <th>日期</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in ViewBag.RecordList)
+    <div id="pullRefreshContainer" class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <h5 class="section-title">账户信息</h5>
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>累计转入</th>
+                        <th>累计转出</th>
+                        <th>蓝钻余额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@ViewBag.TotalIncome</td>
+                        <td>@ViewBag.TotalExpend</td>
+                        <td>@ViewBag.Balance</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 class="section-title">查询条件</h5>
+            <form class="mui-input-group" id="searchForm">
+                <div class="mui-input-row">
+                    <label>起始日期</label>
+                    <input name="dateBegin" value="@Request["dateBegin"]" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
+                </div>
+                <div class="mui-input-row">
+                    <label>终止日期</label>
+                    <input name="dateEnd" value="@Request["dateEnd"]" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
+                </div>
+                <div class="mui-input-row">
+                    <label>选择类型</label>
+                    <select id="acc_record_type" name="acc_record_type" value="@Request["acc_record_type"]" class="mui-input-clear" style="font-size:14px">
+                        <option value="">全部</option>
+                        <option value="3">系统补偿</option>
+                        <option value="6">系统扣除</option>
+                        <option value="10">金钻转入</option>
+                        <option value="11">银钻转入</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-block btn-success">查询</button>
+            </form>
+            <h5 class="section-title">查询结果</h5>
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>蓝钻数</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="recordList">
+                    @*@foreach (var record in ViewBag.RecordList)
             {
-                <tr>
-                    <td>@AccRecordType.ToString(record.acc_record_type)</td>
-                    @if (record.cons_type == -1)
+                        <tr>
+                            <td>@AccRecordType.ToString(record.acc_record_type)</td>
+                            @if (record.cons_type == -1)
                 {
-                        <td style="color:red;">@record.cons_value</td>
-                    }
-                    else
-                    {
-                        <td>@record.cons_value</td>
-                    }
+                                <td style="color:red;">@record.cons_value</td>
+                            }
+                            else
+                            {
+                                <td>@record.cons_value</td>
+                            }
 
-                    <td>@record.acc_record_time.ToString("yyyy/MM/dd")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                            <td>@record.acc_record_time.ToString("yyyy/MM/dd")</td>
+                        </tr>
+                    }*@
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-
 @section bottomScript{
 
     <script type="text/javascript">
@@ -100,5 +103,68 @@
                 e.selected = "selected";
             }
         });
+
+        //上拉加载
+        var no_more_data = false;
+        var page = 1;
+        var rows = 20;
+        mui.init({
+            pullRefresh: {
+                container: "#pullRefreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+                up: {
+                    height: 50,//可选,默认50.触发下拉刷新拖动距离,
+                    auto: true,//可选,默认false.首次加载自动下拉刷新一次
+                    contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentrefresh: "正在加载...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                    contentnomore: "没有更多数据了",
+                    callback: pullRefreshHandler //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+                }
+            }
+        });
+
+        function pullRefreshHandler() {
+            setTimeout(function () {
+                $.ajax({
+                    url: "@Url.Action("AccountBlueDiamond", "User")",
+                    type: "GET",
+                dataType: "json",
+                data: $("#searchForm").serializeObject(),
+                success: function (result) {
+                    if (result.code == 500) {
+                        no_more_data = true;
+                    } else {
+                        $.each(result.data, function (i, val) {
+                            $("<tr>").append($("<td>").text(val.acc_record_type))
+                            .append($("<td>").text(val.cons_value))
+                            .append($("<td>").text(val.acc_record_time))
+                            .appendTo($("#recordList"));
+                        });
+                    }
+                    page++;
+                    mui('#pullRefreshContainer').pullRefresh().endPullupToRefresh(no_more_data); //refresh completed
+                }
+            });
+        }, 1500);
+        }
+
+        // 将form data序列化为json object
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            o["page"] = page;
+            o["rows"] = rows;
+            return o;
+        }
     </script>
 }
