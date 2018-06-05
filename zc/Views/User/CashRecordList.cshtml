@@ -3,18 +3,20 @@
     ViewBag.Title = "提现记录列表";
 }
 <style type="text/css">
-    .mui-segmented-control{
-        border:0px;
-        border-bottom:1px solid #d7d7d7;
+    .mui-segmented-control {
+        border: 0px;
+        border-bottom: 1px solid #d7d7d7;
     }
-    .mui-slider .mui-segmented-control .mui-control-item{
-        background-color:#d7d7d7;
-        color:#808080;
-        border:0px;
+
+    .mui-slider .mui-segmented-control .mui-control-item {
+        background-color: #d7d7d7;
+        color: #808080;
+        border: 0px;
     }
-    .mui-slider .mui-segmented-control .mui-active{
-        background-color:#fff;
-        color:#808080;
+
+    .mui-slider .mui-segmented-control .mui-active {
+        background-color: #fff;
+        color: #808080;
     }
 </style>
 <header class="mui-bar mui-bar-nav">
@@ -23,87 +25,94 @@
     <h1 class="mui-title">提现记录</h1>
 </header>
 <div class="mui-content">
-    <div id="slider" class="mui-slider">
-        <div class="mui-segmented-control" id="segmented">
-            <a class="mui-control-item mui-active" href="#item1mobile" onclick="LoadDataList(1)">
-                已完成提现
-            </a>
-            <a class="mui-control-item" href="#item2mobile" onclick="LoadDataList(2)">
-                待审核提现
-            </a>
-        </div>
-    </div>
-    <div class="mui-content-padded">
-        <div id="item1mobile" class="mui-control-content mui-active">
-            <h5 class="section-title">账户信息</h5>
-            <table class="table table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th>金钻提现</th>
-                        <th>银钻提现</th>
-                        <th>累计提现</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@ViewBag.CompleteGoldCash</td>
-                        <td>@ViewBag.CompleteSilverCash</td>
-                        <td>@ViewBag.SumCashMoney</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h5 class="section-title">查询条件</h5>
-            <form class="mui-input-group" id="searchForm">
-                <div class="mui-input-row">
-                    <label>起始日期</label>
-                    <input name="beginTime" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
+    <div id="pullRefreshContainer" class="mui-scroll-wrapper" style="top: 44px">
+        <div class="mui-scroll">
+            <div id="slider" class="mui-slider">
+                <div class="mui-segmented-control" id="segmented">
+                    <a class="mui-control-item mui-active" href="#item1mobile" onclick="switchToTab1()">
+                        已完成提现
+                    </a>
+                    <a class="mui-control-item" href="#item2mobile" onclick="switchToTab2()">
+                        待审核提现
+                    </a>
                 </div>
-                <div class="mui-input-row">
-                    <label>终止日期</label>
-                    <input name="endTime" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
-                </div>
-                <div class="mui-input-row">
-                    <label>选择类型</label>
-                    <select id="cash_type" name="cash_type" class="mui-input-clear" style="font-size:14px">
-                        <option value="">全部</option>
-                        <option value="1">金钻提现</option>
-                        <option value="2">银钻提现</option>
-                    </select>
-                </div>
-                <input type="hidden" value="5" name="cash_status" />
-                <button type="button" class="btn btn-block btn-success" onclick="LoadDataList(1)" >查询</button>
-            </form>
-            <h5 class="section-title">查询结果</h5>
-            <table class="table table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th>类型</th>
-                        <th>金额</th>
-                        <th>日期</th>
-                    </tr>
-                </thead>
-                <tbody id="goldData">
+            </div>
+            <div class="mui-content-padded">
+                <div id="item1mobile" class="mui-control-content mui-active">
 
-                </tbody>
-                </table>
-        </div>
-            <div id="item2mobile" class="mui-control-content">
-                <form id="silverForm">
-                    <input type="hidden" value="0" name="cash_status" />
-                </form>
-                <table class="table table-bordered table-condensed">
-                    <thead>
-                        <tr>
-                            <th>类型</th>
-                            <th>金额</th>
-                            <th>日期</th>
-                        </tr>
-                    </thead>
-                    <tbody id="silverData"></tbody>
-                </table>
+
+                    <h5 class="section-title">账户信息</h5>
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>金钻提现</th>
+                                <th>银钻提现</th>
+                                <th>累计提现</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@ViewBag.CompleteGoldCash</td>
+                                <td>@ViewBag.CompleteSilverCash</td>
+                                <td>@ViewBag.SumCashMoney</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h5 class="section-title">查询条件</h5>
+                    <form class="mui-input-group" id="searchForm">
+                        <div class="mui-input-row">
+                            <label>起始日期</label>
+                            <input name="beginTime" type="text" class="mui-input-clear datepicker" placeholder="起始日期">
+                        </div>
+                        <div class="mui-input-row">
+                            <label>终止日期</label>
+                            <input name="endTime" type="text" class="mui-input-clear datepicker" placeholder="终止日期">
+                        </div>
+                        <div class="mui-input-row">
+                            <label>选择类型</label>
+                            <select id="cash_type" name="cash_type" class="mui-input-clear" style="font-size:14px">
+                                <option value="">全部</option>
+                                <option value="1">金钻提现</option>
+                                <option value="2">银钻提现</option>
+                            </select>
+                        </div>
+                        <input type="hidden" value="5" name="cash_status" />
+                        <button type="button" class="btn btn-block btn-success" onclick="search()">查询</button>
+                    </form>
+                    <h5 class="section-title">查询结果</h5>
+
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>金额</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goldData"></tbody>
+                    </table>
+                </div>
+
+                <div id="item2mobile" class="mui-control-content">
+                    <form id="silverForm">
+                        <input type="hidden" value="0" name="cash_status" />
+                    </form>
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>金额</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody id="silverData"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
 </div>
+
 @section bottomScript{
 
     <script type="text/javascript">
@@ -126,27 +135,66 @@
 }
 
 <script type="text/javascript">
-    $(function () { 
-        LoadDataList(1);
 
+    var page = 1;
+    var rows = 20;
+
+    $(function () {
+        // 立即加载已完成提现
+        LoadDataList(1);
+        // 修复mui选项卡链接无法响应onclick事件问题 ( for mobile: tap, for pc: click )
+        mui("body").on("tap", "a", function () {
+            eval(this.getAttribute("onclick"));
+        });
     });
 
+    function switchToTab1() {
+        // 切到卡片1时, 启用上拉加载
+        mui("#pullRefreshContainer").pullRefresh().enablePullupToRefresh();
+    }
+
+    function switchToTab2() {
+        // 切到卡片2时, 禁用上拉加载
+        mui("#pullRefreshContainer").pullRefresh().disablePullupToRefresh();
+        // 立即加载未审核提现
+        LoadDataList(2);
+    }
+
+    function search() {
+        // 每一次点击查询, 都是一次全新的搜索
+        // 重置上拉加载
+        mui('#pullRefreshContainer').pullRefresh().refresh(true);
+        // 查第一页
+        page = 1;
+        // 清除数据
+        $("#goldData").html("");
+        // 加载数据
+        LoadDataList(1);
+    }
+
     function LoadDataList(cashType) {
-        var seachCondition = $("#searchForm").serializeArray();;
-        if (cashType != 1) {
+        var searchCondition;
+        if (cashType == 1) {
+            seachCondition = $("#searchForm").serializeArray();;
+            seachCondition.push({ "name": "page", "value": page });
+            seachCondition.push({ "name": "rows", "value": rows });
+        } else {
             seachCondition = $("#silverForm").serializeArray();
         }
         $.ajax({
             url: "@Url.Action("SelectCashRecordList", "User")",
             type: "POST",
             data: seachCondition,
+            dataType: "json",
             success: function (data) {
-                $("#silverData").html("");
-                $("#goldData").html("");
-                if (data.total == 0) {
+                if (data.rows.length == 0) {
+                    if (cashType == 1) {
+                        mui('#pullRefreshContainer').pullRefresh().endPullupToRefresh(true);
+                    }
                     return;
                 }
                 //如果有数据
+                $("#silverData").html("");
                 var list = data.rows;
                 var strHtml = "";
                 for (var i = 0; i < list.length; i++) {
@@ -157,14 +205,40 @@
                     strHtml += " <td>" + prop.cash_time1 + "</td>";
                     strHtml += "</tr>";
                 }
-                if (cashType != 1) {
+                if (cashType == 2) {
                     $("#silverData").html(strHtml);
                 } else {
-                    $("#goldData").html(strHtml);
+                    $("#goldData").append($(strHtml));
+                    // 上拉加载结束
+                    page++;
+                    mui('#pullRefreshContainer').pullRefresh().endPullupToRefresh(false); //refresh completed
                 }
             }
         });
 
+    }
+
+    //上拉加载
+
+    mui.init({
+        pullRefresh: {
+            container: "#pullRefreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+            up: {
+                height: 50,//可选,默认50.触发下拉刷新拖动距离,
+                auto: false,//可选,默认false.首次加载自动下拉刷新一次
+                contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+                contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                contentrefresh: "正在加载...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                contentnomore: "没有更多数据了",
+                callback: pullRefreshHandler //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+            }
+        }
+    });
+
+    function pullRefreshHandler() {
+        setTimeout(function () {
+            LoadDataList(1);
+        }, 1500);
     }
 
 </script>

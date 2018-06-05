@@ -281,6 +281,9 @@ namespace zc.Controllers
             ViewBag.CompleteGoldCash = completeGoldCash;
             ViewBag.CompleteSilverCash = completeSilverCash;
             ViewBag.SumCashMoney = sumCashMoney;
+            // 直接查出未审核提现, 不用Ajax, 但最多20条(应该够了吧)
+            //var auditWaiting = this.userManager.GetCashRequests(userId, null, null, null, CashStatus.AUDIT_WAITING, null, null, 1, 20);
+            //ViewBag.AuditWaiting = auditWaiting;
 
             return View();
         }
