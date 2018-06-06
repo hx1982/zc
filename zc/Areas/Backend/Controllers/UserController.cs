@@ -569,5 +569,34 @@ namespace zc.Areas.Backend.Controllers
         }
 
         #endregion
+
+        #region 推荐树
+
+        public ActionResult ReferTree()
+        {
+            return View();
+        }
+
+        public ActionResult ReferTreeTop3Layer(string userName = "", string userPhone = "")
+        {
+            var users = this._userManager.GetReferTree(userName, userPhone);
+            var data = users.Select(a => new
+            {
+                id = a.user_id,
+                pId = a.referrer_id,
+                name = a.user_name,
+                isParent = true,
+                open = users.Count(item => item.referrer_id == a.user_id) > 0
+            });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ReferTreeChilds(int id)
+        {
+            var children = this._userManager.GetReferTreeChilds(id);
+            return Json(children, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
     }
 }

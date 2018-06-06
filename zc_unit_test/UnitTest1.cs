@@ -71,7 +71,7 @@ namespace zc_unit_test
 
             var query = from u in db.users
                         where
-                            //u.user_name.Contains(userName) // 用户姓名模糊搜索
+                             //u.user_name.Contains(userName) // 用户姓名模糊搜索
                              //&& u.user_phone.Contains(userPhone) // 用户电话模糊搜索
                              //&& 
                              u.user_status == UserStatus.NOT_ACTIVATED // 状态为未激活
@@ -132,5 +132,17 @@ namespace zc_unit_test
                 Console.WriteLine(c.Single());
             }
         }
+
+        [TestMethod]
+        public void testUserTree()
+        {
+            var m = new UserManager();
+            var tree = m.GetReferTree("", "");
+            foreach (var item in tree)
+            {
+                Console.WriteLine(item.user_name);
+            }
+        }
+
     }
 }

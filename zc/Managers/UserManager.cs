@@ -1052,5 +1052,42 @@ namespace zc.Managers
         }
 
         #endregion
+
+        #region 推荐树
+
+        public List<user> GetReferTree(string userName, string userPhone)
+        {
+            var query1 = db.users.Where(a => a.user_name.Contains(userName) && a.user_phone.Contains(userPhone));
+            var query2 = query1.SelectMany(item => db.users.Where(a => a.referrer_id == item.user_id));
+            var query3 = query2.SelectMany(item => db.users.Where(a => a.referrer_id == item.user_id));
+            return query1.Concat(query2).Concat(query3).Distinct().ToList();
+            //var query = db.users.Where(a => a.user_name.Contains(userName) && a.user_phone.Contains(userPhone))
+            //    .Select(item => new
+            //    {
+            //        self = item,
+            //        childs = db.users.Where(a => a.referrer_id == item.user_id).Select(item2 => new
+            //        {
+            //            self = item2,
+            //            childs = db.users.Where(a => a.referrer_id == item2.user_id).Select(item3 => new
+            //            {
+            //                self = item3
+            //            })
+            //        })
+            //    });
+            //return query.ToList();
+        }
+
+        public List<ReferTreeNode> GetReferTreeChilds(int userId)
+        {
+            return db.users.Where(a => a.referrer_id == userId).Select(a => new ReferTreeNode
+            {
+                id = a.user_id,
+                pId = a.referrer_id,
+                name = a.user_name,
+                isParent = db.users.Count(item => item.referrer_id == a.user_id) > 0
+            }).ToList();
+        }
+
+        #endregion
     }
 }

@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "推荐关系";
+}
+<link href="~/Content/zTree.min.css" rel="stylesheet" />
+<link href="~/Content/zTree.theme.metro.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.ztree.all-3.5.min.js"></script>
+<style>
+    #tb {
+        padding: 15px;
+    }
+
+    input, select {
+        vertical-align: middle;
+    }
+</style>
+<div id="tb">
+    <form id="tbForm">
+        <span>会员名称</span>
+        <input name="userName" class="easyui-textbox">
+        <span>手机号码</span>
+        <input name="userPhone" class="easyui-textbox">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" iconCls="icon-search" style="width: 80px;margin-left: 20px;">查询</a>
+    </form>
+</div>
+<hr />
+<div>
+    <ul id="tree" class="ztree">
+
+    </ul>
+</div>
+
+<script>
+    var setting = {
+        async: {
+            enable: true,
+            url: "@Url.Action("ReferTreeChilds", "User")",
+            autoParam: ["id"],
+            //otherParam: { "otherParam": "zTreeAsyncTest" },
+            //dataFilter: filter
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+    $(document).ready(function () {
+        $.fn.zTree.init($("#tree"), setting);
+    });    function submitForm() {
+        $.ajax({
+            url: "@Url.Action("ReferTreeTop3Layer", "User")",
+            type: "get",
+            dataType: "json",
+            data: $("#tbForm").serializeArray(),
+            success: function (data) {
+                $.fn.zTree.init($("#tree"), setting, data);
+            }
+        });
+    }
+</script>
