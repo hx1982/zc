@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "未发货订单";
+}
+
+<!--查询条件-->
+<div style="padding:15px">
+    <form id="searchForm">
+        <label>
+            会员名称: <input type="text" name="userName" />
+        </label>
+        <label>
+            手机号码: <input type="text" name="userPhone" />
+        </label>
+        <label>
+            订单编号: <input type="text" name="orderNum" />
+        </label>
+        <span>
+            订单类型:
+            <label>
+                <input type="radio" name="orderType" value="@zc.Commons.OrderType.REGISTER" />
+                @zc.Commons.OrderType.ToString(zc.Commons.OrderType.REGISTER)
+            </label>
+            <label>
+                <input type="radio" name="orderType" value="@zc.Commons.OrderType.FUXIAO" />
+                @zc.Commons.OrderType.ToString(zc.Commons.OrderType.FUXIAO)
+            </label>
+        </span>
+        <div id="cc" class="easyui-calendar"></div>
+        <span style="white-space: nowrap">
+            &nbsp;&nbsp;日期段
+            <input name="beginDate" class="easyui-datebox" data-options="sharedCalendar:'#cc', editable:false" />
+            <span> - </span>
+            <input name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc', editable:false" />
+        </span>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="doSearch()" iconCls="icon-search" style="width: 80px;margin-left: 20px;">查询</a>
+    </form>
+</div>
+<!--数据显示区-->
+<table id="orderTable"></table>
+<!--scripts-->
+<script src="~/plug-in/easyui/plugins/datagrid-detailview.js"></script>
+<script>
+    var datagridObj = $("#orderTable").datagrid({
+        width: "100%",
+        //height: "100%",
+        singleSelect: true,
+        fitColumns: true,
+        rownumbers: true,
+        pagination: true,
+        url: "@Url.Action("UnPayed", "Order")",
+        columns: [[
+            { field: "orderNum", title: "订单编号", width: 80 },
+            { field: "orderType", title: "订单类型", width: 80 },
+            { field: "userName", title: "会员名称", width: 80 },
+            { field: "userPhone", title: "手机号码", width: 80 },
+            { field: "packageName", title: "套餐名称", width: 80 },
+            { field: "orderCash", title: "订单金额", width: 80 },
+            { field: "orderStatus", title: "状态", width: 80 },
+            { field: "createTime", title: "创建时间", width: 80 },
+        ]],
+        view: detailview,
+        detailFormatter: function (rowIndex, rowData) {
+            var table = $("<table>");
+            $.each(rowData, function (i, row) {
+                var tr = $("<tr>");
+                $("<td>").html(row["goodsName"]).appendTo(tr);
+                $("<td>").html(row["goodsUnit"]).appendTo(tr);
+                $("<td>").html(row["goodsNum"]).appendTo(tr);
+                $("<td>").html(row["cashPrice"]).appendTo(tr);
+                $("<td>").html(row["fuxiaoPrice"]).appendTo(tr);
+                $("<td>").html(row["cashSubtotal"]).appendTo(tr);
+                $("<td>").html(row["fuxiaoSubtotal"]).appendTo(tr);
+                tr.appendTo(table);
+            });
+            return table; // if jquery object not supported, replace with table[0].outerHTML
+        }
+    });
+
+    function doSearch() {
+        datagridObj.datagrid("load", $("#searchForm").serialize());
+    }
+</script>

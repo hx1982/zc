@@ -140,16 +140,19 @@
     <Compile Include="Areas\Backend\BackendAreaRegistration.cs" />
     <Compile Include="Areas\Backend\Controllers\HomeController.cs" />
     <Compile Include="Areas\Backend\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Backend\Controllers\OrderController.cs" />
     <Compile Include="Areas\Backend\Controllers\UserController.cs" />
     <Compile Include="Commons\AccountConstants.cs" />
     <Compile Include="Commons\AjaxResultObject.cs" />
     <Compile Include="Commons\ApplicationOperatorIdentity.cs" />
     <Compile Include="Commons\ApplicationUserIdentity.cs" />
     <Compile Include="Commons\CashConstants.cs" />
+    <Compile Include="Commons\OrderConstants.cs" />
     <Compile Include="Commons\SessionConstants.cs" />
     <Compile Include="Filters\UserAuthorizeAttribute.cs" />
     <Compile Include="Commons\Utility.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Models\ViewModels\ReferTreeNode.cs" />
     <Compile Include="Models\ViewModels\UserLoginModel.cs" />
     <Compile Include="Filters\OperatorAuthorizeAttribute.cs" />
@@ -235,6 +238,7 @@
     <Content Include="Areas\Backend\Views\User\Index.cshtml" />
     <Content Include="Areas\Backend\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Backend\Views\Shared\_Layout.cshtml" />
+    <Content Include="plug-in\easyui\plugins\datagrid-detailview.js" />
     <Content Include="plug-in\mui\css\mui.css" />
     <Content Include="plug-in\mui\css\mui.min.css" />
     <Content Include="plug-in\mui\css\mui.picker.min.css" />
@@ -812,6 +816,7 @@
     <Content Include="Areas\Backend\Views\User\PrepareChangeLevel.cshtml" />
     <Content Include="Areas\Backend\Views\User\AccountLine.cshtml" />
     <Content Include="Areas\Backend\Views\User\ReferTree.cshtml" />
+    <Content Include="Areas\Backend\Views\Order\UnPayed.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />
