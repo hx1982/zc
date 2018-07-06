@@ -15,7 +15,7 @@ namespace zc.Models
 
         public int bouns_type { get; set; }
 
-        public int bouns_money { get; set; }
+        public int bouns_value { get; set; }
 
         public int? source_id { get; set; }
 
@@ -23,8 +23,6 @@ namespace zc.Models
 
         [StringLength(1000)]
         public string bonus_remark { get; set; }
-
-        public bool bouns_is_give { get; set; }
 
         public virtual user user { get; set; }
 

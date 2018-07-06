@@ -153,6 +153,15 @@
     <Compile Include="Commons\Utility.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Managers\EntityManager.cs" />
+    <Compile Include="Models\account_record.cs" />
+    <Compile Include="Models\bonus_record.cs" />
+    <Compile Include="Models\cash_record.cs" />
+    <Compile Include="Models\level.cs" />
+    <Compile Include="Models\menu.cs" />
+    <Compile Include="Models\operator.cs" />
+    <Compile Include="Models\sysrole.cs" />
+    <Compile Include="Models\user.cs" />
+    <Compile Include="Models\user_account.cs" />
     <Compile Include="Models\ViewModels\ReferTreeNode.cs" />
     <Compile Include="Models\ViewModels\UserLoginModel.cs" />
     <Compile Include="Filters\OperatorAuthorizeAttribute.cs" />
@@ -161,25 +170,10 @@
     </Compile>
     <Compile Include="Managers\OperatorManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
-    <Compile Include="Models\account_record.cs" />
-    <Compile Include="Models\bonus_record.cs" />
-    <Compile Include="Models\cash_record.cs" />
     <Compile Include="Commons\UserStatus.cs" />
-    <Compile Include="Models\good.cs" />
-    <Compile Include="Models\level.cs" />
-    <Compile Include="Models\menu.cs" />
-    <Compile Include="Models\operator.cs" />
-    <Compile Include="Models\order.cs" />
-    <Compile Include="Models\order_detail.cs" />
-    <Compile Include="Models\package.cs" />
-    <Compile Include="Models\package_detail.cs" />
-    <Compile Include="Models\sysrole.cs" />
-    <Compile Include="Models\user.cs" />
-    <Compile Include="Models\user_account.cs" />
-    <Compile Include="Models\user_bonus.cs" />
     <Compile Include="Models\ViewModels\UserActiveModel.cs" />
     <Compile Include="Models\ViewModels\UserRegisterModel.cs" />
-    <Compile Include="Models\ZCDbContext.cs" />
+    <Compile Include="Models\ZCDBContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,7 @@ namespace zc.Models
 
         public int cons_value { get; set; }
 
-        public int acc_balance { get; set; }
+        public int? acc_balance { get; set; }
 
         public int? oper_id { get; set; }
 
