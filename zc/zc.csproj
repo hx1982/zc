@@ -173,7 +173,7 @@
     <Compile Include="Commons\UserStatus.cs" />
     <Compile Include="Models\ViewModels\UserActiveModel.cs" />
     <Compile Include="Models\ViewModels\UserRegisterModel.cs" />
-    <Compile Include="Models\ZCDBContext.cs" />
+    <Compile Include="Models\ZCDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

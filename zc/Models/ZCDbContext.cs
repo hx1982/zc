@@ -5,10 +5,10 @@ namespace zc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class ZCDBContext : DbContext
+    public partial class ZCDbContext : DbContext
     {
-        public ZCDBContext()
-            : base("name=ZCDBContext")
+        public ZCDbContext()
+            : base("name=ZCDbContext")
         {
         }
 
