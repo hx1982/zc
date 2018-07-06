@@ -31,10 +31,6 @@
             <input id="shouxufei" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
         </div>
         <div class="mui-input-row">
-            <label>复消费</label>
-            <input id="fuxiaofei" type="text" class="mui-input-clear datepicker" placeholder="复消费" readonly>
-        </div>
-        <div class="mui-input-row">
             <label>余额</label>
             <input id="balance" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
         </div>
@@ -57,10 +53,8 @@
             }
             var service = $("#service_charge").val();
             var shouxufei = service * @CashRate.SHOU_XU_FEI;
-            var fuxiaofei = service * @CashRate.FU_XIAO_FEI;
             $("#shouxufei").val(shouxufei);
-            $("#fuxiaofei").val(fuxiaofei);
-            $("#balance").val($("#balance_value").val()-service-shouxufei-fuxiaofei);
+            $("#balance").val($("#balance_value").val()-service-shouxufei);
         });
 
         $("#submitRequest").click(function(){
