@@ -11,7 +11,7 @@
     <!-- 防止history.back()回退到上一次查询金钻的页面 -->
     <a onclick="location.href = '@Url.Action("Center", "User")';" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">会员账户 - 银钻</h1>
-    <a class="mui-btn mui-btn-red mui-pull-right" href="@Url.Action("CashSilverDiamond", "User")">提现</a>
+    <a class="mui-btn mui-btn-red mui-pull-right" onclick="clickSendQuest();">提现</a>
 </header>
 <div class="mui-content">
     <div id="pullRefreshContainer" class="mui-scroll-wrapper">
@@ -45,14 +45,13 @@
                 </div>
                 <div class="mui-input-row">
                     <label>选择类型</label>
-                    <select id="acc_record_type" name="acc_record_type" onclick="clickSendQuest();" class="mui-input-clear" style="font-size:14px">
+                    <select id="acc_record_type" name="acc_record_type" class="mui-input-clear" style="font-size:14px">
                         <option value="">全部</option>
-                        <option value="3">系统补偿</option>
-                        <option value="4">扣手续费</option>
-                        <option value="5">扣复消费</option>
-                        <option value="6">系统扣除</option>
-                        <option value="7">余额转入</option>
-                        <option value="9">银钻提现</option>
+                        <option value="1">分红(奖金)</option>
+                        <option value="2">系统增加</option>
+                        <option value="3">提现</option>
+                        <option value="4">系统扣减</option>
+                        <option value="5">手续费</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-block btn-success">查询</button>

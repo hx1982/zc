@@ -237,7 +237,7 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = CashType.GOLD_DIAMOND;
+            model.cash_type = AccountConstants.GOLD;
 
             bool result = this.userManager.InsertCashRecord(model);
 
@@ -261,12 +261,43 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = CashType.SILVER_DIAMOND;
+            model.cash_type = AccountConstants.SILVER;
 
             bool result = this.userManager.InsertCashRecord(model);
 
             return Content(result.ToString());
         }
+       
+        //蓝钻提现
+        public ActionResult CashBlueDiamond(int? cash_money, string second_password)
+        {
+            var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
+            var userAccount = this.userManager.GetUserAccount(userId);
+
+            if (!cash_money.HasValue)
+            {
+                ViewBag.user = user;
+                ViewBag.userAccount = userAccount;
+                return View();
+            }
+            //验证二次密码是否正确
+            if (!user.second_password.Equals(Utility.MD5Encrypt(second_password)))
+            {
+                return Content("false");
+            }
+
+            //获取提现的值
+            cash_record model = new cash_record();
+            model.cash_money = int.Parse(cash_money.ToString());
+            model.user_id = userAccount.user_id;
+            model.cash_type = AccountConstants.BLUE;
+
+            bool result = this.userManager.InsertCashRecord(model);
+
+            return Content(result.ToString());
+        }
+        
         /// <summary>
         /// 提现记录页面
         /// </summary>

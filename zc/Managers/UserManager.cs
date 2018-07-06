@@ -558,20 +558,22 @@ namespace zc.Managers
                 //查询用户的账户资金
                 user_account userModel = this.GetUserAccount(model.user_id);
 
-                int accRecordType = AccRecordType.GOLD_CASH;
+                int accRecordType = AccRecordType.WITHDRAWAL;
                 int accBalance = 0;
 
-                if (model.cash_type == CashType.GOLD_DIAMOND)
+                if (model.cash_type == AccountConstants.GOLD)
                 {
-                    accRecordType = AccRecordType.GOLD_CASH;
                     accBalance = userModel.account1 - model.cash_money;
-
                 }
-                if (model.cash_type == CashType.SILVER_DIAMOND)
+                if (model.cash_type == AccountConstants.SILVER)
                 {
-                    accRecordType = AccRecordType.SILVER_CASH;
                     accBalance = userModel.account2 - model.cash_money;
                 }
+                if (model.cash_type == AccountConstants.BLUE)
+                {
+                    accBalance = userModel.account3 - model.cash_money;
+                }
+
                 //插入资金变动记录
                 account_record accModel = new account_record();
                 accModel.user_id = model.user_id;
@@ -589,56 +591,15 @@ namespace zc.Managers
                 accModel.user_id = model.user_id;
                 accModel.acc_type = model.cash_type;
                 accModel.cons_type = ConType.EXPEND;
-                accModel.acc_record_type = AccRecordType.MINUS_SHOU_XU_FEI;
+                accModel.acc_record_type = AccRecordType.POUNDAGE;
                 accModel.acc_balance = accBalance - shou_xu_fei;
                 accModel.cons_value = shou_xu_fei;
                 accModel.oper_id = model.oper_id1;
                 accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
-                int fu_xiao_fei = Convert.ToInt32(model.cash_money * CashRate.FU_XIAO_FEI);
-                accModel = new account_record();
-                accModel.user_id = model.user_id;
-                accModel.acc_type = model.cash_type;
-                accModel.cons_type = ConType.EXPEND;
-                accModel.acc_record_type = AccRecordType.MINUS_FU_XIAO_FEI;
-                accModel.acc_balance = accBalance - fu_xiao_fei;
-                accModel.cons_value = fu_xiao_fei;
-                accModel.oper_id = model.oper_id1;
-                accModel.acc_record_time = DateTime.Now;
-                db.account_record.Add(accModel);
-
                 db.SaveChanges();
-
-                //修改账户余额记录
-                int rt = AccRecordType.ADD_GOLD;
-                if (model.cash_type == CashType.GOLD_DIAMOND)
-                {
-                    userModel.account1 = userModel.account1 - model.cash_money - shou_xu_fei - fu_xiao_fei;
-                    rt = AccRecordType.ADD_GOLD;
-                }
-                if (model.cash_type == CashType.SILVER_DIAMOND)
-                {
-                    userModel.account2 = userModel.account2 - model.cash_money - shou_xu_fei - fu_xiao_fei;
-                    rt = AccRecordType.ADD_SILVER;
-                }
-                userModel.account3 = userModel.account3 + fu_xiao_fei;
-                db.SaveChanges();
-
-                //增加复消费新增的记录
-                accModel = new account_record();
-                accModel.user_id = model.user_id;
-                accModel.acc_type = AccountConstants.BLUE;
-                accModel.cons_type = ConType.INCOME;
-                accModel.acc_record_type = rt;
-                accModel.acc_balance = userModel.account4 + fu_xiao_fei;
-                accModel.cons_value = fu_xiao_fei;
-                accModel.oper_id = model.oper_id1;
-                accModel.acc_record_time = DateTime.Now;
-                db.account_record.Add(accModel);
-
-                db.SaveChanges();
-
+                
                 tx.Complete();
                 return model;
             }
