@@ -1,6 +1,5 @@
 namespace zc.Models
 {
-    using Commons;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -17,11 +16,6 @@ namespace zc.Models
             bonus_record = new HashSet<bonus_record>();
             bonus_record1 = new HashSet<bonus_record>();
             cash_record = new HashSet<cash_record>();
-            orders = new HashSet<order>();
-            user_account = new HashSet<user_account>();
-            user_bonus = new HashSet<user_bonus>();
-            user_bonus1 = new HashSet<user_bonus>();
-            user_bonus2 = new HashSet<user_bonus>();
         }
 
         [Key]
@@ -73,6 +67,9 @@ namespace zc.Models
         [StringLength(50)]
         public string account_num { get; set; }
 
+        [StringLength(50)]
+        public string wallet_adder { get; set; }
+
         public int user_status { get; set; }
 
         public int reg_money { get; set; }
@@ -109,20 +106,9 @@ namespace zc.Models
 
         public virtual level level { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<order> orders { get; set; }
+        public virtual _operator _operator { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<user_account> user_account { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<user_bonus> user_bonus { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<user_bonus> user_bonus1 { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<user_bonus> user_bonus2 { get; set; }
+        public virtual user_account user_account { get; set; }
 
         [ForeignKey("referrer_id")]
         public virtual user referrer { get; set; }
