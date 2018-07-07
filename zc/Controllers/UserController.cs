@@ -99,13 +99,15 @@ namespace zc.Controllers
             var userAccount = this.userManager.GetUserAccount(userId);
             ViewBag.User = user;
 
-            var userBouns = this.userManager.GetUserBonus(userId);
+            //todo: 需要重新计算的数据
 
-            ViewBag.ZC1A = userBouns.dist_money;
-            ViewBag.ZC1B = userBouns.dist_balance;
+            //var userBouns = this.userManager.GetUserBonus(userId);
 
-            ViewBag.ZC2A = this.userManager.GetReferrerMoney1Total(userId) + this.userManager.GetReferrerMoney2Total(userId);
-            ViewBag.ZC2B = this.userManager.GetReferrerBalance1Total(userId) + this.userManager.GetReferrerBalance2Total(userId);
+            //ViewBag.ZC1A = userBouns.dist_money;
+            //ViewBag.ZC1B = userBouns.dist_balance;
+
+            //ViewBag.ZC2A = this.userManager.GetReferrerMoney1Total(userId) + this.userManager.GetReferrerMoney2Total(userId);
+            //ViewBag.ZC2B = this.userManager.GetReferrerBalance1Total(userId) + this.userManager.GetReferrerBalance2Total(userId);
 
             return View(userAccount);
         }
@@ -120,7 +122,7 @@ namespace zc.Controllers
             //统计累计转入，消费
             ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.GOLD, userId);
             ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.GOLD, userId);
-            ViewBag.Balance = userAccount.account1;
+            ViewBag.Balance = userAccount.account1_balance;
 
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.GOLD, acc_record_type, dateBegin, dateEnd, page, rows);
@@ -172,7 +174,7 @@ namespace zc.Controllers
             //统计累计转入，消费
             ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.SILVER, userId);
             ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.SILVER, userId);
-            ViewBag.Balance = userAccount.account2;
+            ViewBag.Balance = userAccount.account2_balance;
 
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.SILVER, acc_record_type, dateBegin, dateEnd, page, rows);
@@ -194,7 +196,7 @@ namespace zc.Controllers
             //统计累计转入，消费
             ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.BLUE, userId);
             ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.BLUE, userId);
-            ViewBag.Balance = userAccount.account3;
+            ViewBag.Balance = userAccount.account3_balance;
 
             //查询列表
             var accountRecordList = this.userManager.GetAccountRecordList(userId, AccountConstants.BLUE, acc_record_type, dateBegin, dateEnd, page, rows);

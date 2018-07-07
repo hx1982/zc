@@ -38,35 +38,35 @@ namespace zc.Commons
         }
     }
 
-    ///// <summary>
-    ///// 提现类型
-    ///// </summary>
-    //public class CashType
-    //{
-    //    /// <summary>
-    //    /// 金钻提现
-    //    /// </summary>
-    //    public static readonly int GOLD_DIAMOND = 1;
-    //    /// <summary>
-    //    /// 银钻提现
-    //    /// </summary>
-    //    public static readonly int SILVER_DIAMOND = 2;
+    /// <summary>
+    /// 提现类型
+    /// </summary>
+    public class CashType
+    {
+        /// <summary>
+        /// 金钻提现
+        /// </summary>
+        public static readonly int GOLD_DIAMOND = 1;
+        /// <summary>
+        /// 银钻提现
+        /// </summary>
+        public static readonly int SILVER_DIAMOND = 2;
 
-    //    public static string ToString(int type)
-    //    {
-    //        string str = "未知";
-    //        if (type == GOLD_DIAMOND)
-    //        {
-    //            str = "金钻提现";
-    //        }
-    //        else if (type == SILVER_DIAMOND)
-    //        {
-    //            str = "银钻提现";
-    //        }
-    //        return str;
-    //    }
+        public static string ToString(int type)
+        {
+            string str = "未知";
+            if (type == GOLD_DIAMOND)
+            {
+                str = "金钻提现";
+            }
+            else if (type == SILVER_DIAMOND)
+            {
+                str = "银钻提现";
+            }
+            return str;
+        }
 
-    //}
+    }
 
     /// <summary>
     /// 提现参数

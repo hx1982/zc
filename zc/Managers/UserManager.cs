@@ -49,45 +49,46 @@ namespace zc.Managers
 
                 // 保存分红信息
                 var dist_money = user.level.level_money1;
-                var bonus = new user_bonus
-                {
-                    user = user,
-                    dist_money = dist_money,
-                    dist_balance = 0,
-                    dist_number = 22
-                };
+                //todo: 重新计算分红信息
+                //var bonus = new user_bonus
+                //{
+                //    user = user,
+                //    dist_money = dist_money,
+                //    dist_balance = 0,
+                //    dist_number = 22
+                //};
 
-                if (user.referrer != null)
-                {
-                    int referrer_money1 = Convert.ToInt32(user.referrer.level.recom_rate1 * user.reg_money);
-                    bonus.referrer_id1 = user.referrer_id;
-                    bonus.referrer_money1 = referrer_money1;
-                    bonus.referrer_balance1 = 0;
-                    bonus.referrer_number1 = 22;
-                    if (user.referrer.referrer != null)
-                    {
-                        int referrer_money2 = Convert.ToInt32(user.referrer.referrer.level.recom_rate2 * user.reg_money);
-                        bonus.referrer_id2 = user.referrer.referrer.user_id;
-                        bonus.referrer_money2 = referrer_money2;
-                        bonus.referrer_balance2 = 0;
-                        bonus.referrer_number2 = 22;
-                    }
-                }
+                //if (user.referrer != null)
+                //{
+                //    int referrer_money1 = Convert.ToInt32(user.referrer.level.recom_rate1 * user.reg_money);
+                //    bonus.referrer_id1 = user.referrer_id;
+                //    bonus.referrer_money1 = referrer_money1;
+                //    bonus.referrer_balance1 = 0;
+                //    bonus.referrer_number1 = 22;
+                //    if (user.referrer.referrer != null)
+                //    {
+                //        int referrer_money2 = Convert.ToInt32(user.referrer.referrer.level.recom_rate2 * user.reg_money);
+                //        bonus.referrer_id2 = user.referrer.referrer.user_id;
+                //        bonus.referrer_money2 = referrer_money2;
+                //        bonus.referrer_balance2 = 0;
+                //        bonus.referrer_number2 = 22;
+                //    }
+                //}
 
-                db.user_bonus.Add(bonus);
-                db.SaveChanges();
+                //db.user_bonus.Add(bonus);
+                //db.SaveChanges();
 
-                // 插入user_account记录, 值均为0
-                var userAccount = new user_account
-                {
-                    user_id = user.user_id,
-                    account1 = 0,
-                    account2 = 0,
-                    account3 = 0,
-                    account4 = 0
-                };
-                db.user_account.Add(userAccount);
-                db.SaveChanges();
+                //// 插入user_account记录, 值均为0
+                //var userAccount = new user_account
+                //{
+                //    user_id = user.user_id,
+                //    account1 = 0,
+                //    account2 = 0,
+                //    account3 = 0,
+                //    account4 = 0
+                //};
+                //db.user_account.Add(userAccount);
+                //db.SaveChanges();
                 tx.Complete();
                 return user;
             }
@@ -418,7 +419,8 @@ namespace zc.Managers
         {
             var query = from b in db.bonus_record select b;
             // 只查已支付的分红
-            query = query.Where(b => b.bouns_is_give);
+            // todo: 现已没有user_bonus实体
+            query = query.Where(b => true);
 
             if (!string.IsNullOrEmpty(user_name))
             {
@@ -451,7 +453,8 @@ namespace zc.Managers
         {
             var query = from b in db.bonus_record select b;
             // 只查已支付的分红
-            query = query.Where(b => b.bouns_is_give);
+            // todo: 现已没有user_bonus实体
+            query = query.Where(b => true);
 
             if (!string.IsNullOrEmpty(user_name))
             {
@@ -563,15 +566,18 @@ namespace zc.Managers
 
                 if (model.cash_type == AccountConstants.GOLD)
                 {
-                    accBalance = userModel.account1 - model.cash_money;
+                    // todo: 由原来的account1改为了account1_balance, 待测试
+                    accBalance = userModel.account1_balance - model.cash_money;
                 }
                 if (model.cash_type == AccountConstants.SILVER)
                 {
-                    accBalance = userModel.account2 - model.cash_money;
+                    // todo: 由原来的account2改为了account21_balance, 待测试
+                    accBalance = userModel.account2_balance - model.cash_money;
                 }
                 if (model.cash_type == AccountConstants.BLUE)
                 {
-                    accBalance = userModel.account3 - model.cash_money;
+                    // todo: 由原来的account3改为了account3_balance, 待测试
+                    accBalance = userModel.account3_balance - model.cash_money;
                 }
 
                 //插入资金变动记录
@@ -880,11 +886,10 @@ namespace zc.Managers
 
         public user_bonus GetUserBonus(int userId)
         {
-            var query = from ua in db.user_bonus
-                        where ua.user_id == userId
-                        select ua;
-            return query.FirstOrDefault();
+            //todo: 现已没有user_bonus实体, 得从bouns_record查出来
+            return null;
         }
+
         /// <summary>
         /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐金额总和
         /// </summary>
@@ -892,12 +897,8 @@ namespace zc.Managers
         /// <returns></returns>
         public int GetReferrerMoney1Total(int? referrer_id1)
         {
-            var query = from b in db.user_bonus select b;
-            if (referrer_id1 != null)
-            {
-                query = query.Where(b => b.referrer_id1 == referrer_id1);
-            }
-            return query.Select(b => b.referrer_money1).DefaultIfEmpty(0).Sum();
+            //todo: 现已没有user_bonus实体
+            return 0;
         }
         /// <summary>
         /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐金额总和
@@ -906,12 +907,8 @@ namespace zc.Managers
         /// <returns></returns>
         public int GetReferrerMoney2Total(int? referrer_id2)
         {
-            var query = from b in db.user_bonus select b;
-            if (referrer_id2 != null)
-            {
-                query = query.Where(b => b.referrer_id2 == referrer_id2);
-            }
-            return (int)query.Select(b => b.referrer_money2).DefaultIfEmpty(0).Sum();
+            //todo: 现已没有user_bonus实体
+            return 0;
         }
 
         /// <summary>
@@ -921,12 +918,15 @@ namespace zc.Managers
         /// <returns></returns>
         public int GetReferrerBalance1Total(int? referrer_id1)
         {
-            var query = from b in db.user_bonus select b;
-            if (referrer_id1 != null)
-            {
-                query = query.Where(b => b.referrer_id1 == referrer_id1);
-            }
-            return query.Select(b => b.referrer_balance1).DefaultIfEmpty(0).Sum();
+            //var query = from b in db.user_bonus select b;
+            //if (referrer_id1 != null)
+            //{
+            //    query = query.Where(b => b.referrer_id1 == referrer_id1);
+            //}
+            //return query.Select(b => b.referrer_balance1).DefaultIfEmpty(0).Sum();
+
+            // todo: 现已没有user_bonus实体
+            return 0;
         }
         /// <summary>
         /// 以当前登录用户ID作为推荐人1或者推荐人2，获取的推荐余额总和
@@ -935,12 +935,8 @@ namespace zc.Managers
         /// <returns></returns>
         public int GetReferrerBalance2Total(int? referrer_id2)
         {
-            var query = from b in db.user_bonus select b;
-            if (referrer_id2 != null)
-            {
-                query = query.Where(b => b.referrer_id2 == referrer_id2);
-            }
-            return (int)query.Select(b => b.referrer_balance2).DefaultIfEmpty(0).Sum();
+            //todo: 现已没有user_bonus实体
+            return 0;
         }
 
         #endregion

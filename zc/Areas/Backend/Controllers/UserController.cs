@@ -120,7 +120,8 @@ namespace zc.Areas.Backend.Controllers
                 user_name = b.user.user_name,
                 user_phone = b.user.user_phone,
                 bonus_type = b.bouns_type == 1 ? "众筹1分红" : "众筹2分红",
-                bonus_money = b.bouns_money,
+                // todo: 由原来的bouns_money改为了bouns_value, 待测试
+                bonus_money = b.bouns_value,
                 bonus_time = b.create_time.ToString("yyyy-MM-dd HH:mm:ss"),
                 bonus_remark = b.bonus_remark
             };
@@ -186,11 +187,11 @@ namespace zc.Areas.Backend.Controllers
                 var userAccount = this._userManager.GetUserAccount(cashRecord.user_id);//查会员账户
                 int cash_money = cashRecord.cash_money;
                 int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
-                int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
+                //int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
                 //判断是否需要的金额，大于了所剩余额
                 if (cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
                 {
-                    if (userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                    if (userAccount.account1_balance < (cash_money + shou_xu_fei))
                     {
                         cashRecord.cash_status = CashStatus.AUDIT_DENY;
                         cashRecord.cash_time2 = DateTime.Now;
@@ -203,7 +204,7 @@ namespace zc.Areas.Backend.Controllers
                 }
                 if (cashRecord.cash_type == CashType.SILVER_DIAMOND) //银钻账户
                 {
-                    if (userAccount.account2 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                    if (userAccount.account2_balance < (cash_money + shou_xu_fei))
                     {
                         cashRecord.cash_status = CashStatus.AUDIT_DENY;
                         cashRecord.cash_time2 = DateTime.Now;
@@ -285,11 +286,11 @@ namespace zc.Areas.Backend.Controllers
             var userAccount = this._userManager.GetUserAccount(cashRecord.user_id);//查会员账户
             int cash_money = cashRecord.cash_money;
             int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
-            int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
+            //int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
             //判断是否需要的金额，大于了所剩余额
             if (cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
             {
-                if (userAccount.account1 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                if (userAccount.account1_balance < (cash_money + shou_xu_fei /*+ fu_xiao_fei*/))
                 {
                     cashRecord.cash_status = CashStatus.AUDIT_DENY;
                     cashRecord.cash_time2 = DateTime.Now;
@@ -306,7 +307,7 @@ namespace zc.Areas.Backend.Controllers
             }
             if (cashRecord.cash_type == CashType.SILVER_DIAMOND) //银钻账户
             {
-                if (userAccount.account2 < (cash_money + shou_xu_fei + fu_xiao_fei))
+                if (userAccount.account2_balance < (cash_money + shou_xu_fei /*+ fu_xiao_fei*/))
                 {
                     cashRecord.cash_status = CashStatus.AUDIT_DENY;
                     cashRecord.cash_time2 = DateTime.Now;
@@ -338,8 +339,8 @@ namespace zc.Areas.Backend.Controllers
                         cash_type = CashType.ToString(c.cash_type),
                         cash_money = c.cash_money,
                         shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
-                        fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
-                        actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                        //fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                        actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * 1 /** CashRate.FU_XIAO_FEI*/),
                         cash_status = CashStatus.ToString(c.cash_status),
                         cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                         cash_record_id = c.cash_record_id,
@@ -372,8 +373,8 @@ namespace zc.Areas.Backend.Controllers
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
-                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
-                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
@@ -429,8 +430,8 @@ namespace zc.Areas.Backend.Controllers
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
-                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
-                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
@@ -467,8 +468,8 @@ namespace zc.Areas.Backend.Controllers
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
-                    fuxiao_money = Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
-                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money * CashRate.FU_XIAO_FEI),
+                    fuxiao_money = Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
+                    actual_money = c.cash_money - Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI) - Convert.ToInt32(c.cash_money /** CashRate.FU_XIAO_FEI*/),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
