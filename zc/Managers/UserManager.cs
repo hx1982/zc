@@ -11,10 +11,8 @@ using zc.Models.ViewModels;
 
 namespace zc.Managers
 {
-    public class UserManager
+    public class UserManager : EntityManager
     {
-        private ZCDbContext db = new ZCDbContext();
-
         public List<level> GetLevelList()
         {
             var query = from b in db.levels select b;
@@ -885,6 +883,7 @@ namespace zc.Managers
         public user_bonus GetUserBonus(int userId)
         {
             //todo: 现已没有user_bonus实体, 得从bouns_record查出来
+
             return null;
         }
 
