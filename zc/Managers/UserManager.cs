@@ -854,7 +854,7 @@ namespace zc.Managers
 
         #region 修改/完善个人信息/修改密码
 
-        public void UpdateUserPersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name)
+        public void UpdateUserPersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name, string wallet_adder)
         {
             var user = db.users.Find(user_id);
             user.province = province;
@@ -863,6 +863,7 @@ namespace zc.Managers
             user.address = address;
             user.account_num = account_num;
             user.bank_name = bank_name;
+            user.wallet_adder = wallet_adder;
             db.SaveChanges();
         }
 
