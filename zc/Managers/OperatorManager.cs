@@ -1,15 +1,15 @@
-﻿using System;
+﻿using LinqKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using zc.Commons;
 using zc.Models;
 
 namespace zc.Managers
 {
-    public class OperatorManager
+    public class OperatorManager : EntityManager
     {
-        private ZCDbContext db = new ZCDbContext();
-
         public _operator Get(string operName)
         {
             return db.operators.Where(a => a.oper_name == operName).FirstOrDefault();
@@ -38,6 +38,32 @@ namespace zc.Managers
                         && oper.oper_password == operPassword
                         select oper;
             return query.FirstOrDefault() != null;
+        }
+
+        /// <summary>
+        /// 修改操作员密码
+        /// </summary>
+        /// <param name="operId"></param>
+        /// <param name="oldPwd"></param>
+        /// <param name="newPwd"></param>
+        /// <returns></returns>
+        public bool ModifyPwd(int operId, string oldPwd, string newPwd)
+        {
+            oldPwd = Utility.MD5Encrypt(oldPwd);
+            newPwd = Utility.MD5Encrypt(newPwd);
+            var op = FindById<_operator>(operId);
+            if (op == null)
+            {
+                return false;
+            }
+            if (op.oper_password != oldPwd)
+            {
+                return false;
+            }
+            op.oper_password = newPwd;
+            Update<_operator>(op);
+            SaveChanges();
+            return true;
         }
     }
 }

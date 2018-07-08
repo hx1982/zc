@@ -144,12 +144,15 @@
     <Compile Include="Areas\Backend\BackendAreaRegistration.cs" />
     <Compile Include="Areas\Backend\Controllers\HomeController.cs" />
     <Compile Include="Areas\Backend\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Backend\Controllers\LogoutController.cs" />
+    <Compile Include="Areas\Backend\Controllers\ModifyPwdController.cs" />
     <Compile Include="Areas\Backend\Controllers\OrderController.cs" />
     <Compile Include="Areas\Backend\Controllers\UserController.cs" />
     <Compile Include="Commons\AccountConstants.cs" />
     <Compile Include="Commons\AjaxResultObject.cs" />
     <Compile Include="Commons\ApplicationOperatorIdentity.cs" />
     <Compile Include="Commons\ApplicationUserIdentity.cs" />
+    <Compile Include="Commons\BonusType.cs" />
     <Compile Include="Commons\CashConstants.cs" />
     <Compile Include="Commons\OrderConstants.cs" />
     <Compile Include="Commons\SessionConstants.cs" />
@@ -816,6 +819,7 @@
     <Content Include="Areas\Backend\Views\User\AccountLine.cshtml" />
     <Content Include="Areas\Backend\Views\User\ReferTree.cshtml" />
     <Content Include="Areas\Backend\Views\Order\UnPayed.cshtml" />
+    <Content Include="Areas\Backend\Views\ModifyPwd\Index.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />
@@ -884,6 +888,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Backend\Models\" />
     <Folder Include="Areas\Backend\Views\Level\" />
+    <Folder Include="Areas\Backend\Views\Logout\" />
     <Folder Include="photos\" />
   </ItemGroup>
   <ItemGroup>
