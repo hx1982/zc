@@ -51,6 +51,10 @@
             <label>开户行</label>
             @Html.TextBoxFor(model => model.bank_name, new { placeholder = "开户行", @class = "mui-input-clear" })
         </div>
+        <div class="mui-input-row">
+            <label>钱包地址</label>
+            @Html.TextBoxFor(model => model.wallet_adder, new { placeholder = "钱包地址", @class = "mui-input-clear" })</label>
+        </div>
         <div class="mui-content-padded">
             <button type="button" onclick="save()" class="mui-btn mui-btn-primary mui-btn-block">保存</button>
         </div>

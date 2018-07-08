@@ -425,9 +425,9 @@ namespace zc.Controllers
         }
 
         [HttpPost]
-        public ActionResult PersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name)
+        public ActionResult PersonalInfo(int user_id, string province, string city, string area, string address, string account_num, string bank_name, string wallet_adder)
         {
-            this.userManager.UpdateUserPersonalInfo(user_id, province, city, area, address, account_num, bank_name);
+            this.userManager.UpdateUserPersonalInfo(user_id, province, city, area, address, account_num, bank_name, wallet_adder);
             return Json(new AjaxResultObject
             {
                 code = AjaxResultObject.OK,
