@@ -181,7 +181,9 @@ namespace zc.Controllers
         public ActionResult AccountBlueDiamond(int? acc_record_type, DateTime? dateBegin, DateTime? dateEnd, int page = 1, int rows = 20)
         {
             var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
             var userAccount = this.userManager.GetUserAccount(userId);
+            ViewBag.User = user;
             //统计累计转入，消费
             ViewBag.TotalIncome = this.userManager.GetTotalIncome(AccountConstants.BLUE, userId);
             ViewBag.TotalExpend = this.userManager.GetTotalExpend(AccountConstants.BLUE, userId);
