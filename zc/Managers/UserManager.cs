@@ -396,6 +396,16 @@ namespace zc.Managers
             return query.FirstOrDefault();
         }
 
+        /// <summary>
+        /// 修改会员账户
+        /// </summary>
+        /// <returns></returns>
+        public bool UpdateUserAccount(user_account model)
+        {
+            db.SaveChanges();
+            return true;
+        }
+
         public user GetUser(int userId)
         {
             return db.users.Find(userId);
@@ -1005,6 +1015,22 @@ namespace zc.Managers
             return query.Count();
         }
 
+        /// <summary>
+        /// 插入账户流水
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool InsertAccountRecord(account_record model)
+        {
+            model.acc_record_time = DateTime.Now;
+            // 持久化
+            db.account_record.Add(model);
+
+            db.SaveChanges();
+            return true;
+        }
+
+
         #endregion
 
         #region 推荐树
@@ -1040,6 +1066,90 @@ namespace zc.Managers
                 name = a.user_name,
                 isParent = db.users.Count(item => item.referrer_id == a.user_id) > 0
             }).ToList();
+        }
+
+        #endregion
+
+        #region 会员账户信息
+
+        /// <summary>
+        /// 根据条件查询所有会员
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="idNumber"></param>
+        /// <param name="levelId"></param>
+        /// <param name="referrerUserName"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public List<user_account> GetAllUserAccount(string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus, int pageNo, int pageSize)
+        {
+            var query = db.user_account.AsQueryable();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(u => u.user.user_name.Contains(userName));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user.user_phone.Contains(userPhone));
+            }
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                query = query.Where(u => u.user.id_number.Contains(idNumber));
+            }
+            if (levelId.HasValue)
+            {
+                query = query.Where(u => u.user.level_id == levelId);
+            }
+            if (!string.IsNullOrEmpty(referrerUserName))
+            {
+                query = query.Where(u => u.user.referrer.user_name.Contains(referrerUserName));
+            }
+            if (userStatus.HasValue)
+            {
+                query = query.Where(u => u.user.user_status == userStatus);
+            }
+            return query.OrderBy(u => u.user_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        /// <summary>
+        /// 符合条件的会员总数
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPhone"></param>
+        /// <param name="idNumber"></param>
+        /// <param name="levelId"></param>
+        /// <param name="referrerUserName"></param>
+        /// <returns></returns>
+        public int GetAllUserAccountTotal(string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus)
+        {
+            var query = db.user_account.AsQueryable();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                query = query.Where(u => u.user.user_name.Contains(userName));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user.user_phone.Contains(userPhone));
+            }
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                query = query.Where(u => u.user.id_number.Contains(idNumber));
+            }
+            if (levelId.HasValue)
+            {
+                query = query.Where(u => u.user.level_id == levelId);
+            }
+            if (!string.IsNullOrEmpty(referrerUserName))
+            {
+                query = query.Where(u => u.user.referrer.user_name.Contains(referrerUserName));
+            }
+            if (userStatus.HasValue)
+            {
+                query = query.Where(u => u.user.user_status == userStatus);
+            }
+            return query.Count();
         }
 
         #endregion

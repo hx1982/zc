@@ -610,5 +610,122 @@ namespace zc.Areas.Backend.Controllers
         }
 
         #endregion
+
+        #region 会员账户相关
+        
+        public ActionResult UserAccountList(string userName, string userPhone, string idNumber, int? levelId, string referrerUserName, int? userStatus, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var accountUser = this._userManager.GetAllUserAccount(userName, userPhone, idNumber, levelId, referrerUserName, userStatus, page, rows);
+                var data = accountUser.Select(u => new
+                {
+                    user_id = u.user_id,
+                    user_code = u.user.user_code,
+                    user_name = u.user.user_name,
+                    user_phone = u.user.user_phone,
+                    id_number = u.user.id_number,
+                    level_name = u.user.level == null ? "" : u.user.level.level_name,
+                    reg_money = u.user.reg_money,
+                    referrer_name = u.user.referrer == null ? "无" : u.user.referrer.user_name,
+                    user_status = UserStatusHelper.ToString(u.user.user_status),
+                    account1_balance = u.account1_balance,
+                    account2_balance = u.account2_balance,
+                    account3_balance = u.account3_balance
+                });
+                var total = this._userManager.GetAllUserAccountTotal(userName, userPhone, idNumber, levelId, referrerUserName, userStatus);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+
+        [Route("/User/AddDeleteMoney")]
+        public bool AddDeleteMoney(int[] userIds, int addOrDelete,string money,int accountType)
+        {
+            for (int i = 0; i < userIds.Length; i++)
+            {
+                int userId = userIds[i];
+                //获取对象
+                user_account userAccount = this._userManager.GetUserAccount(userId);
+                var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
+                if (userAccount == null)
+                {
+                    continue;
+                }
+                account_record accountRecord = new account_record();
+                accountRecord.user_id = userAccount.user_id;
+                accountRecord.cons_value = int.Parse(money);
+                accountRecord.oper_id = operId;
+                accountRecord.acc_remark = "系统手工操作";
+                //判断是增加还是删除
+                //addOrDelete增加是1   减是-1
+                if (addOrDelete == 1)
+                {
+                    accountRecord.acc_record_type = AccRecordType.SYS_ADD;
+                    accountRecord.cons_type = ConType.INCOME;
+                    //金钻账户增加
+                    if (accountType == AccountConstants.GOLD)
+                    {
+                        accountRecord.acc_type = AccountConstants.GOLD;
+                        accountRecord.acc_balance = userAccount.account1_balance + int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    //银钻账户增加
+                    if (accountType == AccountConstants.SILVER)
+                    {
+                        accountRecord.acc_type = AccountConstants.SILVER;
+                        accountRecord.acc_balance = userAccount.account2_balance + int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    //蓝钻账户增加
+                    if (accountType == AccountConstants.BLUE)
+                    {
+                        accountRecord.acc_type = AccountConstants.BLUE;
+                        accountRecord.acc_balance = userAccount.account3_balance + int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    continue;
+                }
+                if(addOrDelete == -1)
+                {
+                    accountRecord.acc_record_type = AccRecordType.SYS_DELETE;
+                    accountRecord.cons_type = ConType.EXPEND;
+                    //金钻账户减少
+                    if (accountType == AccountConstants.GOLD)
+                    {
+                        accountRecord.acc_type = AccountConstants.GOLD;
+                        accountRecord.acc_balance = userAccount.account1_balance - int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    //银钻账户减少
+                    if (accountType == AccountConstants.SILVER)
+                    {
+                        accountRecord.acc_type = AccountConstants.SILVER;
+                        accountRecord.acc_balance = userAccount.account2_balance - int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    //蓝钻账户减少
+                    if (accountType == AccountConstants.BLUE)
+                    {
+                        accountRecord.acc_type = AccountConstants.BLUE;
+                        accountRecord.acc_balance = userAccount.account3_balance - int.Parse(money);
+
+                        this._userManager.InsertAccountRecord(accountRecord);
+                    }
+                    continue;
+                }
+            }
+            return true;
+        }
+
+
+        #endregion
+
     }
 }
