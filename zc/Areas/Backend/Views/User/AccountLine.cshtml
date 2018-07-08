@@ -30,18 +30,18 @@
             <label><input checked="checked" type="radio" name="accType" value="@AccountConstants.GOLD" />金钻</label>
             <label><input type="radio" name="accType" value="@AccountConstants.SILVER" />银钻</label>
             <label><input type="radio" name="accType" value="@AccountConstants.BLUE" />蓝钻</label>
-            <label><input type="radio" name="accType" value="@AccountConstants.TEATICKET" />茶票</label>
+            @*<label><input type="radio" name="accType" value="@AccountConstants.TEATICKET" />茶票</label>*@
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" iconCls="icon-search" style="width: 80px;margin-left: 20px;">查询</a>
         </form>
     </fieldset>
 </div>
-<table id="tt" class="easyui-datagrid" style="width:100%;height:100%"
+<table id="tt" class="easyui-datagrid" style="width:98%;height:100%"
        toolbar="#tb" rownumbers="true" pagination="true"
        data-options="url:'@Url.Action("AccountLine", "User")',fitColumns:true">
     <thead>
         <tr>
-            <th field="user_name" width="20%">会员名称</th>
-            <th field="user_phone" width="20%">手机号码</th>
+            <th field="user_name" width="15%">会员名称</th>
+            <th field="user_phone" width="18%">手机号码</th>
             <th field="acc_type" width="10%">账户类型</th>
             <th field="acc_record_type" width="10%">消费类型</th>
             <th field="cons_value" width="15%">消费金额</th>

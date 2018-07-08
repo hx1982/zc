@@ -230,7 +230,7 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = AccountConstants.GOLD;
+            model.cash_type = CashType.GOLD_DIAMOND;
 
             bool result = this.userManager.InsertCashRecord(model);
 
@@ -254,7 +254,7 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = AccountConstants.SILVER;
+            model.cash_type = CashType.SILVER_DIAMOND;
 
             bool result = this.userManager.InsertCashRecord(model);
 
@@ -284,7 +284,7 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = AccountConstants.BLUE;
+            model.cash_type = CashType.BLUE_DIAMOND;
 
             bool result = this.userManager.InsertCashRecord(model);
 
