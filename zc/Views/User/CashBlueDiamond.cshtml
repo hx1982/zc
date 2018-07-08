@@ -1,11 +1,11 @@
 ﻿@using zc.Commons;
 @{
-    ViewBag.Title = "银钻提现";
+    ViewBag.Title = "蓝钻提现";
 }
 
 <header class="mui-bar mui-bar-nav">
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-    <h1 class="mui-title">银钻提现申请</h1>
+    <h1 class="mui-title">蓝钻提现申请</h1>
 </header>
 <div class="mui-content">
     <h5 class="section-title">基本信息</h5>
@@ -15,16 +15,16 @@
             <input type="text" value="@ViewBag.user.user_name" readonly>
         </div>
         <div class="mui-input-row">
-            <label>剩余银钻</label>
-            <input type="text" id="balance_value" value="@ViewBag.userAccount.account2_balance" readonly>
+            <label>剩余蓝钻</label>
+            <input type="text" id="balance_value" value="@ViewBag.userAccount.account3_balance" readonly>
         </div>
         <div></div>
     </div>
     <h5 class="section-title">本次提现</h5>
     <div class="mui-input-group">
         <div class="mui-input-row">
-            <label>提现金额</label>
-            <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现金额">
+            <label>提现数</label>
+            <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现数">
         </div>
         <div class="mui-input-row">
             <label>手续费</label>
@@ -48,7 +48,7 @@
         $('#service_charge').bind('input propertychange', function() {
             var s = $(this).val();
             if(isNaN(s)) {
-                alert("输入的提现金额不是数字");
+                alert("输入的提现数不是数字");
                 $(this).focus();
             }
             var service = $("#service_charge").val();
@@ -85,24 +85,27 @@
                 $('#service_charge').focus();
                 return;
             }
-            //弹出对话框，输入二次密码，密码通过，而且还需要在点击提现的时候查看是否有银行卡资料
+            //弹出对话框，输入二次密码，密码通过，而且还需要在提现的时候查看时候有银行卡资料
             mui.prompt('','请输入交易密码','',['确定','取消'],function(e){
                 $.ajax({
-                    url: "/User/CashGoldDiamond",
+                    url: "/User/CashBlueDiamond",
                     type: "POST",
                     data: {cash_money:$("#service_charge").val(),second_password:e.value},
                     success: function (data) {
                         //如果成功，跳转页面
-                       // if(data=="true"){
-                            location.href = '@Url.Action("CashSilverDiamond", "User")';
-                        //}else{
-                        //    //失败提示
-                        //    alert("申请提现失败");
-                        //}
+                        if(data){
+                            location.href = '@Url.Action("AccountBlueDiamond", "User")';
+                        }else{
+                            //失败提示
+                            alert("申请提现失败");
+                        }
                     }
                 });
             },'div') ;
             document.querySelector('.mui-popup-input input').type='password';
+
+
+
         });
 
     });

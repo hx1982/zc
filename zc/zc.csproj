@@ -878,6 +878,7 @@
     <Content Include="Views\User\CashRecordList.cshtml" />
     <Content Include="Views\User\PersonalInfo.cshtml" />
     <Content Include="Views\User\ChangePwd.cshtml" />
+    <Content Include="Views\User\CashBlueDiamond.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

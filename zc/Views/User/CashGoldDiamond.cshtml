@@ -16,7 +16,7 @@
         </div>
         <div class="mui-input-row">
             <label>剩余金钻</label>
-            <input type="text" id="balance_value" value="@ViewBag.userAccount.account1" readonly>
+            <input type="text" id="balance_value" value="@ViewBag.userAccount.account1_balance" readonly>
         </div>
         <div></div>
     </div>
@@ -65,12 +65,12 @@
                 $('#service_charge').focus();
                 return;
             }
-            var isTen=s%200;
-            if(isTen != 0){
-                alert("提现金额只能是200或者200的倍数");
-                $('#service_charge').focus();
-                return;
-            }
+            //var isTen=s%200;
+            //if(isTen != 0){
+            //    alert("提现金额只能是200或者200的倍数");
+            //    $('#service_charge').focus();
+            //    return;
+            //}
 
             var re = /^[0-9]*[1-9][0-9]*$/ ;
 
