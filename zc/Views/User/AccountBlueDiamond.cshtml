@@ -108,7 +108,7 @@
 
         ///点击提现的时候
         function clickSendQuest() {
-            if ('@ViewBag.User.account_num' == null || '@ViewBag.User.account_num' == "") {
+            if ('@ViewBag.User.wallet_adder' == null || '@ViewBag.User.wallet_adder' == "") {
                 alert("您还不存在钱包地址信息，请先完善资料");
                 return;
             }
