@@ -44,24 +44,32 @@ namespace zc.Commons
     public class CashType
     {
         /// <summary>
-        /// 金钻提现
+        /// 分红提现
         /// </summary>
         public static readonly int GOLD_DIAMOND = 1;
         /// <summary>
-        /// 银钻提现
+        /// 茶票提现
         /// </summary>
         public static readonly int SILVER_DIAMOND = 2;
+        /// <summary>
+        /// 代币提现
+        /// </summary>
+        public static readonly int BLUE_DIAMOND = 3;
 
         public static string ToString(int type)
         {
             string str = "未知";
             if (type == GOLD_DIAMOND)
             {
-                str = "金钻提现";
+                str = "分红提现";
             }
             else if (type == SILVER_DIAMOND)
             {
-                str = "银钻提现";
+                str = "茶票提现";
+            }
+            else if (type == BLUE_DIAMOND)
+            {
+                str = "代币提现";
             }
             return str;
         }

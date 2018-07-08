@@ -564,19 +564,16 @@ namespace zc.Managers
                 int accRecordType = AccRecordType.WITHDRAWAL;
                 int accBalance = 0;
 
-                if (model.cash_type == AccountConstants.GOLD)
+                if (model.cash_type == CashType.GOLD_DIAMOND)
                 {
-                    // todo: 由原来的account1改为了account1_balance, 待测试
                     accBalance = userModel.account1_balance - model.cash_money;
                 }
-                if (model.cash_type == AccountConstants.SILVER)
+                if (model.cash_type == CashType.SILVER_DIAMOND)
                 {
-                    // todo: 由原来的account2改为了account21_balance, 待测试
                     accBalance = userModel.account2_balance - model.cash_money;
                 }
-                if (model.cash_type == AccountConstants.BLUE)
+                if (model.cash_type == CashType.BLUE_DIAMOND)
                 {
-                    // todo: 由原来的account3改为了account3_balance, 待测试
                     accBalance = userModel.account3_balance - model.cash_money;
                 }
 
