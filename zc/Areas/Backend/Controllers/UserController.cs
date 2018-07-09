@@ -112,20 +112,33 @@ namespace zc.Areas.Backend.Controllers
             return View();
         }
 
-        private object ToBonusRecordViewModel(bonus_record b)
+        private object ToBonusRecordViewModel(account_record b)
         {
             return new
             {
-                bonus_record_id = b.bonus_record_id,
                 user_name = b.user.user_name,
                 user_phone = b.user.user_phone,
-                bonus_type = b.bouns_type == 1 ? "众筹1分红" : "众筹2分红",
-                // todo: 由原来的bouns_money改为了bouns_value, 待测试
-                bonus_money = b.bouns_value,
-                bonus_time = b.create_time.ToString("yyyy-MM-dd HH:mm:ss"),
-                bonus_remark = b.bonus_remark
+                bonus_money = b.cons_value,
+                bonus_time = b.acc_record_time.ToString("yyyy-MM-dd HH:mm:ss"),
+                bonus_remark = b.acc_remark,
+                acc_balance = b.acc_balance
             };
         }
+
+        //private object ToBonusRecordViewModel(bonus_record b)
+        //{
+        //    return new
+        //    {
+        //        bonus_record_id = b.bonus_record_id,
+        //        user_name = b.user.user_name,
+        //        user_phone = b.user.user_phone,
+        //        bonus_type = b.bouns_type == 1 ? "众筹1分红" : "众筹2分红",
+        //        // todo: 由原来的bouns_money改为了bouns_value, 待测试
+        //        bonus_money = b.bouns_value,
+        //        bonus_time = b.create_time.ToString("yyyy-MM-dd HH:mm:ss"),
+        //        bonus_remark = b.bonus_remark
+        //    };
+        //}
 
         private object ToUserViewModel(user a)
         {
@@ -596,7 +609,7 @@ namespace zc.Areas.Backend.Controllers
             {
                 id = a.user_id,
                 pId = a.referrer_id,
-                name = a.user_name,
+                name = a.user_name+"-"+a.user_phone+"-"+a.level.level_name+"-"+a.reg_money+"元",
                 isParent = true,
                 open = users.Count(item => item.referrer_id == a.user_id) > 0
             });
