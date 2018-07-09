@@ -10,7 +10,7 @@ namespace zc.Areas.Backend.Controllers
     public class HomeController : Controller
     {
         // GET: Backend/Home
-        //[OperatorAuthorize]
+        // [OperatorAuthorize]
         public ActionResult Index()
         {
             return View();

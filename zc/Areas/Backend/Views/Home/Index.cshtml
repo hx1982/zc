@@ -22,42 +22,32 @@
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'west',split:true,title:' '" class="div-left">
             <ul class="meau-nav" id="meau-nav">
-                <li>
-                    <div class="link down">
-                        会员管理
-                    </div>
-                    <ul class="submenu">
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("SearchNotActivatedUsers","User")">未激活会员</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("All","User")">全部会员</a></li>
-                        @*<li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("PrepareChangeLevel","User")">等级修改</a></li>*@
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("ReferTree","User")">推荐关系</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("UserAccountList","User")">会员账户</a></li>
-                        
-                    </ul>
-                </li>
-                <li>
-                    <div class="link down">
-                        财务管理
-                    </div>
-                    <ul class="submenu">
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("CashRecordNoAudit", "User")">未审核提现</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("CashRecordNoGrant", "User")">未发放提现</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("CashRecordAll", "User")">全部提现记录</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("BonusRecords", "User")">分红记录</a></li>
-                        <!--<li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("AccountSummary","User")">账户汇总</a></li>-->
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("AccountLine","User")">账户流水</a></li>
-                    </ul>
-                </li>
-                @*<li>
-                    <div class="link down">
-                        订单管理
-                    </div>
-                    <ul class="submenu">
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("UnPayed", "Order")">未付款订单</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("UnShipped", "Order")">未发货订单</a></li>
-                        <li class="m_t_3_1"><a href="javascript:;" src="@Url.Action("All", "Order")">全部订单</a></li>
-                    </ul>
-                </li>*@
+                @{
+                    var oper = Session[SessionConstants.CURRENTOPERATOR] as _operator;
+                    var menus = (from role in oper.sysroles
+                                 from menu in role.menus
+                                 select menu).Distinct();
+                    foreach (var menu in menus)
+                    {
+                        if(menu.menu_parent_id == 0)
+                        {
+                            <li>
+                                <div class="link down">
+                                    @menu.menu_name
+                                </div>
+                                <ul class="submenu">
+                                    @foreach (var item in menus)
+                                    {
+                                        if (item.menu_parent_id == menu.menu_id)
+                                        {
+                                            <li class="m_t_3_1"><a href="javascript:;" src="@item.menu_url">@item.menu_name</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                }
             </ul>
         </div>
         <div data-options="region:'center'">
@@ -78,13 +68,14 @@
 
 <!--修改密码弹框-->
 <div id="dlg" class="easyui-dialog" title="修改密码" style="width:400px;height:260px;padding:15px"
-      data-options="modal:true,closed:true,buttons:'#dlg-buttons'">
+     data-options="modal:true,closed:true,buttons:'#dlg-buttons'">
     <style>
-        #fmModifyPwd .text{
+        #fmModifyPwd .text {
             padding: 5px 7px;
             width: 220px;
         }
-        #fmModifyPwd label{
+
+        #fmModifyPwd label {
             display: inline-block;
             width: 6em;
             text-align: right;
@@ -113,7 +104,7 @@
     function modifyPwd() {
         $('#fmModifyPwd').form('submit', {
             success: function (data) {
-                data = eval( "(" + data + ")" );
+                data = eval("(" + data + ")");
                 if (data.code != 200) {
                     $.messager.alert('系统消息', data.message, 'info');
                 } else {
@@ -174,7 +165,7 @@
         //点击子菜单样式变更
         $(".submenu li").click(function () {
 
-            
+
             if (this.className == "m_t_3_1") {
                 $(".submenu li").removeClass("m_t_3_2").addClass("m_t_3_1");
                 $(this).removeClass("m_t_3_1").addClass("m_t_3_2");
