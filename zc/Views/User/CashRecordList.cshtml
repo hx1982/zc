@@ -47,6 +47,7 @@
                             <tr>
                                 <th>金钻提现</th>
                                 <th>银钻提现</th>
+                                <th>蓝钻提现</th>
                                 <th>累计提现</th>
                             </tr>
                         </thead>
@@ -54,6 +55,7 @@
                             <tr>
                                 <td>@ViewBag.CompleteGoldCash</td>
                                 <td>@ViewBag.CompleteSilverCash</td>
+                                <td>@ViewBag.completeBlueCash</td>
                                 <td>@ViewBag.SumCashMoney</td>
                             </tr>
                         </tbody>
@@ -74,6 +76,7 @@
                                 <option value="">全部</option>
                                 <option value="1">金钻提现</option>
                                 <option value="2">银钻提现</option>
+                                <option value="3">蓝钻提现</option>
                             </select>
                         </div>
                         <input type="hidden" value="5" name="cash_status" />
