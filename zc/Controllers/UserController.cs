@@ -300,10 +300,12 @@ namespace zc.Controllers
             var userId = int.Parse(User.Identity.Name);
             int completeGoldCash = this.userManager.GetCashMoneyTotal(CashType.GOLD_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
             int completeSilverCash = this.userManager.GetCashMoneyTotal(CashType.SILVER_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
-            int sumCashMoney = completeGoldCash + completeSilverCash;
+            int completeBlueCash = this.userManager.GetCashMoneyTotal(CashType.BLUE_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
+            int sumCashMoney = completeGoldCash + completeSilverCash+ completeBlueCash;
 
             ViewBag.CompleteGoldCash = completeGoldCash;
             ViewBag.CompleteSilverCash = completeSilverCash;
+            ViewBag.completeBlueCash = completeBlueCash;
             ViewBag.SumCashMoney = sumCashMoney;
             // 直接查出未审核提现, 不用Ajax, 但最多20条(应该够了吧)
             //var auditWaiting = this.userManager.GetCashRequests(userId, null, null, null, CashStatus.AUDIT_WAITING, null, null, 1, 20);

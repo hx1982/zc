@@ -413,6 +413,8 @@ namespace zc.Managers
 
         #region 分红记录
 
+        #region 分红记录新
+
         /// <summary>
         /// 分红记录
         /// </summary>
@@ -423,9 +425,9 @@ namespace zc.Managers
         /// <param name="pageNo"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public List<bonus_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        public List<account_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
         {
-            var query = from b in db.bonus_record select b;
+            var query = from b in db.account_record select b;
             // 只查已支付的分红
             // todo: 现已没有user_bonus实体
             query = query.Where(b => true);
@@ -440,13 +442,14 @@ namespace zc.Managers
             }
             if (begin.HasValue)
             {
-                query = query.Where(b => b.create_time >= begin);
+                query = query.Where(b => b.acc_record_time >= begin);
             }
             if (end.HasValue)
             {
-                query = query.Where(b => b.create_time <= end);
+                query = query.Where(b => b.acc_record_time <= end);
             }
-            return query.OrderBy(b => b.bonus_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+            query = query.Where(b => b.acc_record_type == 1);
+            return query.OrderBy(b => b.user_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
         }
 
         /// <summary>
@@ -459,7 +462,7 @@ namespace zc.Managers
         /// <returns></returns>
         public int GetBonusRecordsTotal(string user_name, string user_phone, DateTime? begin, DateTime? end)
         {
-            var query = from b in db.bonus_record select b;
+            var query = from b in db.account_record select b;
             // 只查已支付的分红
             // todo: 现已没有user_bonus实体
             query = query.Where(b => true);
@@ -474,14 +477,91 @@ namespace zc.Managers
             }
             if (begin.HasValue)
             {
-                query = query.Where(b => b.create_time >= begin);
+                query = query.Where(b => b.acc_record_time >= begin);
             }
             if (end.HasValue)
             {
-                query = query.Where(b => b.create_time <= end);
+                query = query.Where(b => b.acc_record_time <= end);
             }
+            query = query.Where(b => b.acc_record_type == 1);
             return query.Count();
         }
+        #endregion
+
+
+        #region 分红记录老
+
+        ///// <summary>
+        ///// 分红记录
+        ///// </summary>
+        ///// <param name="user_name"></param>
+        ///// <param name="user_phone"></param>
+        ///// <param name="begin"></param>
+        ///// <param name="end"></param>
+        ///// <param name="pageNo"></param>
+        ///// <param name="pageSize"></param>
+        ///// <returns></returns>
+        //public List<bonus_record> GetBonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        //{
+        //    var query = from b in db.bonus_record select b;
+        //    // 只查已支付的分红
+        //    // todo: 现已没有user_bonus实体
+        //    query = query.Where(b => true);
+
+        //    if (!string.IsNullOrEmpty(user_name))
+        //    {
+        //        query = query.Where(b => b.user.user_name.Contains(user_name));
+        //    }
+        //    if (!string.IsNullOrEmpty(user_phone))
+        //    {
+        //        query = query.Where(b => b.user.user_phone.Contains(user_phone));
+        //    }
+        //    if (begin.HasValue)
+        //    {
+        //        query = query.Where(b => b.create_time >= begin);
+        //    }
+        //    if (end.HasValue)
+        //    {
+        //        query = query.Where(b => b.create_time <= end);
+        //    }
+        //    return query.OrderBy(b => b.bonus_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        //}
+
+        ///// <summary>
+        ///// 分红记录总数
+        ///// </summary>
+        ///// <param name="user_name"></param>
+        ///// <param name="user_phone"></param>
+        ///// <param name="begin"></param>
+        ///// <param name="end"></param>
+        ///// <returns></returns>
+        //public int GetBonusRecordsTotal(string user_name, string user_phone, DateTime? begin, DateTime? end)
+        //{
+        //    var query = from b in db.bonus_record select b;
+        //    // 只查已支付的分红
+        //    // todo: 现已没有user_bonus实体
+        //    query = query.Where(b => true);
+
+        //    if (!string.IsNullOrEmpty(user_name))
+        //    {
+        //        query = query.Where(b => b.user.user_name.Contains(user_name));
+        //    }
+        //    if (!string.IsNullOrEmpty(user_phone))
+        //    {
+        //        query = query.Where(b => b.user.user_phone.Contains(user_phone));
+        //    }
+        //    if (begin.HasValue)
+        //    {
+        //        query = query.Where(b => b.create_time >= begin);
+        //    }
+        //    if (end.HasValue)
+        //    {
+        //        query = query.Where(b => b.create_time <= end);
+        //    }
+        //    return query.Count();
+        //}
+
+        #endregion
 
         #endregion
 
