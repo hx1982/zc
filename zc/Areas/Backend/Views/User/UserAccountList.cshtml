@@ -123,7 +123,7 @@
         var addOrDelete = $("#addOrDelete").val();
         var cash_money = $("#cash_money").textbox('getValue');
         var account_type = $("#account_type").combobox('getValue');
-        var names = $("#names").val(names);
+        var names = $("#names").val();
 
         if (isNaN(cash_money)) {
             alert("输入的提现金额不是数字");
@@ -144,7 +144,7 @@
             success: function (data) {
                 if (data) {
                     $.messager.alert('系统提示', '操作成功', "info", function () {
-                        location.reload();
+                        window.location.reload();
                     });
                 } else {
                     $.messager.alert('系统提示', data.message);
