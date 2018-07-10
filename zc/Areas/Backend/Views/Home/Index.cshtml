@@ -164,18 +164,11 @@
         });
         //点击子菜单样式变更
         $(".submenu li").click(function () {
-
-
             if (this.className == "m_t_3_1") {
                 $(".submenu li").removeClass("m_t_3_2").addClass("m_t_3_1");
                 $(this).removeClass("m_t_3_1").addClass("m_t_3_2");
                 $(this).children("a").addClass("aHover");
             }
-            //else {
-            //    $(".submenu li").removeClass("m_t_3_1").addClass("m_t_3_2");
-            //    $(this).removeClass("m_t_3_2").addClass("m_t_3_1");
-            //    $(this).children("a").removeClass("aHover");
-            //}
         });
         $(".submenu li a").click(function () {
             var $this = $(this);

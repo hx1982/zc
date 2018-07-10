@@ -44,49 +44,7 @@ namespace zc.Managers
                 user.activate_time = DateTime.Now;
 
                 db.SaveChanges();
-
-                // 保存分红信息
-                var dist_money = user.level.level_money1;
-                //todo: 重新计算分红信息
-                //var bonus = new user_bonus
-                //{
-                //    user = user,
-                //    dist_money = dist_money,
-                //    dist_balance = 0,
-                //    dist_number = 22
-                //};
-
-                //if (user.referrer != null)
-                //{
-                //    int referrer_money1 = Convert.ToInt32(user.referrer.level.recom_rate1 * user.reg_money);
-                //    bonus.referrer_id1 = user.referrer_id;
-                //    bonus.referrer_money1 = referrer_money1;
-                //    bonus.referrer_balance1 = 0;
-                //    bonus.referrer_number1 = 22;
-                //    if (user.referrer.referrer != null)
-                //    {
-                //        int referrer_money2 = Convert.ToInt32(user.referrer.referrer.level.recom_rate2 * user.reg_money);
-                //        bonus.referrer_id2 = user.referrer.referrer.user_id;
-                //        bonus.referrer_money2 = referrer_money2;
-                //        bonus.referrer_balance2 = 0;
-                //        bonus.referrer_number2 = 22;
-                //    }
-                //}
-
-                //db.user_bonus.Add(bonus);
-                //db.SaveChanges();
-
-                //// 插入user_account记录, 值均为0
-                //var userAccount = new user_account
-                //{
-                //    user_id = user.user_id,
-                //    account1 = 0,
-                //    account2 = 0,
-                //    account3 = 0,
-                //    account4 = 0
-                //};
-                //db.user_account.Add(userAccount);
-                //db.SaveChanges();
+                
                 tx.Complete();
                 return user;
             }
@@ -677,18 +635,20 @@ namespace zc.Managers
                 accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
-                int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SHOU_XU_FEI);
-                accModel = new account_record();
-                accModel.user_id = model.user_id;
-                accModel.acc_type = model.cash_type;
-                accModel.cons_type = ConType.EXPEND;
-                accModel.acc_record_type = AccRecordType.POUNDAGE;
-                accModel.acc_balance = accBalance - shou_xu_fei;
-                accModel.cons_value = shou_xu_fei;
-                accModel.oper_id = model.oper_id1;
-                accModel.acc_record_time = DateTime.Now;
-                db.account_record.Add(accModel);
-
+                if (model.cash_type != CashType.BLUE_DIAMOND)
+                {
+                    int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SHOU_XU_FEI);
+                    accModel = new account_record();
+                    accModel.user_id = model.user_id;
+                    accModel.acc_type = model.cash_type;
+                    accModel.cons_type = ConType.EXPEND;
+                    accModel.acc_record_type = AccRecordType.POUNDAGE;
+                    accModel.acc_balance = accBalance - shou_xu_fei;
+                    accModel.cons_value = shou_xu_fei;
+                    accModel.oper_id = model.oper_id1;
+                    accModel.acc_record_time = DateTime.Now;
+                    db.account_record.Add(accModel);
+                }
                 db.SaveChanges();
                 
                 tx.Complete();
@@ -814,6 +774,105 @@ namespace zc.Managers
             }
             return query.Count();
         }
+
+        #region 为了区分开金钻蓝钻提现，单独的方法
+
+
+        //提现请求列表
+        public List<cash_record> GetCashRequests1(int? user_id, string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end, int pageNo, int pageSize)
+        {
+            var query = from b in db.cash_record select b;
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (cash_type != null)
+            {
+                query = query.Where(b => b.cash_type == cash_type);
+            }
+            else
+            {
+                query = query.Where(b => b.cash_type == CashType.GOLD_DIAMOND || b.cash_type == CashType.SILVER_DIAMOND);
+            }
+            if (cash_status != null)
+            {
+                if (cash_status == 5)
+                {
+                    int[] array = new int[] { 1, 2 };
+                    query = query.Where(b => array.Contains(b.cash_status));
+                }
+                else
+                {
+                    query = query.Where(b => b.cash_status == cash_status);
+                }
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 <= end);
+            }
+            return query.OrderBy(b => b.cash_record_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+        }
+        //提现请求分页计数
+        public int GetCashRequestsTotal1(int? user_id, string user_name, string user_phone, int? cash_type, int? cash_status, DateTime? begin, DateTime? end)
+        {
+            var query = from b in db.cash_record select b;
+            if (user_id != null)
+            {
+                query = query.Where(b => b.user_id == user_id);
+            }
+            if (!string.IsNullOrEmpty(user_name))
+            {
+                query = query.Where(b => b.user.user_name.Contains(user_name));
+            }
+            if (!string.IsNullOrEmpty(user_phone))
+            {
+                query = query.Where(b => b.user.user_phone.Contains(user_phone));
+            }
+            if (cash_type != null)
+            {
+                query = query.Where(b => b.cash_type == cash_type);
+            }
+            else
+            {
+                query = query.Where(b => b.cash_type == CashType.GOLD_DIAMOND || b.cash_type == CashType.SILVER_DIAMOND);
+            }
+            if (cash_status != null)
+            {
+                if (cash_status == 5)
+                {
+                    int[] array = new int[] { 1, 2 };
+                    query = query.Where(b => array.Contains(b.cash_status));
+                }
+                else
+                {
+                    query = query.Where(b => b.cash_status == cash_status);
+                }
+            }
+            if (begin.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 >= begin);
+            }
+            if (end.HasValue)
+            {
+                query = query.Where(b => b.cash_time1 <= end);
+            }
+            return query.Count();
+        }
+
+
+        #endregion
 
         #endregion
 

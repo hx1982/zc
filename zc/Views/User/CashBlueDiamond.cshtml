@@ -27,10 +27,6 @@
             <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现数">
         </div>
         <div class="mui-input-row">
-            <label>手续费</label>
-            <input id="shouxufei" type="text" class="mui-input-clear datepicker" placeholder="手续费" readonly>
-        </div>
-        <div class="mui-input-row">
             <label>余额</label>
             <input id="balance" type="text" class="mui-input-clear datepicker" placeholder="余额" readonly>
         </div>
@@ -52,9 +48,7 @@
                 $(this).focus();
             }
             var service = $("#service_charge").val();
-            var shouxufei = service * @CashRate.SHOU_XU_FEI;
-            $("#shouxufei").val(shouxufei);
-            $("#balance").val($("#balance_value").val()-service-shouxufei);
+            $("#balance").val($("#balance_value").val()-service);
         });
 
         $("#submitRequest").click(function(){

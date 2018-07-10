@@ -61,15 +61,15 @@ namespace zc.Commons
             string str = "未知";
             if (type == GOLD_DIAMOND)
             {
-                str = "分红提现";
+                str = "金钻提现";
             }
             else if (type == SILVER_DIAMOND)
             {
-                str = "茶票提现";
+                str = "银钻提现";
             }
             else if (type == BLUE_DIAMOND)
             {
-                str = "代币提现";
+                str = "蓝钻提现";
             }
             return str;
         }

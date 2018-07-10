@@ -1,7 +1,7 @@
 ﻿@using zc.Commons;
 
 @{
-    ViewBag.Title = "全部提现记录";
+    ViewBag.Title = "代币全部提现记录";
 }
 
 
@@ -50,13 +50,6 @@
 
 <div id="tb" style="padding:2%">
     <form id="tbForm">
-        <span class="tbspan">提现类型：</span>
-        <select id="cashType" name="cash_type">
-            <option value="">全部</option>
-            <option value="1">金钻提现</option>
-            <option value="2">银钻提现</option>
-            <option value="3">蓝钻提现</option>
-        </select>
         <span class="tbspan">申请状态：</span>
         <select name="cash_status">
             <option value="">全部</option>
@@ -84,7 +77,7 @@
     </form>
 </div>
 <table id="tt" class="easyui-datagrid" style="width:100%;height:100%"
-       toolbar="#tb" rownumbers="true" pagination="true" data-options="url:'@Url.Action("CashRecordAll","User")',fitColumns:true,singleSelect:true">
+       toolbar="#tb" rownumbers="true" pagination="true" data-options="url:'@Url.Action("BlueCashRecordAll","User")',fitColumns:true,singleSelect:true">
     <thead>
         <tr>
             <th field="cash_record_id" hidden></th>

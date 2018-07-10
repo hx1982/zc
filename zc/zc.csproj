@@ -821,6 +821,8 @@
     <Content Include="Areas\Backend\Views\Order\UnPayed.cshtml" />
     <Content Include="Areas\Backend\Views\User\UserAccountList.cshtml" />
     <Content Include="Areas\Backend\Views\ModifyPwd\Index.cshtml" />
+    <Content Include="Areas\Backend\Views\User\BlueCashRecordNoGrant.cshtml" />
+    <Content Include="Areas\Backend\Views\User\BlueCashRecordAll.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />

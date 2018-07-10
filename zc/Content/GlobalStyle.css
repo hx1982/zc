@@ -81,7 +81,7 @@ ul li{
     background-image:url("/Content/images/m_t_2_up.jpg");
 }
 .submenu{
-    display: none;
+    /*display: none;*/
 	font-size: 14px;
 }
 .block{

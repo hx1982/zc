@@ -1,7 +1,7 @@
 ﻿@using zc.Commons;
 
 @{
-    ViewBag.Title = "全部提现记录";
+    ViewBag.Title = "代币未发放提现记录";
 }
 
 
@@ -50,21 +50,6 @@
 
 <div id="tb" style="padding:2%">
     <form id="tbForm">
-        <span class="tbspan">提现类型：</span>
-        <select id="cashType" name="cash_type">
-            <option value="">全部</option>
-            <option value="1">金钻提现</option>
-            <option value="2">银钻提现</option>
-            <option value="3">蓝钻提现</option>
-        </select>
-        <span class="tbspan">申请状态：</span>
-        <select name="cash_status">
-            <option value="">全部</option>
-            <option value="-1">未通过审核</option>
-            <option value="0">未审核</option>
-            <option value="1">未发放</option>
-            <option value="2">已发放</option>
-        </select>
         <span class="tbspan">会员名称：</span>
         <input id="userName" name="user_name" class="input-width query-input ">
 
@@ -84,10 +69,10 @@
     </form>
 </div>
 <table id="tt" class="easyui-datagrid" style="width:100%;height:100%"
-       toolbar="#tb" rownumbers="true" pagination="true" data-options="url:'@Url.Action("CashRecordAll","User")',fitColumns:true,singleSelect:true">
+       rownumbers="true" pagination="true" data-options="url:'@Url.Action("BlueCashRecordNoGrant","User")',fitColumns:true,toolbar:toolbar">
     <thead>
         <tr>
-            <th field="cash_record_id" hidden></th>
+            <th data-options="field:'cash_record_id',checkbox:true"></th>
             <th field="user_name" width="10%">会员名称</th>
             <th field="user_phone" width="15%">手机号码</th>
             <th field="cash_type" width="10%">提现类型</th>
@@ -95,9 +80,11 @@
             <th field="shouxu_money" width="10%">手续费</th>
             <th field="cash_status" width="10%">状态</th>
             <th field="cash_time1" width="15%">申请时间</th>
+            <!--<th field="cash_record_id" formatter="generateOperations">操作</th>-->
         </tr>
     </thead>
 </table>
+
 <script>
     // 将form data序列化为json object
     $.fn.serializeObject = function () {
@@ -116,9 +103,42 @@
         return o;
     }
 
+    var toolbar = [{
+        text: '批量发放',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var checkedItems = $('#tt').datagrid('getChecked');
+            var names = [];
+            $.each(checkedItems, function (index, item) {
+                names.push(item.cash_record_id);
+            });
+            if (names.length == 0) {
+                $.messager.alert('系统提示', '请选择需要发放的数据');
+                return;
+            }
+            //传递请求
+            $.ajax({
+                url: '@Url.Action("UpdateGiveMoney", "User")',
+                type: "POST",
+                data: { "recordIds": names },
+                success: function (data) {
+                    if (data) {
+                        $.messager.alert('系统提示', '操作成功', "info", function () {
+                            location.reload();
+                        });
+                    } else {
+                        $.messager.alert('系统提示', data.message);
+                    }
+                }
+            });
+
+        }
+    }];
+
     function submitForm() {
         $('#tt').datagrid('load', $('#tbForm').serializeObject());
     }
+
 </script>
 
 

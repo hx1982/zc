@@ -450,7 +450,7 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
+                var pageData = this._userManager.GetCashRequests1(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new
                 {
                     user_name = c.user.user_name,
@@ -464,7 +464,7 @@ namespace zc.Areas.Backend.Controllers
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
+                var total = this._userManager.GetCashRequestsTotal1(null, user_name, user_phone, cash_type, CashStatus.GIVEMONEY_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -505,6 +505,66 @@ namespace zc.Areas.Backend.Controllers
             }
             return View();
         }
+
+        #region 代币相关提现操作
+
+
+        /// <summary>
+        /// 查询代币未发放的提现记录
+        /// </summary>
+        public ActionResult BlueCashRecordNoGrant(string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
+                var data = pageData.Select(c => new
+                {
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = CashType.ToString(c.cash_type),
+                    cash_money = c.cash_money,
+                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    cash_status = CashStatus.ToString(c.cash_status),
+                    cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
+                    cash_record_id = c.cash_record_id,
+                    user_id = c.user_id
+
+                });
+                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+        /// <summary>
+        /// 查询代币全部提现记录
+        /// </summary>
+        public ActionResult BlueCashRecordAll(string user_name, string user_phone, int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end, page, rows);
+                var data = pageData.Select(c => new
+                {
+                    user_name = c.user.user_name,
+                    user_phone = c.user.user_phone,
+                    cash_type = CashType.ToString(c.cash_type),
+                    cash_money = c.cash_money,
+                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    cash_status = CashStatus.ToString(c.cash_status),
+                    cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
+                    cash_record_id = c.cash_record_id,
+                    user_id = c.user_id
+
+                });
+                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end);
+                return Json(new { total = total, rows = data });
+            }
+            return View();
+        }
+
+
+        #endregion
 
         #endregion
 
