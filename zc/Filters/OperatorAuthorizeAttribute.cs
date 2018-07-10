@@ -22,6 +22,7 @@ namespace zc.Filters
             var oper = httpContext.Session[SessionConstants.CURRENTOPERATOR] as _operator;
             if (oper == null)
             {
+                HttpContext.Current.Response.Redirect("~/Backend/Login");
                 return false;
             }
             string path = HttpContext.Current.Request.Path;
