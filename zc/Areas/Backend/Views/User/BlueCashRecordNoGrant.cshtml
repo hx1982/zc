@@ -53,9 +53,6 @@
         <span class="tbspan">会员名称：</span>
         <input id="userName" name="user_name" class="input-width query-input ">
 
-        <span class="tbspan">手机号码：</span>
-        <input id="userPhone" name="user_phone" class="input-width query-input ">
-
         <span class="tbspan">起始日期：</span>
         <input id="userPhone" name="begin" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
 
@@ -73,11 +70,10 @@
     <thead>
         <tr>
             <th data-options="field:'cash_record_id',checkbox:true"></th>
-            <th field="user_name" width="10%">会员名称</th>
-            <th field="user_phone" width="15%">手机号码</th>
+            <th field="user_code" width="10%">会员编号</th>
+            <th field="wallet_adder" width="30%">钱包地址</th>
             <th field="cash_type" width="10%">提现类型</th>
             <th field="cash_money" width="10%">提现金额</th>
-            <th field="shouxu_money" width="10%">手续费</th>
             <th field="cash_status" width="10%">状态</th>
             <th field="cash_time1" width="15%">申请时间</th>
             <!--<th field="cash_record_id" formatter="generateOperations">操作</th>-->

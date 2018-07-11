@@ -238,7 +238,7 @@ namespace zc.Controllers
         }
 
         // 银钻提现申请  茶票提现
-        public ActionResult CashSilverDiamond(int? cash_money)
+        public ActionResult CashSilverDiamond(int? cash_money, string second_password)
         {
             var userId = int.Parse(User.Identity.Name);
             var user = this.userManager.GetUser(userId);
@@ -250,6 +250,12 @@ namespace zc.Controllers
                 ViewBag.userAccount = userAccount;
                 return View();
             }
+            //验证二次密码是否正确
+            if (!user.second_password.Equals(Utility.MD5Encrypt(second_password)))
+            {
+                return Content("false");
+            }
+
             //获取提现的值
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());

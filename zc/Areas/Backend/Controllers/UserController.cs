@@ -100,13 +100,13 @@ namespace zc.Areas.Backend.Controllers
         #region 会员分红相关
 
         // 财务管理 > 会员分红记录
-        public ActionResult BonusRecords(string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        public ActionResult BonusRecords(int? acc_type,string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetBonusRecords(user_name, user_phone, begin, end, page, rows);
+                var pageData = this._userManager.GetBonusRecords(acc_type,user_name, user_phone, begin, end, page, rows);
                 var data = pageData.Select(ToBonusRecordViewModel);
-                var total = this._userManager.GetBonusRecordsTotal(user_name, user_phone, begin, end);
+                var total = this._userManager.GetBonusRecordsTotal(acc_type,user_name, user_phone, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -118,6 +118,7 @@ namespace zc.Areas.Backend.Controllers
             {
                 user_name = b.user.user_name,
                 user_phone = b.user.user_phone,
+                acc_type = AccountConstants.ToString(b.acc_type),
                 bonus_money = b.cons_value,
                 bonus_time = b.acc_record_time.ToString("yyyy-MM-dd HH:mm:ss"),
                 bonus_remark = b.acc_remark,
@@ -400,6 +401,7 @@ namespace zc.Areas.Backend.Controllers
                 {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
+                    user_code = c.user.user_code,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
@@ -455,6 +457,7 @@ namespace zc.Areas.Backend.Controllers
                 {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
+                    user_code = c.user.user_code,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
@@ -491,6 +494,7 @@ namespace zc.Areas.Backend.Controllers
                 {
                     user_name = c.user.user_name,
                     user_phone = c.user.user_phone,
+                    user_code = c.user.user_code,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
                     shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
@@ -512,25 +516,24 @@ namespace zc.Areas.Backend.Controllers
         /// <summary>
         /// 查询代币未发放的提现记录
         /// </summary>
-        public ActionResult BlueCashRecordNoGrant(string user_name, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        public ActionResult BlueCashRecordNoGrant(string user_code, string user_phone, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
+                var pageData = this._userManager.BlueGetCashRequests(null, user_code, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end, page, rows);
                 var data = pageData.Select(c => new
                 {
-                    user_name = c.user.user_name,
-                    user_phone = c.user.user_phone,
+                    user_code = c.user.user_code,
+                    wallet_adder = c.user.wallet_adder,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
-                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end);
+                var total = this._userManager.BlueGetCashRequestsTotal(null, user_code, user_phone, CashType.BLUE_DIAMOND, CashStatus.GIVEMONEY_WAITING, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -539,25 +542,24 @@ namespace zc.Areas.Backend.Controllers
         /// <summary>
         /// 查询代币全部提现记录
         /// </summary>
-        public ActionResult BlueCashRecordAll(string user_name, string user_phone, int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
+        public ActionResult BlueCashRecordAll(string user_code, string user_phone, int? cash_status, DateTime? begin, DateTime? end, int page = 1, int rows = 10)
         {
             if (Request.IsAjaxRequest())
             {
-                var pageData = this._userManager.GetCashRequests(null, user_name, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end, page, rows);
+                var pageData = this._userManager.BlueGetCashRequests(null, user_code, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end, page, rows);
                 var data = pageData.Select(c => new
                 {
-                    user_name = c.user.user_name,
-                    user_phone = c.user.user_phone,
+                    user_code = c.user.user_code,
+                    wallet_adder = c.user.wallet_adder,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
-                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,
                     user_id = c.user_id
 
                 });
-                var total = this._userManager.GetCashRequestsTotal(null, user_name, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end);
+                var total = this._userManager.BlueGetCashRequestsTotal(null, user_code, user_phone, CashType.BLUE_DIAMOND, cash_status, begin, end);
                 return Json(new { total = total, rows = data });
             }
             return View();

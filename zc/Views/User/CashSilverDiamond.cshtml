@@ -88,13 +88,13 @@
             //弹出对话框，输入二次密码，密码通过，而且还需要在点击提现的时候查看是否有银行卡资料
             mui.prompt('','请输入交易密码','',['确定','取消'],function(e){
                 $.ajax({
-                    url: "/User/CashGoldDiamond",
+                    url: "/User/CashSilverDiamond",
                     type: "POST",
                     data: {cash_money:$("#service_charge").val(),second_password:e.value},
                     success: function (data) {
                         //如果成功，跳转页面
                        // if(data=="true"){
-                            location.href = '@Url.Action("CashSilverDiamond", "User")';
+                            location.href = '@Url.Action("AccountSilverDiamond", "User")';
                         //}else{
                         //    //失败提示
                         //    alert("申请提现失败");
