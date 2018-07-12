@@ -1391,5 +1391,20 @@ namespace zc.Managers
         }
 
         #endregion
+
+        #region 后台修改用户钱包地址
+
+        public void FillWalletAddressByIdentityNum(string identityNum, string walletAddress)
+        {
+            var user = db.users.Where(a => a.id_number == identityNum).FirstOrDefault();
+            if (user == null)
+            {
+                throw new Exception("身份证号码不正确");
+            }
+            user.wallet_adder = walletAddress;
+            db.SaveChanges();
+        }
+
+        #endregion
     }
 }

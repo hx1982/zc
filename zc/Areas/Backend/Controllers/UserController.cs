@@ -802,5 +802,26 @@ namespace zc.Areas.Backend.Controllers
 
         #endregion
 
+        #region 修改钱包地址
+
+        public ActionResult FillUpWalletAddress(string identityNum, string walletAddress)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                try
+                {
+                    this._userManager.FillWalletAddressByIdentityNum(identityNum, walletAddress);
+                    return Content("OK");
+                }
+                catch(Exception e)
+                {
+                    return Content("ERROR");
+                }
+                
+            }
+            return View();
+        }
+
+        #endregion
     }
 }

@@ -109,7 +109,23 @@
         ///点击提现的时候
         function clickSendQuest() {
             if ('@ViewBag.User.wallet_adder' == null || '@ViewBag.User.wallet_adder' == "") {
-                alert("您还不存在钱包地址信息，请先完善资料");
+                //alert("您还不存在钱包地址信息，请先完善资料");
+                mui.prompt('', '请输入钱包地址', '', ['确定', '取消'], function (e) {
+                    $.ajax({
+                        url: "/User/FillUpWalletAddress", // 补填钱包地址
+                        type: "POST",
+                        data: { wallet_address: e.value },
+                        success: function (data) {
+                            //如果成功，跳转页面
+                            if (data) {
+                                location.href = '@Url.Action("CashBlueDiamond", "User")';
+                            } else {
+                                //失败提示
+                                alert("钱包地址提交失败");
+                            }
+                        }
+                    });
+                }, 'div');
                 return;
             }
             location.href = '@Url.Action("CashBlueDiamond", "User")';

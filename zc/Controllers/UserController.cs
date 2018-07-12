@@ -296,7 +296,18 @@ namespace zc.Controllers
 
             return Content(result.ToString());
         }
-        
+
+        // 用户在蓝钻提现时补填钱包地址
+        public ActionResult FillUpWalletAddress(string wallet_address)
+        {
+            var userId = int.Parse(User.Identity.Name);
+            var user = this.userManager.GetUser(userId);
+            user.wallet_adder = wallet_address;
+            this.userManager.Update<user>(user);
+            this.userManager.SaveChanges();
+            return Content("补填钱包地址成功");
+        }
+
         /// <summary>
         /// 提现记录页面
         /// </summary>

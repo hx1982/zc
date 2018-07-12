@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "修改用户钱包地址";
+}
+
+
+<style>
+    .text {
+        padding: 5px 7px;
+        width: 220px;
+    }
+
+    label {
+        display: inline-block;
+        width: 8em;
+        text-align: right;
+    }
+</style>
+
+<form id="fm" method="post" action="@Url.Action("FillUpWalletAddress", "User")" style="padding: 15px">
+    <h2>@ViewBag.Title</h2>
+    <p>
+        <label>用户身份证号码：</label>
+        <input type="text" name="identityNum" class="text" />
+    </p>
+    <p>
+        <label>钱包地址：</label>
+        <input type="text" name="walletAddress" class="text" />
+    </p>
+    <p>
+        <label></label>
+        <input type="submit" value="保存" />
+    </p>
+</form>
+
+<script>
+    $("#fm").submit(function () {
+        $.ajax({
+            url: this.action,
+            type: "post",
+            data: $("#fm").serialize(),
+            success: function (result) {
+                if (result == "OK") {
+                    $.messager.alert('系统消息', "修改钱包地址成功", 'info');
+                    $("#fm").form("clear");
+                } else {
+                    $.messager.alert('系统消息', "修改钱包地址失败", 'info');
+                }
+            }
+        });
+        return false;
+    });
+</script>
+

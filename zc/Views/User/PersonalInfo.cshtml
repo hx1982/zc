@@ -6,6 +6,7 @@
 <header class="mui-bar mui-bar-nav">
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">@ViewBag.Title</h1>
+    <a class="mui-btn mui-btn-red mui-pull-right" href="/User/Center">首页</a>
 </header>
 <div class="mui-content">
     <form id="personalInfoForm" class="mui-input-group" method="post">
@@ -53,7 +54,7 @@
         </div>
         <div class="mui-input-row">
             <label>钱包地址</label>
-            @Html.TextBoxFor(model => model.wallet_adder, new { placeholder = "钱包地址", @class = "mui-input-clear" })</label>
+            @Html.TextBoxFor(model => model.wallet_adder, new { placeholder = "钱包地址", @class = "mui-input-clear", disabled = "disabled" })
         </div>
         <div class="mui-content-padded">
             <button type="button" onclick="save()" class="mui-btn mui-btn-primary mui-btn-block">保存</button>
