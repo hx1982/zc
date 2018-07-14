@@ -40,9 +40,12 @@ namespace zc.Models.ViewModels
         public override bool IsValid(object value)
         {
             int regMoney = Convert.ToInt32(value);
-            int[] range = { 18000, 32000, 76000 };
-            var query = from item in range where item == regMoney select item;
-            return query.Count() == 1;
+            using (var db = new ZCDbContext())
+            {
+                var range = db.levels.Select(a => a.level_money);
+                var query = from item in range where item == regMoney select item;
+                return query.Count() == 1;
+            }
         }
     }
     

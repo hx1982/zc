@@ -144,7 +144,7 @@
     }
 
     function activeUser() {
-        $("#btnConfim").hide();
+        //$("#btnConfim").hide();
         $('#fm').form('submit', {
             url: '@Url.Action("ActiveUser", "User")',
             //onSubmit: function () {
@@ -166,7 +166,7 @@
                     });
                     $.messager.alert('系统提示', '激活成功');
                     $('#dlg').dialog('close');
-                    $("#btnConfim").show();
+                    //$("#btnConfim").show();
                 }
             }
         });
