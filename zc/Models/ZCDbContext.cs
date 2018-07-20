@@ -77,11 +77,6 @@ namespace zc.Models
                 .HasForeignKey(e => e.oper_id2);
 
             modelBuilder.Entity<_operator>()
-                .HasMany(e => e.users)
-                .WithOptional(e => e._operator)
-                .HasForeignKey(e => e.activate_id);
-
-            modelBuilder.Entity<_operator>()
                 .HasMany(e => e.sysroles)
                 .WithMany(e => e.operators)
                 .Map(m => m.ToTable("operator_sysrole").MapLeftKey("oper_id").MapRightKey("role_id"));

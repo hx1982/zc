@@ -92,6 +92,12 @@ namespace zc.Models
         [StringLength(1000)]
         public string user_remark3 { get; set; }
 
+        public int? activate_type { get; set; }
+
+        public bool? is_activate { get; set; }
+
+        public string ref_url { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<account_record> account_record { get; set; }
 
@@ -105,8 +111,6 @@ namespace zc.Models
         public virtual ICollection<cash_record> cash_record { get; set; }
 
         public virtual level level { get; set; }
-
-        public virtual _operator _operator { get; set; }
 
         public virtual user_account user_account { get; set; }
 

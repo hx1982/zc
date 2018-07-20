@@ -1,0 +1,157 @@
+﻿@using zc.Commons;
+@{
+    ViewBag.Title = "未激活会员查看";
+}
+
+@section style {
+
+}
+
+<header class="mui-bar mui-bar-nav">
+    <a onclick="location.href = '@Url.Action("Center", "User")';" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">会员账户 - 未激活会员</h1>
+</header>
+<div class="mui-content">
+    <div id="pullRefreshContainer" class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <h5 class="section-title">查询条件</h5>
+            <form class="mui-input-group" id="searchForm">
+                <div class="mui-input-row">
+                    <label>会员电话</label>
+                    <input name="phone" value="@Request["phone"]" type="text" class="mui-input-clear" placeholder="会员电话">
+                </div>
+                <button type="submit" class="btn btn-block btn-success">查询</button>
+            </form>
+            <h5 class="section-title">查询结果</h5>
+            <ul class="mui-table-view" id="activateList">
+               
+            </ul>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="AUserId" value="0" />
+<div id="sheet1" class="mui-popover mui-popover-bottom mui-popover-action ">
+    <!-- 可选择菜单 -->
+    <ul class="mui-table-view" id="levelList">
+        <li class="mui-table-view-cell">
+            <a href="#" onclick="ActivateUser(1)">铜卡</a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a href="#" onclick="ActivateUser(2)">银卡</a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a href="#" onclick="ActivateUser(3)">金卡</a>
+        </li>
+    </ul>
+    <!-- 取消菜单 -->
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a href="#sheet1"><b>取消</b></a>
+        </li>
+    </ul>
+</div>
+@section bottomScript{
+
+    <script type="text/javascript">
+        //上拉加载
+        var no_more_data = false;
+        var page = 1;
+        var rows = 20;
+        mui.init({
+            pullRefresh: {
+                container: "#pullRefreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+                up: {
+                    height: 50,//可选,默认50.触发下拉刷新拖动距离,
+                    auto: true,//可选,默认false.首次加载自动下拉刷新一次
+                    contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentrefresh: "正在加载...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                    contentnomore: "没有更多数据了",
+                    callback: pullRefreshHandler //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+                }
+            }
+        });
+        function pullRefreshHandler() {
+            setTimeout(function () {
+                $.ajax({
+                    url: "@Url.Action("NoActivateList", "User")",
+                    type: "GET",
+                dataType: "json",
+                data: $("#searchForm").serializeObject(),
+                success: function (result) {
+
+                    $("#activateList").html("");
+
+                    if (result.code == 500) {
+                        no_more_data = true;
+                    } else {
+                        var str = '';
+                        $.each(result.rows, function (i, val) {
+                            str += '<li class="mui-table-view-cell">'+val.user_name+','+val.phone;
+                            str+='<button type="button" class="mui-btn mui-btn-primary" onclick="Activate('+val.user_id+')">激活</button>';
+                            str+='</li>';
+                        });
+                        $("#activateList").html(str);
+                    }
+                    page++;
+                    mui('#pullRefreshContainer').pullRefresh().endPullupToRefresh(no_more_data); //refresh completed
+                }
+            });
+        }, 1500);
+        }
+        function Activate(userId) {
+            $("#AUserId").val(userId);
+            mui('#sheet1').popover('toggle');
+        }
+        function ActivateUser(levelId) {
+            var auseId = $("#AUserId").val();
+
+            $.ajax({
+                url: "@Url.Action("ActiveUser", "User")",
+                type: "post",
+            dataType: "json",
+            data: { 'auserId': auseId, 'levelId': levelId },
+            success: function (result) {
+
+                if (result.code != 200) {
+                    mui.alert('激活失败，请重试','系统提示');
+                } else {
+                    mui.alert('激活成功', '系统提示', function () {
+                        location.reload();
+                    });
+                }
+            }
+        });
+        }
+        @*$(function(){
+            ShowLevelList();
+        });
+        function ShowLevelList() {
+           
+            var levelList = @Html.Raw(ViewBag.Levels);
+
+            for (var i = 0; i < levelList.count(); i++) {
+                alert(levelList[i][0]);
+            }
+        }*@
+
+        // 将form data序列化为json object
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            o["page"] = page;
+            o["rows"] = rows;
+            return o;
+        }
+    </script>
+}

@@ -887,6 +887,7 @@
     <Content Include="Views\User\PersonalInfo.cshtml" />
     <Content Include="Views\User\ChangePwd.cshtml" />
     <Content Include="Views\User\CashBlueDiamond.cshtml" />
+    <Content Include="Views\User\NoActivateList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

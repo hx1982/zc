@@ -15,7 +15,7 @@ namespace zc.Models
             account_record = new HashSet<account_record>();
             cash_record = new HashSet<cash_record>();
             cash_record1 = new HashSet<cash_record>();
-            users = new HashSet<user>();
+           // users = new HashSet<user>();
             sysroles = new HashSet<sysrole>();
         }
 
@@ -59,7 +59,7 @@ namespace zc.Models
         public virtual ICollection<cash_record> cash_record1 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<user> users { get; set; }
+        //public virtual ICollection<user> users { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<sysrole> sysroles { get; set; }

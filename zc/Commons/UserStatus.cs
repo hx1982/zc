@@ -38,4 +38,28 @@ namespace zc.Commons
             return str;
         }
     }
+
+    public class ActivateType
+    {
+        /// <summary>
+        /// 系统操作员
+        /// </summary>
+        public static readonly int OPERID = 1;
+        /// <summary>
+        /// 会员
+        /// </summary>
+        public static readonly int USERID = 2;
+    }
+    public class ActivateTypeHelper
+    {
+        public static string ToString(int activateType)
+        {
+            string str = string.Empty;
+            if (activateType == ActivateType.OPERID)
+                str = "操作员";
+            else if (activateType == ActivateType.USERID)
+                str = "会员";
+            return str;
+        }
+    }
 }

@@ -60,28 +60,48 @@
         尊敬的金卡会员你好!
     </div>
     <div class="mui-row">
-        <div class="mui-col-xs-4">
-            <a href="@Url.Action("AccountGoldDiamond", "User")" class="gold-diamond">
-                <span>金钻</span>
-                <br />
-                <span>@Model.account1_balance</span>
-            </a>
-        </div>
-        <div class="mui-col-xs-4">
+        @{
+            if (ViewBag.User.is_activate)
+            {
+                <div class="mui-col-xs-4" style="width:50%">
+                    <a href="@Url.Action("AccountGoldDiamond", "User")" class="gold-diamond">
+                        <span>金钻</span>
+                        <br />
+                        <span>@Model.account1_balance</span>
+                    </a>
+                </div>
+            }
+            }
+        @*<div class="mui-col-xs-4">
             <a href="@Url.Action("AccountSilverDiamond", "User")" class="silver-diamond">
                 <span>银钻</span>
                 <br />
                 <span>@Model.account2_balance</span>
             </a>
-        </div>
-        <div class="mui-col-xs-4">
-            <a href="@Url.Action("AccountBlueDiamond", "User")" class="blue-diamond">
-                <span>蓝钻</span>
-                <br />
-                <span>@Model.account3_balance</span>
-            </a>
-        </div>
-    </div>
+        </div>*@
+        @{
+            if (ViewBag.User.is_activate)
+            {
+                <div class="mui-col-xs-4" style="width:50%">
+                    <a href="@Url.Action("AccountBlueDiamond", "User")" class="silver-diamond">
+                        <span>银钻</span>
+                        <br />
+                        <span>@Model.account3_balance</span>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="mui-col-xs-4" style="width:100%">
+                    <a href="@Url.Action("AccountBlueDiamond", "User")" class="silver-diamond">
+                        <span>银钻</span>
+                        <br />
+                        <span>@Model.account3_balance</span>
+                    </a>
+                </div>
+            }
+        }
+            </div>
     <ul class="mui-table-view">
         <li class="mui-table-view-cell">
             <a class="mui-navigate-right" href="/User/PersonalInfo">
@@ -113,6 +133,15 @@
                 修改密码
             </a>
         </li>
+        @{ 
+            if (ViewBag.User.is_activate) {
+                <li class="mui-table-view-cell">
+                    <a class="mui-navigate-right" href="/User/NoActivateList">
+                        激活会员
+                    </a>
+                </li>
+            }
+        }
     </ul>
 </div>
 

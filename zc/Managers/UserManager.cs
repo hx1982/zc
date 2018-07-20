@@ -19,6 +19,8 @@ namespace zc.Managers
             return query.ToList();
         }
 
+        #region 激活会员相关
+
         /// <summary>
         /// 激活会员
         /// </summary>
@@ -42,9 +44,34 @@ namespace zc.Managers
                 user.level_id = (from lev in db.levels where lev.level_money == user.reg_money select lev).FirstOrDefault().level_id;
                 user.user_status = UserStatus.NORMAL;
                 user.activate_time = DateTime.Now;
+                user.activate_type = ActivateType.OPERID;
 
                 db.SaveChanges();
                 
+                tx.Complete();
+                return user;
+            }
+        }
+        /// <summary>
+        /// 激活会员
+        /// </summary>
+        public user ActiveUser(int? auserId,int levelId, int userId)
+        {
+
+            using (TransactionScope tx = new TransactionScope())
+            {
+
+                // 保存用户激活信息
+                var user = db.users.Find(auserId);
+                user.reg_money = (from lev in db.levels where lev.level_id == levelId select lev).FirstOrDefault().level_money ;
+                user.activate_id = userId;
+                user.level_id = levelId; 
+                user.user_status = UserStatus.NORMAL;
+                user.activate_time = DateTime.Now;
+                user.activate_type = ActivateType.USERID;
+
+                db.SaveChanges();
+
                 tx.Complete();
                 return user;
             }
@@ -62,6 +89,8 @@ namespace zc.Managers
 
             return user;
         }
+
+        #endregion
 
         /// <summary>
         /// 会员登录
@@ -337,6 +366,46 @@ namespace zc.Managers
                         select u;
             return query.Count();
         }
+
+        ///<summary>
+        /// 会员查询未激活会员
+        /// </summary>
+        public List<user> SearchNotActivedUsers(string userPhone, int? userId, int pageNo, int pageSize)
+        {
+            var query = db.users.AsQueryable();
+            if (userId!=null)
+            {
+                query = query.Where(u => u.ref_url.Contains(userId+"-"));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user_phone.Contains(userPhone));
+            }
+                query = query.Where(u => u.user_status == UserStatus.NOT_ACTIVATED);
+            
+            return query.OrderBy(u => u.user_id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+            
+        }
+
+        /// <summary>
+        /// 会员查询未激活会员总数
+        /// </summary>
+        public int SearchTotalOfNotActivatedUsers(string userPhone,int userId)
+        {
+            var query = db.users.AsQueryable();
+            if (userId != null)
+            {
+                query = query.Where(u => u.ref_url.Contains(userId + "-"));
+            }
+            if (!string.IsNullOrEmpty(userPhone))
+            {
+                query = query.Where(u => u.user_phone.Contains(userPhone));
+            }
+            query = query.Where(u => u.user_status == UserStatus.NOT_ACTIVATED);
+
+            return query.Count();
+        }
+
 
 
         #endregion

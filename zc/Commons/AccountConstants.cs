@@ -78,12 +78,18 @@ namespace zc.Commons
         /// 系统扣减(手工减)
         /// </summary>
         public static readonly int SYS_DELETE = 4;
-
         /// <summary>
         /// 手续费
         /// </summary>
         public static readonly int POUNDAGE = 5;
-        
+        /// <summary>
+        /// 充值
+        /// </summary>
+        public static readonly int RECHARGE = 6;
+        /// <summary>
+        /// 激活会员
+        /// </summary>
+        public static readonly int ACTIVATE = 7;
 
         /// <summary>
         /// 转汉字
@@ -97,7 +103,9 @@ namespace zc.Commons
             else if (status == SYS_ADD) str = "系统增加(手工加)";
             else if (status == WITHDRAWAL) str = "提现";
             else if (status == SYS_DELETE) str = "系统扣减(手工减)";
-            else if (status == POUNDAGE) str = "手续费";
+            else if (status == RECHARGE) str = "手续费";
+            else if (status == POUNDAGE) str = "充值";
+            else if (status == ACTIVATE) str = "激活会员";
             return str;
         }
     }

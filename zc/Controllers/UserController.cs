@@ -100,7 +100,6 @@ namespace zc.Controllers
             ViewBag.User = user;
             return View(userAccount);
         }
-
         // 会员账户 - 金钻
         public ActionResult AccountGoldDiamond(int? acc_record_type, DateTime? dateBegin, DateTime? dateEnd, int page = 1, int rows = 20)
         {
@@ -471,7 +470,55 @@ namespace zc.Controllers
         }
         #endregion
 
+        #region 会员激活会员相关
 
+        public ActionResult NoActivateList(string phone, int page = 1, int rows = 20)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var userId = int.Parse(User.Identity.Name);
+                var pageData = this.userManager.SearchNotActivedUsers(phone, userId, page, rows);
+
+                var data = pageData.Select(c => new
+                {
+                    user_id = c.user_id,
+                    user_code = c.user_code,
+                    user_name = c.user_name,
+                    phone = c.user_phone,
+                    reffer_name = c.referrer.user_name
+                });
+                var total = this.userManager.SearchTotalOfNotActivatedUsers(phone, userId);
+                return Json(new { total = total, rows = data }, JsonRequestBehavior.AllowGet);
+            }
+            //会员等级
+            //var level = this.userManager.GetLevelList();
+            //ViewBag.Levels = new SelectList(level, "level_money", "level_money"); 
+            return View();
+        }
+
+        public ActionResult ActiveUser(int? auserId,int levelId)
+        {
+            var userId = int.Parse(User.Identity.Name);
+            var user = userManager.ActiveUser(auserId, levelId, userId);
+            if (ModelState.IsValid)
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.OK,
+                    message = "OK"
+                });
+            }
+            else
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "数据校验错误"
+                });
+            }
+        }
+
+        #endregion
 
     }
 }
