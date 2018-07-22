@@ -16,6 +16,8 @@
 </header>
 <div class="mui-content">
     <form class="mui-input-group" method="post">
+        <!--标识是否是协助注册-->
+        @Html.HiddenFor(model => model.HelpMode)
         <div class="mui-input-row">
             <label>用户名称</label>
             @Html.TextBoxFor(model => model.UserName, new { @class = "mui-input-clear", placeholder = "真实姓名" })
