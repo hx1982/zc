@@ -491,8 +491,8 @@ namespace zc.Controllers
                 return Json(new { total = total, rows = data }, JsonRequestBehavior.AllowGet);
             }
             //会员等级
-            //var level = this.userManager.GetLevelList();
-            //ViewBag.Levels = new SelectList(level, "level_money", "level_money"); 
+            var levels = this.userManager.GetLevelList();
+            ViewBag.Levels = levels;
             return View();
         }
 

@@ -33,7 +33,13 @@
 <div id="sheet1" class="mui-popover mui-popover-bottom mui-popover-action ">
     <!-- 可选择菜单 -->
     <ul class="mui-table-view" id="levelList">
-        <li class="mui-table-view-cell">
+        @foreach (var item in (ViewBag.Levels as List<zc.Models.level>))
+        {
+            <li class="mui-table-view-cell">
+                <a href="#" onclick="ActivateUser(@item.level_money)">@item.level_money</a>
+            </li>
+        }
+        @*<li class="mui-table-view-cell">
             <a href="#" onclick="ActivateUser(1)">铜卡</a>
         </li>
         <li class="mui-table-view-cell">
@@ -41,7 +47,7 @@
         </li>
         <li class="mui-table-view-cell">
             <a href="#" onclick="ActivateUser(3)">金卡</a>
-        </li>
+        </li>*@
     </ul>
     <!-- 取消菜单 -->
     <ul class="mui-table-view">
