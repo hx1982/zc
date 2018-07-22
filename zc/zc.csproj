@@ -824,6 +824,8 @@
     <Content Include="Areas\Backend\Views\User\BlueCashRecordNoGrant.cshtml" />
     <Content Include="Areas\Backend\Views\User\BlueCashRecordAll.cshtml" />
     <Content Include="Areas\Backend\Views\User\FillUpWalletAddress.cshtml" />
+    <Content Include="Areas\Backend\Views\User\SearchBeforeActiveUser.cshtml" />
+    <Content Include="Areas\Backend\Views\User\RechargeGold.cshtml" />
     <None Include="Properties\PublishProfiles\zc_web.pubxml" />
     <None Include="Scripts\jquery-1.12.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.3.js" />

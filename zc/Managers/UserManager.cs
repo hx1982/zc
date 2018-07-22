@@ -63,7 +63,7 @@ namespace zc.Managers
                 var user = db.users.Find(auserId);
                 user.reg_money = regMoney;
                 user.activate_id = userId;
-                user.level_id = (from lev in db.levels where lev.level_money == user.reg_money select lev).FirstOrDefault().level_id; ; 
+                user.level_id = (from lev in db.levels where lev.level_money == user.reg_money select lev).FirstOrDefault().level_id; 
                 user.user_status = UserStatus.NORMAL;
                 user.activate_time = DateTime.Now;
                 user.activate_type = ActivateType.USERID;
@@ -421,7 +421,7 @@ namespace zc.Managers
         #endregion
 
         /// <summary>
-        /// 查会员账户
+        /// 查会员账户--根据userID查询
         /// </summary>
         /// <param name="userId">会员id</param>
         /// <returns></returns>
@@ -1400,12 +1400,16 @@ namespace zc.Managers
         /// <param name="pageNo"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public List<user_account> GetAllUserAccount(string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus, int pageNo, int pageSize)
+        public List<user_account> GetAllUserAccount(bool? isActive,string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus, int pageNo, int pageSize)
         {
             var query = db.user_account.AsQueryable();
             if (!string.IsNullOrEmpty(userName))
             {
                 query = query.Where(u => u.user.user_name.Contains(userName));
+            }
+            if(isActive != null)
+            {
+                query = query.Where(u => u.user.is_activate== isActive);
             }
             if (!string.IsNullOrEmpty(userPhone))
             {
@@ -1439,12 +1443,16 @@ namespace zc.Managers
         /// <param name="levelId"></param>
         /// <param name="referrerUserName"></param>
         /// <returns></returns>
-        public int GetAllUserAccountTotal(string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus)
+        public int GetAllUserAccountTotal(bool? isActive, string userName, string userPhone, string idNumber, int? levelId, string referrerUserName,int? userStatus)
         {
             var query = db.user_account.AsQueryable();
             if (!string.IsNullOrEmpty(userName))
             {
                 query = query.Where(u => u.user.user_name.Contains(userName));
+            }
+            if (isActive != null)
+            {
+                query = query.Where(u => u.user.is_activate == isActive);
             }
             if (!string.IsNullOrEmpty(userPhone))
             {
@@ -1485,5 +1493,19 @@ namespace zc.Managers
         }
 
         #endregion
+
+        /// <summary>
+        /// 批量修改会员是否有激活权限
+        /// </summary>
+        public bool BachUpdateUserActivate(int[] userIds)
+        {
+            var users = db.users.Where(c => userIds.Contains(c.user_id));
+            foreach (var customer in users)
+            {
+                customer.is_activate = true;
+            }
+            db.SaveChanges();
+            return true;
+        }
     }
 }

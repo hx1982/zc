@@ -692,7 +692,7 @@ namespace zc.Areas.Backend.Controllers
         {
             if (Request.IsAjaxRequest())
             {
-                var accountUser = this._userManager.GetAllUserAccount(userName, userPhone, idNumber, levelId, referrerUserName, userStatus, page, rows);
+                var accountUser = this._userManager.GetAllUserAccount(null,userName, userPhone, idNumber, levelId, referrerUserName, userStatus, page, rows);
                 var data = accountUser.Select(u => new
                 {
                     user_id = u.user_id,
@@ -708,7 +708,7 @@ namespace zc.Areas.Backend.Controllers
                     account2_balance = u.account2_balance,
                     account3_balance = u.account3_balance
                 });
-                var total = this._userManager.GetAllUserAccountTotal(userName, userPhone, idNumber, levelId, referrerUserName, userStatus);
+                var total = this._userManager.GetAllUserAccountTotal(null,userName, userPhone, idNumber, levelId, referrerUserName, userStatus);
                 return Json(new { total = total, rows = data });
             }
             return View();
@@ -820,6 +820,114 @@ namespace zc.Areas.Backend.Controllers
                 
             }
             return View();
+        }
+
+        #endregion
+
+        #region 会员赋予可激活会员权限相关
+
+        // 赋予权限前的查询
+
+        public ActionResult SearchBeforeActiveUser(string userName="", string userPhone="", int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var users = _userManager.SearchNormalUsersByNameAndPhone(userName, userPhone, page, rows);
+                var data = users.Select(user => new
+                {
+                    user_id = user.user_id,
+                    user_code = user.user_code,
+                    user_name = user.user_name,
+                    user_phone = user.user_phone,
+                    id_number = user.id_number,
+                    level_name = user.level.level_name,
+                    referrer_name = user.referrer != null ? user.referrer.user_name : "无",
+                    is_activate = user.is_activate == true ? "有" : "无"
+                });
+                var total = _userManager.SearchNormalUsersByNameAndPhoneTotal(userName, userPhone);
+                return Json(new
+                {
+                    total = total,
+                    rows = data
+                });
+            }
+            return View();
+        }
+        // 赋予权限
+        public ActionResult ChangeActiveUser(int[] array_user_id)
+        {
+            try
+            {
+                bool result = this._userManager.BachUpdateUserActivate(array_user_id);
+                
+                return Json(new AjaxResultObject { code = AjaxResultObject.OK, message = "赋予激活会员权限成功" });
+            }
+            catch (Exception e)
+            {
+                return Json(new AjaxResultObject { code = AjaxResultObject.ERROR, message = "系统错误: " });
+            }
+        }
+
+        #endregion
+
+        #region 充值金钻账户
+
+        public ActionResult RechargeGold(string userName = "", string userPhone = "", int page = 1, int rows = 10)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var users = _userManager.GetAllUserAccount(true,userName, userPhone,null,null,null,UserStatus.NORMAL, page, rows);
+                var data = users.Select(u => new
+                {
+                    user_id = u.user_id,
+                    user_code = u.user.user_code,
+                    user_name = u.user.user_name,
+                    user_phone = u.user.user_phone,
+                    id_number = u.user.id_number,
+                    level_name = u.user.level == null ? "" : u.user.level.level_name,
+                    reg_money = u.user.reg_money,
+                    referrer_name = u.user.referrer == null ? "无" : u.user.referrer.user_name,
+                    user_status = UserStatusHelper.ToString(u.user.user_status),
+                    account1_balance = u.account1_balance,
+                    account2_balance = u.account2_balance,
+                    account3_balance = u.account3_balance,
+                    is_activate = u.user.is_activate == true ? "有" : "无"
+                });
+                var total = _userManager.GetAllUserAccountTotal(true, userName, userPhone, null, null, null, UserStatus.NORMAL);
+                return Json(new
+                {
+                    total = total,
+                    rows = data
+                });
+            }
+            return View();
+        }
+
+        public ActionResult ChangeUserGoldNum(int userId, int cashMoney)
+        {
+            try
+            {
+                var operId = (Session[SessionConstants.CURRENTOPERATOR] as _operator).oper_id;
+
+                account_record model = new account_record();
+                model.user_id = userId;
+                model.acc_type = AccountConstants.GOLD;
+                model.cons_type = ConType.INCOME;
+                model.acc_record_type = AccRecordType.RECHARGE;
+                model.cons_value = cashMoney;
+                model.acc_balance = 0;
+                model.oper_id = operId;
+                model.acc_remark = "后台充值";
+
+                bool result = _userManager.InsertAccountRecord(model);
+
+                return Json(new AjaxResultObject { code = AjaxResultObject.OK, message = "充值成功" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AjaxResultObject { code = AjaxResultObject.ERROR, message = "失败，请联系管理员" });
+            }
+
         }
 
         #endregion
