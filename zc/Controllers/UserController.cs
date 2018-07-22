@@ -499,6 +499,16 @@ namespace zc.Controllers
         public ActionResult ActiveUser(int? auserId,int regMoney)
         {
             var userId = int.Parse(User.Identity.Name);
+            var userAccount = userManager.GetUserAccount(userId);
+            if(userAccount.account1_balance < regMoney)
+            {
+                return Json(new AjaxResultObject
+                {
+                    code = AjaxResultObject.ERROR,
+                    message = "金钻余额不足以支付激活所花费"
+                });
+            }
+
             var user = userManager.ActiveUser(auserId, regMoney, userId);
             if (ModelState.IsValid)
             {
