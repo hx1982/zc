@@ -129,18 +129,6 @@
             }
         });
         }
-        @*$(function(){
-            ShowLevelList();
-        });
-        function ShowLevelList() {
-           
-            var levelList = @Html.Raw(ViewBag.Levels);
-
-            for (var i = 0; i < levelList.count(); i++) {
-                alert(levelList[i][0]);
-            }
-        }*@
-
         // 将form data序列化为json object
         $.fn.serializeObject = function () {
             var o = {};

@@ -78,6 +78,7 @@ namespace zc.Managers
                 model.cons_value = regMoney;
                 model.acc_balance = 0;
                 model.acc_remark = "激活"+user.user_name+"-"+user.user_phone+"花费";
+                model.acc_record_time = DateTime.Now;
                 // 持久化
                 db.account_record.Add(model);
                 db.SaveChanges();
