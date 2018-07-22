@@ -21,5 +21,7 @@ namespace zc.Models.ViewModels
         public string ReferrerUserCode { get; set; }
         [Required(ErrorMessage = "必须同意注册协议")]
         public bool? AgreeRegisterProtocal { get; set; }
+
+        public bool? HelpMode { get; set; }
     }
 }

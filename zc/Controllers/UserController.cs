@@ -34,7 +34,7 @@ namespace zc.Controllers
             {
                 var user = this.userManager.GetUser(id.Value);
                 ViewBag.ReferrerUserCode = user.user_code;
-                return View(new UserRegisterModel { ReferrerUserCode = user.user_code });
+                return View(new UserRegisterModel { ReferrerUserCode = user.user_code, HelpMode = true });
             }
 
             return View();
@@ -49,6 +49,10 @@ namespace zc.Controllers
                 var regSuccess = this.userManager.Register(model);
                 if (regSuccess)
                 {
+                    if (model.HelpMode.HasValue && model.HelpMode.Value)
+                    {
+                        return RedirectToAction("Center");
+                    }
                     return Content("<script>alert('注册成功, 请等待工作人员为您激活账户!');</script>");
                 }
             }
