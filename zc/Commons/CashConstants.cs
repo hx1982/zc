@@ -85,6 +85,13 @@ namespace zc.Commons
         /// 手续费
         /// </summary>
         public static readonly decimal SHOU_XU_FEI = decimal.Parse(Utility.GetAppKey("Poundage"));
+
+
+        /// <summary>
+        /// 银钻手续费
+        /// </summary>
+        public static readonly decimal SIVLVER_SHOU_XU_FEI = decimal.Parse(Utility.GetAppKey("SilverPoundage"));
+
         ///// <summary>
         ///// 复消费
         ///// </summary>

@@ -496,10 +496,10 @@ namespace zc.Controllers
             return View();
         }
 
-        public ActionResult ActiveUser(int? auserId,int levelId)
+        public ActionResult ActiveUser(int? auserId,int regMoney)
         {
             var userId = int.Parse(User.Identity.Name);
-            var user = userManager.ActiveUser(auserId, levelId, userId);
+            var user = userManager.ActiveUser(auserId, regMoney, userId);
             if (ModelState.IsValid)
             {
                 return Json(new AjaxResultObject

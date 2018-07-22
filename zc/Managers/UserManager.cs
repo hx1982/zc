@@ -55,23 +55,32 @@ namespace zc.Managers
         /// <summary>
         /// 激活会员
         /// </summary>
-        public user ActiveUser(int? auserId,int levelId, int userId)
+        public user ActiveUser(int? auserId,int regMoney, int userId)
         {
-
             using (TransactionScope tx = new TransactionScope())
             {
-
                 // 保存用户激活信息
                 var user = db.users.Find(auserId);
-                user.reg_money = (from lev in db.levels where lev.level_id == levelId select lev).FirstOrDefault().level_money ;
+                user.reg_money = regMoney;
                 user.activate_id = userId;
-                user.level_id = levelId; 
+                user.level_id = (from lev in db.levels where lev.level_money == user.reg_money select lev).FirstOrDefault().level_id; ; 
                 user.user_status = UserStatus.NORMAL;
                 user.activate_time = DateTime.Now;
                 user.activate_type = ActivateType.USERID;
-
                 db.SaveChanges();
 
+                //写入流水
+                account_record model = new account_record();
+                model.user_id = userId;
+                model.acc_type = AccountConstants.GOLD;
+                model.cons_type = ConType.EXPEND;
+                model.acc_record_type = AccRecordType.ACTIVATE;
+                model.cons_value = regMoney;
+                model.acc_balance = 0;
+                model.acc_remark = "激活"+user.user_name+"-"+user.user_phone+"花费";
+                // 持久化
+                db.account_record.Add(model);
+                db.SaveChanges();
                 tx.Complete();
                 return user;
             }
@@ -390,7 +399,7 @@ namespace zc.Managers
         /// <summary>
         /// 会员查询未激活会员总数
         /// </summary>
-        public int SearchTotalOfNotActivatedUsers(string userPhone,int userId)
+        public int SearchTotalOfNotActivatedUsers(string userPhone,int? userId)
         {
             var query = db.users.AsQueryable();
             if (userId != null)
