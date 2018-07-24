@@ -200,7 +200,7 @@ namespace zc.Areas.Backend.Controllers
                 //如果是通过的
                 var userAccount = this._userManager.GetUserAccount(cashRecord.user_id);//查会员账户
                 int cash_money = cashRecord.cash_money;
-                int shou_xu_fei = Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI);
+                int shou_xu_fei = cashRecord.cash_type==1?Convert.ToInt32(cash_money * CashRate.SHOU_XU_FEI): Convert.ToInt32(cash_money * CashRate.SIVLVER_SHOU_XU_FEI);
                 //int fu_xiao_fei = Convert.ToInt32(cash_money * CashRate.FU_XIAO_FEI);
                 //判断是否需要的金额，大于了所剩余额
                 if (cashRecord.cash_type == CashType.GOLD_DIAMOND) //金钻账户
@@ -216,9 +216,9 @@ namespace zc.Areas.Backend.Controllers
                         continue;
                     }
                 }
-                if (cashRecord.cash_type == CashType.SILVER_DIAMOND) //银钻账户
+                if (cashRecord.cash_type == CashType.SILVER_DIAMOND || cashRecord.cash_type == CashType.BLUE_DIAMOND) 
                 {
-                    if (userAccount.account2_balance < (cash_money + shou_xu_fei))
+                    if (userAccount.account3_balance < (cash_money + shou_xu_fei))
                     {
                         cashRecord.cash_status = CashStatus.AUDIT_DENY;
                         cashRecord.cash_time2 = DateTime.Now;
@@ -404,7 +404,7 @@ namespace zc.Areas.Backend.Controllers
                     user_code = c.user.user_code,
                     cash_type = CashType.ToString(c.cash_type),
                     cash_money = c.cash_money,
-                    shouxu_money = Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI),
+                    shouxu_money = c.cash_type==1 ? Convert.ToInt32(c.cash_money * CashRate.SHOU_XU_FEI): Convert.ToInt32(c.cash_money * CashRate.SIVLVER_SHOU_XU_FEI),
                     cash_status = CashStatus.ToString(c.cash_status),
                     cash_time1 = c.cash_time1.ToString("yyyy-MM-dd HH:mm:ss"),
                     cash_record_id = c.cash_record_id,

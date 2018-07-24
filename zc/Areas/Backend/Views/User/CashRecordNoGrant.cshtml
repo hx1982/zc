@@ -8,7 +8,7 @@
 
 <style>
     #tb span, .combobox-item {
-        font-size: 16px;
+        font-size: 12px;
     }
 
     #tb .query-input {
@@ -22,7 +22,7 @@
     }
 
     .tbspan {
-        padding-left: 20px;
+        padding-left: 10px;
     }
 
     .input-width {
@@ -51,23 +51,23 @@
 <div id="tb" style="padding:2%">
     <form id="tbForm">
         <span class="tbspan">提现类型：</span>
-        <select id="cashType" name="cash_type">
+        <select id="cashType" name="cash_type" class="easyui-combobox" editable="false" style="width:100px">
             <option value="">全部</option>
             <option value="1">金钻提现</option>
             <option value="2">银钻提现</option>
         </select>
 
         <span class="tbspan">会员名称：</span>
-        <input id="userName" name="user_name" class="input-width query-input ">
+        <input id="userName" name="user_name" style="width:100px" class="easyui-textbox">
 
         <span class="tbspan">手机号码：</span>
-        <input id="userPhone" name="user_phone" class="input-width query-input ">
+        <input id="userPhone" name="user_phone" style="width:100px" class="easyui-textbox" >
 
         <span class="tbspan">起始日期：</span>
-        <input id="userPhone" name="begin" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+        <input id="userPhone" name="begin" style="width:100px" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
 
         <span class="tbspan">终止日期：</span>
-        <input id="userPhone" name="end" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+        <input id="userPhone" name="end" style="width:100px" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
 
         <div id="cc" class="easyui-calendar">
         </div>

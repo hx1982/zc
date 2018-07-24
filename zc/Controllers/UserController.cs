@@ -271,7 +271,7 @@ namespace zc.Controllers
         }
        
         //蓝钻提现
-        public ActionResult CashBlueDiamond(int? cash_money, string second_password)
+        public ActionResult CashBlueDiamond(int? cash_money, string second_password,int? cash_type)
         {
             var userId = int.Parse(User.Identity.Name);
             var user = this.userManager.GetUser(userId);
@@ -293,7 +293,7 @@ namespace zc.Controllers
             cash_record model = new cash_record();
             model.cash_money = int.Parse(cash_money.ToString());
             model.user_id = userAccount.user_id;
-            model.cash_type = CashType.BLUE_DIAMOND;
+            model.cash_type = (int)cash_type;
 
             bool result = this.userManager.InsertCashRecord(model);
 
@@ -319,12 +319,12 @@ namespace zc.Controllers
         {
             var userId = int.Parse(User.Identity.Name);
             int completeGoldCash = this.userManager.GetCashMoneyTotal(CashType.GOLD_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
-            int completeSilverCash = this.userManager.GetCashMoneyTotal(CashType.SILVER_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
+            //int completeSilverCash = this.userManager.GetCashMoneyTotal(CashType.SILVER_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
             int completeBlueCash = this.userManager.GetCashMoneyTotal(CashType.BLUE_DIAMOND, userId, CashStatus.GIVEMONEY_OK);
-            int sumCashMoney = completeGoldCash + completeSilverCash+ completeBlueCash;
+            int sumCashMoney = completeGoldCash+ completeBlueCash;
 
             ViewBag.CompleteGoldCash = completeGoldCash;
-            ViewBag.CompleteSilverCash = completeSilverCash;
+            //ViewBag.CompleteSilverCash = completeSilverCash;
             ViewBag.completeBlueCash = completeBlueCash;
             ViewBag.SumCashMoney = sumCashMoney;
             // 直接查出未审核提现, 不用Ajax, 但最多20条(应该够了吧)

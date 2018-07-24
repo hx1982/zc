@@ -6,7 +6,7 @@ using System.Web;
 namespace zc.Commons
 {
     /// <summary>
-    /// 账户类型 金，银，蓝
+    /// 账户类型 金，银，银(蓝)
     /// </summary>
     public class AccountConstants
     {
@@ -19,7 +19,7 @@ namespace zc.Commons
         /// </summary>
         public static readonly int SILVER = 2;
         /// <summary>
-        /// 蓝钻
+        /// 银钻 -- 改之后
         /// </summary>
         public static readonly int BLUE = 3;
         /// <summary>
@@ -34,7 +34,7 @@ namespace zc.Commons
             {
                 case 1: str = "金钻"; break;
                 case 2: str = "银钻"; break;
-                case 3: str = "蓝钻"; break;
+                case 3: str = "银钻"; break;
                 case 4: str = "茶票"; break;
             }
             return str;

@@ -700,11 +700,11 @@ namespace zc.Managers
                 {
                     accBalance = userModel.account1_balance - model.cash_money;
                 }
-                if (model.cash_type == CashType.SILVER_DIAMOND)
-                {
-                    accBalance = userModel.account2_balance - model.cash_money;
-                }
-                if (model.cash_type == CashType.BLUE_DIAMOND)
+                //if (model.cash_type == CashType.SILVER_DIAMOND)
+                //{
+                //    accBalance = userModel.account2_balance - model.cash_money;
+                //}
+                if (model.cash_type == CashType.SILVER_DIAMOND || model.cash_type == CashType.BLUE_DIAMOND)
                 {
                     accBalance = userModel.account3_balance - model.cash_money;
                 }
@@ -712,7 +712,7 @@ namespace zc.Managers
                 //插入资金变动记录
                 account_record accModel = new account_record();
                 accModel.user_id = model.user_id;
-                accModel.acc_type = model.cash_type;
+                accModel.acc_type = model.cash_type==1? AccountConstants.GOLD:AccountConstants.BLUE;
                 accModel.cons_type = ConType.EXPEND;
                 accModel.acc_record_type = accRecordType;
                 accModel.acc_balance = accBalance;
@@ -721,12 +721,27 @@ namespace zc.Managers
                 accModel.acc_record_time = DateTime.Now;
                 db.account_record.Add(accModel);
 
-                if (model.cash_type != CashType.BLUE_DIAMOND)
+                if (model.cash_type == CashType.GOLD_DIAMOND)
                 {
                     int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SHOU_XU_FEI);
                     accModel = new account_record();
                     accModel.user_id = model.user_id;
                     accModel.acc_type = model.cash_type;
+                    accModel.cons_type = ConType.EXPEND;
+                    accModel.acc_record_type = AccRecordType.POUNDAGE;
+                    accModel.acc_balance = accBalance - shou_xu_fei;
+                    accModel.cons_value = shou_xu_fei;
+                    accModel.oper_id = model.oper_id1;
+                    accModel.acc_record_time = DateTime.Now;
+                    db.account_record.Add(accModel);
+                }
+                //如果银钻并且手续费不未0的情况
+                if(model.cash_type != CashType.GOLD_DIAMOND && CashRate.SIVLVER_SHOU_XU_FEI != 0)
+                {
+                    int shou_xu_fei = Convert.ToInt32(model.cash_money * CashRate.SIVLVER_SHOU_XU_FEI);
+                    accModel = new account_record();
+                    accModel.user_id = model.user_id;
+                    accModel.acc_type = AccountConstants.BLUE;
                     accModel.cons_type = ConType.EXPEND;
                     accModel.acc_record_type = AccRecordType.POUNDAGE;
                     accModel.acc_balance = accBalance - shou_xu_fei;
@@ -755,7 +770,14 @@ namespace zc.Managers
             var query = from b in db.cash_record select b;
             if (cash_type != null)
             {
-                query = query.Where(b => b.cash_type == cash_type);
+                if (cash_type == 1)
+                {
+                    query = query.Where(b => b.cash_type == cash_type);
+                }else
+                {
+                    int[] array = new int[] { 2, 3 };
+                    query = query.Where(b => array.Contains(b.cash_type));
+                }
             }
             if (user_id != null)
             {
@@ -794,7 +816,15 @@ namespace zc.Managers
             }
             if (cash_type != null)
             {
-                query = query.Where(b => b.cash_type == cash_type);
+                if (cash_type == 1)
+                {
+                    query = query.Where(b => b.cash_type == cash_type);
+                }
+                else
+                {
+                    int[] array = new int[] { 2, 3 };
+                    query = query.Where(b => array.Contains(b.cash_type));
+                }
             }
             if (cash_status != null)
             {
@@ -836,7 +866,15 @@ namespace zc.Managers
             }
             if (cash_type != null)
             {
-                query = query.Where(b => b.cash_type == cash_type);
+                if (cash_type == 1)
+                {
+                    query = query.Where(b => b.cash_type == cash_type);
+                }
+                else
+                {
+                    int[] array = new int[] { 2, 3 };
+                    query = query.Where(b => array.Contains(b.cash_type));
+                }
             }
             if (cash_status != null)
             {
@@ -882,7 +920,15 @@ namespace zc.Managers
             }
             if (cash_type != null)
             {
-                query = query.Where(b => b.cash_type == cash_type);
+                if (cash_type == 1)
+                {
+                    query = query.Where(b => b.cash_type == cash_type);
+                }
+                else
+                {
+                    int[] array = new int[] { 2, 3 };
+                    query = query.Where(b => array.Contains(b.cash_type));
+                }
             }
             if (cash_status != null)
             {
@@ -924,7 +970,15 @@ namespace zc.Managers
             }
             if (cash_type != null)
             {
-                query = query.Where(b => b.cash_type == cash_type);
+                if (cash_type == 1)
+                {
+                    query = query.Where(b => b.cash_type == cash_type);
+                }
+                else
+                {
+                    int[] array = new int[] { 2, 3 };
+                    query = query.Where(b => array.Contains(b.cash_type));
+                }
             }
             if (cash_status != null)
             {

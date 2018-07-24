@@ -24,6 +24,14 @@
     <h5 class="section-title">本次提现</h5>
     <div class="mui-input-group">
         <div class="mui-input-row">
+            <label>提现类型</label>
+                <select id="cash_type" class="mui-input-clear" style="font-size:14px">
+                    <option value="">请选择提现类型</option>
+                    <option value="2">航空币</option>
+                    <option value="3">爱特币</option>
+                </select>
+        </div>
+        <div class="mui-input-row">
             <label>提现数</label>
             <input id="service_charge" name="cash_money" type="text" class="mui-input-clear" placeholder="提现数">
         </div>
@@ -45,7 +53,7 @@
         $('#service_charge').bind('input propertychange', function() {
             var s = $(this).val();
             if(isNaN(s)) {
-                alert("输入的提现数不是数字");
+                mui.alert("输入的提现数不是数字");
                 $(this).focus();
             }
             var service = $("#service_charge").val();
@@ -56,13 +64,13 @@
             //验证输入的金额是否是整数
             var s = $('#service_charge').val();
             if(isNaN(s)) {
-                alert("输入的提现金额不是数字");
+                mui.alert("输入的提现金额不是数字");
                 $('#service_charge').focus();
                 return;
             }
             var isTen=s%100;
             if(isTen != 0){
-                alert("提现金额只能是100或者100的倍数");
+                mui.alert("提现金额只能是100或者100的倍数");
                 $('#service_charge').focus();
                 return;
             }
@@ -70,14 +78,20 @@
             var re = /^[0-9]*[1-9][0-9]*$/ ;
 
             if(!TestRgexp(re , s)){
-                alert("输入的提现金额不是正整数");
+                mui.alert("输入的提现金额不是正整数");
                 $('#service_charge').focus();
                 return;
             }
             var ba =  $("#balance").val();
             if(!TestRgexp(re , ba)){
-                alert("剩余金额不足扣除支付");
+                mui.alert("剩余金额不足扣除支付");
                 $('#service_charge').focus();
+                return;
+            }
+            var cashType = $("#cash_type").val();
+            if (cashType === '') {
+                mui.alert("请选择你需要提现的类型");
+                $('#cash_type').focus();
                 return;
             }
             //弹出对话框，输入二次密码，密码通过，而且还需要在提现的时候查看时候有银行卡资料
@@ -85,7 +99,7 @@
                 $.ajax({
                     url: "/User/CashBlueDiamond",
                     type: "POST",
-                    data: {cash_money:$("#service_charge").val(),second_password:e.value},
+                    data: { cash_money: $("#service_charge").val(), second_password: e.value, cash_type:cashType },
                     success: function (data) {
                         //如果成功，跳转页面
                         if(data){

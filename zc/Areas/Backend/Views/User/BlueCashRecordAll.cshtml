@@ -8,7 +8,7 @@
 
 <style>
     #tb span, .combobox-item {
-        font-size: 16px;
+        font-size: 12px;
     }
 
     #tb .query-input {
@@ -22,13 +22,8 @@
     }
 
     .tbspan {
-        padding-left: 20px;
+        padding-left: 10px;
     }
-
-    .input-width {
-        width: 10%;
-    }
-
     .datagrid-header .datagrid-cell span {
         font-size: 15px !important;
     }
@@ -51,7 +46,7 @@
 <div id="tb" style="padding:2%">
     <form id="tbForm">
         <span class="tbspan">申请状态：</span>
-        <select name="cash_status">
+        <select name="cash_status" class="easyui-combobox" style="width:100px;">
             <option value="">全部</option>
             <option value="-1">未通过审核</option>
             <option value="0">未审核</option>
@@ -59,13 +54,13 @@
             <option value="2">已发放</option>
         </select>
         <span class="tbspan">会员编号：</span>
-        <input id="userName" name="user_code" class="input-width query-input ">
+        <input id="userName" name="user_code" class="easyui-textbox" style="width:100px;">
 
         <span class="tbspan">起始日期：</span>
-        <input id="userPhone" name="begin" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+        <input id="userPhone" name="begin" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
 
         <span class="tbspan">终止日期：</span>
-        <input id="userPhone" name="end" class="input-width query-input easyui-datebox" data-options="sharedCalendar:'#cc'">
+        <input id="userPhone" name="end" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
 
         <div id="cc" class="easyui-calendar">
         </div>

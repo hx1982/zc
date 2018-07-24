@@ -48,11 +48,11 @@ namespace zc.Commons
         /// </summary>
         public static readonly int GOLD_DIAMOND = 1;
         /// <summary>
-        /// 茶票提现
+        /// 航空币
         /// </summary>
         public static readonly int SILVER_DIAMOND = 2;
         /// <summary>
-        /// 代币提现
+        /// 爱特币
         /// </summary>
         public static readonly int BLUE_DIAMOND = 3;
 
@@ -65,11 +65,11 @@ namespace zc.Commons
             }
             else if (type == SILVER_DIAMOND)
             {
-                str = "银钻提现";
+                str = "航空币";
             }
             else if (type == BLUE_DIAMOND)
             {
-                str = "蓝钻提现";
+                str = "爱特币";
             }
             return str;
         }
@@ -88,7 +88,7 @@ namespace zc.Commons
 
 
         /// <summary>
-        /// 银钻手续费
+        /// 2.3提现手续费
         /// </summary>
         public static readonly decimal SIVLVER_SHOU_XU_FEI = decimal.Parse(Utility.GetAppKey("SilverPoundage"));
 
